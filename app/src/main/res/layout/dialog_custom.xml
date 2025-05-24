@@ -33,7 +33,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:textColor="?attr/myTextColor"
+        android:textColor="?attr/alertTextColor"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/dialog_title"
         app:layout_constraintStart_toStartOf="parent"

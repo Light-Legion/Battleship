@@ -7,7 +7,7 @@
 
         <!-- Фон для AlertDialog и цвет текста внутри -->
         <item name="alertBackground">@color/white</item>
-        <item name="myTextColor">@color/black</item>
+        <item name="alertTextColor">@color/black</item>
     </style>
 
     <!-- Стиль, которым будем оборачивать наш кастомный диалог -->

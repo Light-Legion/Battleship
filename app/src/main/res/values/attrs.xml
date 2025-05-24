@@ -3,5 +3,5 @@
     <!-- Атрибут для фона вашего диалога -->
     <attr name="alertBackground" format="reference|color"/>
     <!-- Атрибут для цвета текста внутри -->
-    <attr name="myTextColor"     format="reference|color"/>
+    <attr name="alertTextColor"     format="reference|color"/>
 </resources>
