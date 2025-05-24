@@ -64,11 +64,11 @@ class MainActivity : BaseActivity() {
 
     private fun showExitConfirmDialog() {
         CustomAlertDialog(this)
+            .setIcon(R.drawable.ic_launcher_foreground)
             .setTitle(R.string.exit_title)
             .setMessage(R.string.exit_message)
             .setNegativeButtonText(R.string.action_cancel)
             .setPositiveButtonText(R.string.action_yes)
-            .setOnNegativeClickListener { /* просто закроется диалог */ }
             .setOnPositiveClickListener {
                 finishAffinity()
             }

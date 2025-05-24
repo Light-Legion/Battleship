@@ -36,7 +36,7 @@ class SplashActivity : BaseActivity() {
 
     private fun simulateLoading() {
         val animator = ObjectAnimator.ofInt(binding.progress, "progress", 0, 100)
-        animator.duration = 3000L // 3 секунды
+        animator.duration = 2000L
         animator.interpolator = LinearInterpolator() //равномерное заполнение
         animator.start()
         animator.doOnEnd { openMain() }

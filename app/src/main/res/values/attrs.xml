@@ -4,4 +4,14 @@
     <attr name="alertBackground" format="reference|color"/>
     <!-- Атрибут для цвета текста внутри -->
     <attr name="alertTextColor"     format="reference|color"/>
+
+    <!-- Цвет фона положительной кнопки -->
+    <attr name="customDialogPositiveButtonTint" format="reference|color"/>
+    <!-- Цвет текста на положительной кнопке -->
+    <attr name="customDialogPositiveButtonTextColor" format="reference|color"/>
+
+    <!-- Цвет фона отрицательной кнопки -->
+    <attr name="customDialogNegativeButtonTint" format="reference|color"/>
+    <!-- Цвет текста на отрицательной кнопке -->
+    <attr name="customDialogNegativeButtonTextColor" format="reference|color"/>
 </resources>

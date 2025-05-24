@@ -6,21 +6,42 @@
         <item name="colorOnPrimary">@color/white</item>
 
         <!-- Фон для AlertDialog и цвет текста внутри -->
-        <item name="alertBackground">@color/white</item>
+        <item name="alertBackground">@color/teal_200</item>
         <item name="alertTextColor">@color/black</item>
+
+        <!-- Для кнопок CustomAlertDialog -->
+        <item name="customDialogPositiveButtonTint">@color/blue</item>
+        <item name="customDialogPositiveButtonTextColor">@color/white</item>
+        <item name="customDialogNegativeButtonTint">@color/gray</item>
+        <item name="customDialogNegativeButtonTextColor">@color/white</item>
     </style>
 
     <!-- Стиль, которым будем оборачивать наш кастомный диалог -->
     <style name="CustomAlertDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
-        <!-- прозрачный фон вокруг, скруглённые углы и т.п. можно тут же прописать -->
+        <!--<item name="android:windowMinWidthMajor">0dp</item>
+        <item name="android:windowMinWidthMinor">0dp</item>-->
+
         <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.App.RoundedCorners24</item>
-        <item name="android:windowMinWidthMajor">80%</item>
-        <item name="android:windowMinWidthMinor">80%</item>
     </style>
 
     <!-- Переопределение скругления в Overlay -->
     <style name="ShapeAppearanceOverlay.App.RoundedCorners24" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">24dp</item>
+    </style>
+
+    <!-- Контейнерная («ДА») кнопка -->
+    <style name="Widget.CustomDialog.ButtonAgree" parent="Widget.MaterialComponents.Button">
+        <!-- Берём наш атрибут из темы -->
+        <item name="backgroundTint">?attr/customDialogPositiveButtonTint</item>
+        <item name="android:textColor">?attr/customDialogPositiveButtonTextColor</item>
+        <item name="cornerRadius">16dp</item>
+    </style>
+
+    <!-- Текстовая («ОТМЕНА») кнопка -->
+    <style name="Widget.CustomDialog.ButtonCancel" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">?attr/customDialogNegativeButtonTint</item>
+        <item name="android:textColor">?attr/customDialogNegativeButtonTextColor</item>
+        <item name="cornerRadius">16dp</item>
     </style>
 </resources>

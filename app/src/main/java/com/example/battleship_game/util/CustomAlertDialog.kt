@@ -29,7 +29,9 @@ class CustomAlertDialog(context: Context) {
             onPositive?.invoke()
             dialog.dismiss()
         }
-        dialog.setOnDismissListener { onDismiss?.invoke() }
+        dialog.setOnDismissListener {
+            onDismiss?.invoke()
+        }
     }
 
     fun setIcon(@DrawableRes res: Int): CustomAlertDialog {
