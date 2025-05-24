@@ -1,47 +1,78 @@
 package com.example.battleship_game.main
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.battleship_game.ui.theme.BattleshipgameTheme
+import android.view.Gravity
+import android.widget.Toast
+import androidx.activity.addCallback
+import com.example.battleship_game.BaseActivity
+import com.example.battleship_game.R
+import com.example.battleship_game.databinding.ActivityMainBinding
+import com.example.battleship_game.dialog.CustomAlertDialog
 
-class MainActivity : ComponentActivity() {
+class MainActivity : BaseActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            BattleshipgameTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        // Edge-to-edge отступы
+        applyEdgeInsets(binding.main)
+
+        // Скрываем SystemBars
+        enterImmersiveMode()
+
+        // Навешиваем слушатели на кнопки
+        setupListeners()
+
+        // Перехват системной кнопки «Назад»
+        onBackPressedDispatcher.addCallback(this) {
+            showExitConfirmDialog()
+        }
+    }
+
+    private fun setupListeners() {
+        binding.apply {
+            btnPlay.setOnClickListener {
+                //startActivity(Intent(this, GameSetupActivity::class.java))
+                toastShowMessage("Переход по кнопке играть")
+            }
+            btnProfile.setOnClickListener {
+                //startActivity(Intent(this, ProfileActivity::class.java))
+                toastShowMessage("Переход по кнопке профиль")
+            }
+            btnStats.setOnClickListener {
+                //startActivity(Intent(this, StatsActivity::class.java))
+                toastShowMessage("Переход по кнопке статистика")
+            }
+            btnHelp.setOnClickListener {
+                //startActivity(Intent(this, HelpActivity::class.java))
+                toastShowMessage("Переход по кнопке справка")
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    BattleshipgameTheme {
-        Greeting("Android")
+    //Функция для вывода на экран сообщения-тоста
+    private fun toastShowMessage(message: String){
+        val toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
+        toast.setGravity(Gravity.TOP, 0, 0)
+        toast.show()
     }
+
+    private fun showExitConfirmDialog() {
+        CustomAlertDialog(this)
+            .setTitle(R.string.exit_title)
+            .setMessage(R.string.exit_message)
+            .setNegativeButtonText(R.string.action_cancel)
+            .setPositiveButtonText(R.string.action_yes)
+            .setOnNegativeClickListener { /* просто закроется диалог */ }
+            .setOnPositiveClickListener {
+                finishAffinity()
+            }
+            .show()
+    }
+
 }

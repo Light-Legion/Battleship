@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">battleship-game</string>
+    <!-- Названия для компонентов -->
+    <string name="app_name">Морской бой</string>
+    <string name="play">Играть</string>
+    <string name="profile">Профиль</string>
+    <string name="stats">Статистика</string>
+    <string name="help">Справка</string>
+
+    <!-- Названия для модальных окон (диалогов) -->
+    <string name="exit_title">Выход из приложения</string>
+    <string name="exit_message">Вы действительно хотите выйти?</string>
+    <string name="action_yes">Да</string>
+    <string name="action_cancel">Отмена</string>
 </resources>

@@ -5,26 +5,25 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.animation.LinearInterpolator
-import androidx.activity.ComponentActivity
-import androidx.activity.enableEdgeToEdge
 import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.battleship_game.BaseActivity
 import com.example.battleship_game.databinding.ActivitySplashBinding
 import com.example.battleship_game.main.MainActivity
 
 @SuppressLint("CustomSplashScreen")
-class SplashActivity : ComponentActivity() {
+class SplashActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySplashBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        enableEdgeToEdge()
-
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        applyEdgeInsets(binding.main)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
