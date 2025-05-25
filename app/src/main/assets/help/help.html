@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Краткое руководство пользователя</title>
+    <style>
+        /* Плавный скролл */
+        html { scroll-behavior: smooth; }
+
+        body {
+          font-family: sans-serif;
+          line-height: 1.6;
+          margin: 0;
+          padding-top: 64px;      /* место под фиксированное меню */
+          padding-bottom: 80px;   /* место под кнопку наверх */
+        }
+
+        /* Фиксированное меню навигации */
+        nav#toc {
+          position: fixed;
+          top: 0; left: 0; right: 0;
+          background: #003366;
+          color: #fff;
+          display: flex;
+          gap: 16px;
+          padding: 12px;
+          z-index: 1000;
+        }
+        nav#toc a {
+          color: #fff;
+          text-decoration: none;
+          font-weight: bold;
+        }
+        nav#toc a:hover {
+          text-decoration: underline;
+        }
+
+        /* Заголовки разделов */
+        section {
+          margin: 32px 16px;
+        }
+        section h2 {
+          color: #003366;
+          margin-bottom: 16px;
+          border-bottom: 2px solid #003366;
+          padding-bottom: 4px;
+        }
+
+        p { margin-bottom: 1em; text-align: justify; }
+
+        /* Кнопка «Наверх» */
+        #toTop {
+          position: fixed;
+          bottom: 24px; right: 24px;
+          cursor: pointer;
+          width: 56px; height: auto;
+          z-index: 1000;
+        }
+        #toTop img { width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+
+<!-- Фиксированное меню с якорями -->
+<nav id="toc">
+    <a href="#intro">Введение</a>
+    <a href="#gameplay">Игровой процесс</a>
+    <a href="#ui">Интерфейс</a>
+    <a href="#profile">Профиль</a>
+    <a href="#stats">Статистика</a>
+</nav>
+
+<!-- Раздел: Введение -->
+<section id="intro">
+    <h2>Введение</h2>
+    <p>Добро пожаловать в «Морской бой» — приложение, разработанное в рамках курсового проекта Самарского университета. Ниже вы найдете краткое руководство по использованию игры.</p>
+</section>
+
+<!-- Раздел: Игровой процесс -->
+<section id="gameplay">
+    <h2>Игровой процесс</h2>
+    <p>Игровой процесс включает расстановку кораблей, атаку на поле противника и анализ статистики. Вы можете создавать профиль, просматривать достижения и вести игровую статистику.</p>
+</section>
+
+<!-- Раздел: Интерфейс -->
+<section id="ui">
+    <h2>Интерфейс</h2>
+    <p>Пользовательский интерфейс оптимизирован для разных разрешений экрана. Управление осуществляется касанием: выбор ячейки, поворот корабля и использование кнопок.</p>
+</section>
+
+<!-- Раздел: Профиль -->
+<section id="profile">
+    <h2>Профиль</h2>
+    <p>Настройки профиля позволяют сменить имя, аватар и другие параметры. Все изменения сохраняются локально и доступны при последующих запусках приложения.</p>
+</section>
+
+<!-- Раздел: Статистика -->
+<section id="stats">
+    <h2>Статистика</h2>
+    <p>В разделе «Статистика» вы увидите таблицу со всеми проведёнными играми: результат, уровень сложности и дату.</p>
+</section>
+
+<!-- Кнопка «Наверх» -->
+<a href="#intro" id="toTop" title="Вернуться наверх">
+    <img src="ship.png" alt="Наверх">
+</a>
+</body>
+</html>

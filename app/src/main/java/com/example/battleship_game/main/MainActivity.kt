@@ -1,5 +1,6 @@
 package com.example.battleship_game.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.Toast
@@ -8,6 +9,7 @@ import com.example.battleship_game.BaseActivity
 import com.example.battleship_game.R
 import com.example.battleship_game.databinding.ActivityMainBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
+import com.example.battleship_game.help.HelpActivity
 
 class MainActivity : BaseActivity() {
 
@@ -49,7 +51,7 @@ class MainActivity : BaseActivity() {
                 toastShowMessage("Переход по кнопке статистика")
             }
             btnHelp.setOnClickListener {
-                //startActivity(Intent(this, HelpActivity::class.java))
+                startActivity(Intent(this@MainActivity, HelpActivity::class.java))
                 toastShowMessage("Переход по кнопке справка")
             }
         }
