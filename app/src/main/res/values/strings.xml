@@ -5,6 +5,26 @@
     <string name="profile">Профиль</string>
     <string name="stats">Статистика</string>
     <string name="help">Справка</string>
+    <string name="back">Назад</string>
+    <string name="about_system">О системе</string>
+    <string name="choose_browser">Открыть в браузере</string>
+    <string name="refresh">Обновить</string>
+
+    <!-- Названия для текстовых ресурсов -->
+    <string name="txt_help_title">Сведения о разработчиках</string>
+    <string name="txt_help_text">
+        Самарский университет\n
+        Кафедра программных систем\n
+        Курсовой проект по дисциплине \"Программная инженерия\"\n
+        Тема проекта \"Игра "Морской бой\"\n
+        Разработчики - обучающиеся группы 6302-020302D\n
+        Васильев А.Л.\n
+        Гончарова Ю.А.\n
+        Самара 2025
+    </string>
+    <string name="txt_error_loading">Ошибка загрузки, попробуйте снова!</string>
+    <string name="txt_retry">Повторить попытку!</string>
+    <string name="txt_open_help">Повторить попытку!</string>
 
     <!-- Названия для модальных окон (диалогов) -->
     <string name="exit_title">Выход из приложения</string>
