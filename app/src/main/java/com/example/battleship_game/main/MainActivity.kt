@@ -2,14 +2,14 @@ package com.example.battleship_game.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Gravity
-import android.widget.Toast
 import androidx.activity.addCallback
 import com.example.battleship_game.BaseActivity
 import com.example.battleship_game.R
 import com.example.battleship_game.databinding.ActivityMainBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
 import com.example.battleship_game.help.HelpActivity
+import com.example.battleship_game.profile.ProfileActivity
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : BaseActivity() {
 
@@ -40,28 +40,21 @@ class MainActivity : BaseActivity() {
         binding.apply {
             btnPlay.setOnClickListener {
                 //startActivity(Intent(this, GameSetupActivity::class.java))
-                toastShowMessage("Переход по кнопке играть")
+                Snackbar.make(main, "Переход по кнопке играть", Snackbar.LENGTH_SHORT).show()
             }
             btnProfile.setOnClickListener {
-                //startActivity(Intent(this, ProfileActivity::class.java))
-                toastShowMessage("Переход по кнопке профиль")
+                startActivity(Intent(this@MainActivity, ProfileActivity::class.java))
+                Snackbar.make(main, "Переход по кнопке профиль", Snackbar.LENGTH_SHORT).show()
             }
             btnStats.setOnClickListener {
                 //startActivity(Intent(this, StatsActivity::class.java))
-                toastShowMessage("Переход по кнопке статистика")
+                Snackbar.make(main, "Переход по кнопке статистика", Snackbar.LENGTH_SHORT).show()
             }
             btnHelp.setOnClickListener {
                 startActivity(Intent(this@MainActivity, HelpActivity::class.java))
-                toastShowMessage("Переход по кнопке справка")
+                Snackbar.make(main, "Переход по кнопке справка", Snackbar.LENGTH_SHORT).show()
             }
         }
-    }
-
-    //Функция для вывода на экран сообщения-тоста
-    private fun toastShowMessage(message: String){
-        val toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
-        toast.setGravity(Gravity.TOP, 0, 0)
-        toast.show()
     }
 
     private fun showExitConfirmDialog() {

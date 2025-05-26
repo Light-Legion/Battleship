@@ -9,6 +9,9 @@
     <string name="about_system">О системе</string>
     <string name="choose_browser">Открыть в браузере</string>
     <string name="refresh">Обновить</string>
+    <string name="edit_name">Редактировать имя</string>
+    <string name="change_avatar">Изменить аватар</string>
+    <string name="save">Сохранить</string>
 
     <!-- Названия для текстовых ресурсов -->
     <string name="txt_help_title">Сведения о разработчиках</string>
@@ -25,10 +28,19 @@
     <string name="txt_error_loading">Ошибка загрузки, попробуйте снова!</string>
     <string name="txt_retry">Повторить попытку!</string>
     <string name="txt_open_help">Открытие информации о системе</string>
+    <string name="txt_avatar">Аватар</string>
+    <string name="txt_username">Имя пользователя</string>
+    <string name="txt_enter_name">Введите имя пользователя:</string>
+    <string name="txt_select_avatar">Выберите аватар:</string>
+    <string name="txt_hint_name">Имя может содержать только буквы и пробелы между словами!</string>
 
     <!-- Названия для модальных окон (диалогов) -->
     <string name="exit_title">Выход из приложения</string>
     <string name="exit_message">Вы действительно хотите выйти?</string>
     <string name="action_yes">Да</string>
     <string name="action_cancel">Отмена</string>
+    <string name="action_ok">Ок</string>
+    <string name="action_done">Готово</string>
+    <string name="error_name_title">Некорректный ввод!</string>
+    <string name="error_name_message">Вы неправильно ввели имя пользователя, попробуйте снова!</string>
 </resources>
