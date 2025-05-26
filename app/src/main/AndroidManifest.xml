@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".BattleshipApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -12,6 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Battleshipgame"
         tools:targetApi="31">
+        <activity
+            android:name=".presentation.stats.StatsActivity"
+            android:exported="false"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.Battleshipgame" />
         <activity
             android:name=".presentation.profile.SelectAvatarActivity"
             android:exported="false"
