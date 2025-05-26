@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Уровни сложности -->
+    <string-array name="difficulty_options">
+        <item>Легкий</item>
+        <item>Средний</item>
+        <item>Сложный</item>
+    </string-array>
+
+    <!-- Способы расстановки -->
+    <string-array name="placement_options">
+        <item>Ручной</item>
+        <item>Автоматический</item>
+        <item>Загрузка сохранённой расстановки</item>
+    </string-array>
+</resources>

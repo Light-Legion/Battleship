@@ -12,6 +12,7 @@
     <string name="edit_name">Редактировать имя</string>
     <string name="change_avatar">Изменить аватар</string>
     <string name="save">Сохранить</string>
+    <string name="next">Далее</string>
 
     <!-- Названия для таблиц -->
     <string name="db_name">Имя</string>
@@ -39,6 +40,9 @@
     <string name="txt_enter_name">Введите имя пользователя:</string>
     <string name="txt_select_avatar">Выберите аватар:</string>
     <string name="txt_hint_name">Имя может содержать только буквы и пробелы между словами!</string>
+    <string name="txt_game_setup">Настройка игры</string>
+    <string name="txt_difficulty">Уровень сложности</string>
+    <string name="txt_placement">Способ расстановки</string>
 
     <!-- Названия для модальных окон (диалогов) -->
     <string name="exit_title">Выход из приложения</string>
