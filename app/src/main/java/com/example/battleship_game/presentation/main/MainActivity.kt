@@ -9,6 +9,7 @@ import com.example.battleship_game.databinding.ActivityMainBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
 import com.example.battleship_game.presentation.help.HelpActivity
 import com.example.battleship_game.presentation.profile.ProfileActivity
+import com.example.battleship_game.presentation.stats.StatsActivity
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : BaseActivity() {
@@ -47,7 +48,7 @@ class MainActivity : BaseActivity() {
                 Snackbar.make(main, "Переход по кнопке профиль", Snackbar.LENGTH_SHORT).show()
             }
             btnStats.setOnClickListener {
-                //startActivity(Intent(this, StatsActivity::class.java))
+                startActivity(Intent(this@MainActivity, StatsActivity::class.java))
                 Snackbar.make(main, "Переход по кнопке статистика", Snackbar.LENGTH_SHORT).show()
             }
             btnHelp.setOnClickListener {
