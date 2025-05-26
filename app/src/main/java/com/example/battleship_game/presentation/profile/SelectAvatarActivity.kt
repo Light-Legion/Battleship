@@ -1,13 +1,13 @@
-package com.example.battleship_game.profile
+package com.example.battleship_game.presentation.profile
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.addCallback
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.battleship_game.BaseActivity
+import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.R
 import com.example.battleship_game.databinding.ActivitySelectAvatarBinding
-import com.example.battleship_game.util.UserPreferences.avatarRes
+import com.example.battleship_game.common.UserPreferences.avatarRes
 
 class SelectAvatarActivity : BaseActivity() {
 

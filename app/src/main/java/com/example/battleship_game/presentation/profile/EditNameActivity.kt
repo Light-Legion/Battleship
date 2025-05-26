@@ -1,4 +1,4 @@
-package com.example.battleship_game.profile
+package com.example.battleship_game.presentation.profile
 
 import android.os.Bundle
 import android.view.KeyEvent
@@ -7,11 +7,11 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
-import com.example.battleship_game.BaseActivity
+import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.R
 import com.example.battleship_game.databinding.ActivityEditNameBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
-import com.example.battleship_game.util.UserPreferences.nickname
+import com.example.battleship_game.common.UserPreferences.nickname
 
 class EditNameActivity : BaseActivity() {
 

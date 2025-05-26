@@ -1,4 +1,4 @@
-package com.example.battleship_game.util
+package com.example.battleship_game.common
 
 import android.content.Context
 import com.example.battleship_game.R

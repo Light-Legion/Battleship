@@ -1,4 +1,4 @@
-package com.example.battleship_game
+package com.example.battleship_game.common
 
 import android.os.Build
 import android.os.Bundle

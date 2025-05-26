@@ -1,14 +1,14 @@
-package com.example.battleship_game.main
+package com.example.battleship_game.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.addCallback
-import com.example.battleship_game.BaseActivity
+import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.R
 import com.example.battleship_game.databinding.ActivityMainBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
-import com.example.battleship_game.help.HelpActivity
-import com.example.battleship_game.profile.ProfileActivity
+import com.example.battleship_game.presentation.help.HelpActivity
+import com.example.battleship_game.presentation.profile.ProfileActivity
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : BaseActivity() {
