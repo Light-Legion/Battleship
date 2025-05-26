@@ -1,4 +1,4 @@
-package com.example.battleship_game.help
+package com.example.battleship_game.presentation.help
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
@@ -10,7 +10,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
-import com.example.battleship_game.BaseActivity
+import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.R
 import com.example.battleship_game.databinding.ActivityHelpBinding
 import com.google.android.material.snackbar.Snackbar

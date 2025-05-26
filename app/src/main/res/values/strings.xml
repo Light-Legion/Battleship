@@ -13,6 +13,12 @@
     <string name="change_avatar">Изменить аватар</string>
     <string name="save">Сохранить</string>
 
+    <!-- Названия для таблиц -->
+    <string name="db_name">Имя</string>
+    <string name="db_result">Результат</string>
+    <string name="db_level">Уровень сложности</string>
+    <string name="db_date">Дата</string>
+
     <!-- Названия для текстовых ресурсов -->
     <string name="txt_help_title">Сведения о разработчиках</string>
     <string name="txt_help_text">

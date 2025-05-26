@@ -1,4 +1,4 @@
-package com.example.battleship_game.profile
+package com.example.battleship_game.presentation.profile
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

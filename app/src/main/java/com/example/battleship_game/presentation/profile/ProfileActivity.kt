@@ -1,13 +1,13 @@
-package com.example.battleship_game.profile
+package com.example.battleship_game.presentation.profile
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.addCallback
-import com.example.battleship_game.BaseActivity
+import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.R
 import com.example.battleship_game.databinding.ActivityProfileBinding
-import com.example.battleship_game.util.UserPreferences.avatarRes
-import com.example.battleship_game.util.UserPreferences.nickname
+import com.example.battleship_game.common.UserPreferences.avatarRes
+import com.example.battleship_game.common.UserPreferences.nickname
 import com.google.android.material.snackbar.Snackbar
 
 class ProfileActivity : BaseActivity() {

@@ -1,0 +1,26 @@
+package com.example.battleship_game.data.dao
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.example.battleship_game.data.entity.GameProgress
+import kotlinx.coroutines.flow.Flow
+
+/**
+ * DAO для таблицы `game_progress`.
+ */
+@Dao
+interface GameProgressDao {
+    /**
+     * Вставить новую запись. Если дубликат по PK — игнорируем.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(progress: GameProgress)
+
+    /**
+     * Вернуть все записи, сортируя по убыванию ID (последние сверху).
+     */
+    @Query("SELECT * FROM game_progress ORDER BY game_id DESC")
+    fun getAll(): Flow<List<GameProgress>>
+}

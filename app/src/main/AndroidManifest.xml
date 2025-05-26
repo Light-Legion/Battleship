@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".BattleshipApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,17 +14,22 @@
         android:theme="@style/Theme.Battleshipgame"
         tools:targetApi="31">
         <activity
-            android:name=".profile.SelectAvatarActivity"
+            android:name=".presentation.stats.StatsActivity"
             android:exported="false"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.Battleshipgame" />
         <activity
-            android:name=".profile.EditNameActivity"
+            android:name=".presentation.profile.SelectAvatarActivity"
+            android:exported="false"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.Battleshipgame" />
+        <activity
+            android:name=".presentation.profile.EditNameActivity"
             android:exported="false"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.Battleshipgame" />
         <activity
-            android:name=".profile.ProfileActivity"
+            android:name=".presentation.profile.ProfileActivity"
             android:exported="false"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.Battleshipgame" />
@@ -39,19 +45,19 @@
         </provider>
 
         <activity
-            android:name=".help.HelpActivity"
+            android:name=".presentation.help.HelpActivity"
             android:exported="false"
             android:hardwareAccelerated="true"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.Battleshipgame" />
         <activity
-            android:name=".main.MainActivity"
+            android:name=".presentation.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.Battleshipgame" />
         <activity
-            android:name=".splash.SplashActivity"
+            android:name=".presentation.splash.SplashActivity"
             android:exported="true"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.Battleshipgame">
