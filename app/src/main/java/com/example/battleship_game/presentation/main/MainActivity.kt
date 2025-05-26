@@ -9,6 +9,7 @@ import com.example.battleship_game.databinding.ActivityMainBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
 import com.example.battleship_game.presentation.help.HelpActivity
 import com.example.battleship_game.presentation.profile.ProfileActivity
+import com.example.battleship_game.presentation.setup.GameSetupActivity
 import com.example.battleship_game.presentation.stats.StatsActivity
 import com.google.android.material.snackbar.Snackbar
 
@@ -40,20 +41,16 @@ class MainActivity : BaseActivity() {
     private fun setupListeners() {
         binding.apply {
             btnPlay.setOnClickListener {
-                //startActivity(Intent(this, GameSetupActivity::class.java))
-                Snackbar.make(main, "Переход по кнопке играть", Snackbar.LENGTH_SHORT).show()
+                startActivity(Intent(this@MainActivity, GameSetupActivity::class.java))
             }
             btnProfile.setOnClickListener {
                 startActivity(Intent(this@MainActivity, ProfileActivity::class.java))
-                Snackbar.make(main, "Переход по кнопке профиль", Snackbar.LENGTH_SHORT).show()
             }
             btnStats.setOnClickListener {
                 startActivity(Intent(this@MainActivity, StatsActivity::class.java))
-                Snackbar.make(main, "Переход по кнопке статистика", Snackbar.LENGTH_SHORT).show()
             }
             btnHelp.setOnClickListener {
                 startActivity(Intent(this@MainActivity, HelpActivity::class.java))
-                Snackbar.make(main, "Переход по кнопке справка", Snackbar.LENGTH_SHORT).show()
             }
         }
     }
