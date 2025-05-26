@@ -15,6 +15,7 @@
         android:src="@drawable/ic_launcher_foreground"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/about_system"
+        android:tooltipText="@string/about_system"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -85,7 +86,8 @@
             android:layout_margin="8dp"
             android:src="@drawable/ic_launcher_foreground"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/refresh"/>
+            android:contentDescription="@string/refresh"
+            android:tooltipText="@string/refresh"/>
     </FrameLayout>
 
     <!-- Кнопка «Назад» -->
@@ -96,6 +98,7 @@
         android:src="@drawable/ic_launcher_foreground"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/back"
+        android:tooltipText="@string/back"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
