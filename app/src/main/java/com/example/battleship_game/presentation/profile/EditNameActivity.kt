@@ -88,7 +88,7 @@ class EditNameActivity : BaseActivity() {
         clearFocusKeyboard()
         if (!valid) {
             binding.tvError.apply {
-                text = getString(R.string.hint_name)
+                text = getString(R.string.hint_username)
                 visibility = View.VISIBLE
             }
             showExitConfirmDialog()
@@ -103,7 +103,7 @@ class EditNameActivity : BaseActivity() {
         CustomAlertDialog(this)
             .setIcon(R.drawable.ic_launcher_foreground)
             .setTitle(R.string.error_name_title)
-            .setMessage(R.string.error_name_message)
+            .setMessage(R.string.error_username_message)
             .setPositiveButtonText(R.string.action_ok)
             .show()
     }
