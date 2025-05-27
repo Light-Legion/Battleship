@@ -11,9 +11,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.data.db.AppDatabase
-import com.example.battleship_game.data.entity.Difficulty
+import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.data.entity.GameHistory
-import com.example.battleship_game.data.entity.GameResult
+import com.example.battleship_game.data.model.GameResult
 import com.example.battleship_game.databinding.ActivitySplashBinding
 import com.example.battleship_game.presentation.main.MainActivity
 import kotlinx.coroutines.Dispatchers

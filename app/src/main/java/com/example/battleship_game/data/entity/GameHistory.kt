@@ -3,36 +3,8 @@ package com.example.battleship_game.data.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-
-/**
- * Результат игры: ПОБЕДА или ПОРАЖЕНИЕ.
- */
-enum class GameResult {
-    WIN, LOSS;
-
-    /** Отображаемое русское название */
-    fun toDisplayString(): String =
-        when(this) {
-            WIN  -> "Победа"
-            LOSS -> "Поражение"
-        }
-}
-
-/**
- * Уровень сложности: ЛЕГКИЙ, СРЕДНИЙ, СЛОЖНЫЙ.
- */
-enum class Difficulty {
-    EASY, MEDIUM, HARD;
-
-    /** Отображаемое русское название */
-    fun toDisplayString(): String =
-        when(this) {
-            EASY   -> "Легкий"
-            MEDIUM -> "Средний"
-            HARD   -> "Сложный"
-        }
-}
-
+import com.example.battleship_game.data.model.Difficulty
+import com.example.battleship_game.data.model.GameResult
 
 /**
  * Сущность для таблицы `game_progress`.

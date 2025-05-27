@@ -110,7 +110,6 @@ class HelpActivity : BaseActivity() {
 
             webViewContainer.isVisible = showWeb
             if (showWeb) {
-                webViewHelp.settings.javaScriptEnabled = false
                 webViewHelp.loadUrl("file:///android_asset/help/help.html")
             }
         }
