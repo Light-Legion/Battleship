@@ -5,39 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Краткое руководство пользователя</title>
     <style>
-        html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             margin: 0;
-            padding-top: 70px;
-            padding-bottom: 100px;
+            padding: 90px 20px 100px;
             background: linear-gradient(135deg, #eef3f8 0%, #dbe6f0 100%);
             color: #222;
         }
         nav#toc {
             position: fixed;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 45px;
             background: #001f3f;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 14px;
-            padding: 14px 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            padding: 0 90px;
+        }
+        .nav-container {
+            width: 400%;
+            max-width: none;
+            margin: 0 auto;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #00bfff #001f3f;
+        }
+        .nav-container::-webkit-scrollbar {
+            height: 0px;
+        }
+        .nav-container::-webkit-scrollbar-track {
+            background: #001f3f;
+        }
+        .nav-links {
+            display: inline-flex;
+            gap: 15px;
+            padding: 0 15px;
+            height: 35px;
+            align-items: center;
         }
         nav#toc a {
             color: #fff;
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.95rem;
-            transition: color 0.2s, transform 0.2s;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            padding: 8px 12px;
+            border-radius: 0px;
+            transition: all 0.2s ease;
+            background: none;
         }
         nav#toc a:hover {
-            color: #00bfff;
-            transform: scale(1.05);
+            background: rgba(0,191,255,0.3);
+            transform: translateY(-2px);
         }
         section {
             margin: 32px auto;
@@ -151,32 +177,40 @@
             transform: translateY(-2px);
         }
         #toTop {
+            transition: transform 0.3s ease;
             position: fixed;
             bottom: 24px; right: 24px;
             cursor: pointer;
             width: 56px; height: auto;
             z-index: 1000;
         }
+        #toTop:hover {
+            transform: scale(1.1);
+        }
         #toTop img {
             width: 100%; height: auto;
         }
     </style>
 </head>
-<body>
+<body id="top">
 <h1 style="text-align:center; color: #001f3f; margin: 20px auto; font-size: 2.2rem;">Мобильное приложение «игра «Морской бой»</h1>
 <nav id="toc">
-    <a href="#overview">Обзор</a>
-    <a href="#launch">Запуск</a>
-    <a href="#profile">Профиль</a>
-    <a href="#stats">Статистика</a>
-    <a href="#help">Справка</a>
-    <a href="#prep">Подготовка к бою</a>
-    <a href="#manual">Ручная расстановка</a>
-    <a href="#auto">Автоматическая расстановка</a>
-    <a href="#load">Загрузка шаблона</a>
-    <a href="#gameplay">Бой</a>
-    <a href="#rules">Правила</a>
-    <a href="#end">Завершение</a>
+    <div class="nav-container">
+        <div class="nav-links">
+            <a href="#overview">Обзор</a>
+            <a href="#launch">Запуск приложения</a>
+            <a href="#profile">Профиль</a>
+            <a href="#stats">Статистика</a>
+            <a href="#help">Справка</a>
+            <a href="#prep">Настройка игры</a>
+            <a href="#manual">Ручная расстановка</a>
+            <a href="#auto">Автоматическая расстановка</a>
+            <a href="#load">Загрузка расстановки</a>
+            <a href="#gameplay">Бой</a>
+            <a href="#rules">Правила</a>
+            <a href="#end">Завершение</a>
+        </div>
+    </div>
 </nav>
 
 <section id="overview">
@@ -209,7 +243,7 @@
     <p>Введите имя пользователя и нажмите «Сохранить», чтобы применить изменения.</p>
     <img src="img_screen_edit_name.png" alt="Изменение имени">
     <div class="back-note">
-        <a href="#overview"><img src="img_btn_back.png" alt="Назад" width="24"></a>
+        <a href="#launch"><img src="img_btn_back.png" alt="Назад" width="24"></a>
         <span>Для перехода на предыдущий экран нажмите на кнопку</span>
     </div>
 </section>
@@ -226,7 +260,7 @@
     </ul>
     <img src="img_screen_stats.png" alt="Экран Статистика">
     <div class="back-note">
-        <a href="#overview"><img src="img_btn_back.png" alt="Назад" width="24"></a>
+        <a href="#launch"><img src="img_btn_back.png" alt="Назад" width="24"></a>
         <span>Для перехода на предыдущий экран нажмите на кнопку</span>
     </div>
 </section>
@@ -236,14 +270,14 @@
     <p>На экране «Справка» размещены сведения о разработчиках и кнопка «О системе».</p>
     <img src="img_screen_help.png" alt="Экран Справка">
     <div class="back-note">
-        <a href="#overview"><img src="img_btn_back.png" alt="Назад" width="24"></a>
+        <a href="#launch"><img src="img_btn_back.png" alt="Назад" width="24"></a>
         <span>Для перехода на предыдущий экран нажмите на кнопку</span>
     </div>
 </section>
 
 <section id="prep">
-    <h2>Подготовка к бою</h2>
-    <p>На экране «Подготовка к бою» доступны два раскрывающихся списка и кнопка «Далее».</p>
+    <h2>Настройка игры</h2>
+    <p>На экране «Настройка игры» доступны два раскрывающихся списка и кнопка «Далее».</p>
     <p>Нажмите на раскрывающийся список «Уровень сложности» и выберите один уровень сложности из трех представленных:</p>
     <ul>
         <li>Лёгкий;</li>
@@ -259,7 +293,7 @@
     <img src="img_screen_preparation.png" alt="Подготовка к бою">
     <p>Настройки игры устанавливаются по умолчанию, если пользователь не осуществил выбор параметров.</p>
     <div class="back-note">
-        <a href="#overview"><img src="img_btn_back.png" alt="Назад" width="24"></a>
+        <a href="#launch"><img src="img_btn_back.png" alt="Назад" width="24"></a>
         <span>Для перехода на предыдущий экран нажмите на кнопку</span>
     </div>
 </section>
@@ -399,7 +433,6 @@
             <li><strong>Попадание</strong> (○) — клетка помечается кружком. Право хода сохраняется.</li>
             <li><strong>Уничтожение корабля</strong> (■) — все палубы корабля закрашиваются. Автоматически отмечаются смежные клетки как промахи.</li>
         </ol>
-
         <h3>Завершение игры</h3>
         <p>Победа присуждается игроку, первым уничтожившему все 10 кораблей противника.</p>
     </div>
@@ -414,14 +447,12 @@
     <p>После окончания боя отображается <strong>экран результатов</strong> с доступными действиями:</p>
 
     <div class="result-buttons">
-        <a href="#overview" class="game-button">Главное меню</a>
-        <a href="#prep" class="game-button">Сыграть снова</a>
+        <a href="#launch" class="game-button">Главное меню</a>
+        <a href="#gameplay" class="game-button">Сыграть снова</a>
     </div>
     <img src="img_screen_result.png" alt="Результат игры">
 </section>
-
-
-
-<a href="#overview" id="toTop" title="Вернуться наверх"><img src="img_btn_ship.png" alt="Наверх"></a>
+<a href="#top" id="toTop" title="Вернуться наверх"><img src="img_btn_ship.png" alt="Наверх"></a>
 </body>
+
 </html>
