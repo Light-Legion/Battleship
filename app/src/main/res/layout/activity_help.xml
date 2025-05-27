@@ -7,21 +7,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:background="@drawable/bg_help_screen"
     tools:context=".presentation.help.HelpActivity">
 
     <!-- Кнопка «О системе» -->
+
+    <!-- Заголовок -->
+
     <ImageButton
         android:id="@+id/btnSystemInfo"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/ic_launcher_foreground"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/about_system"
+        android:src="@drawable/ic_btn_system"
         android:tooltipText="@string/about_system"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Заголовок -->
     <TextView
         android:id="@+id/tvHelpTitle"
         android:layout_width="wrap_content"
@@ -57,6 +60,18 @@
     </ScrollView>
 
     <!-- Контейнер WebView -->
+
+    <TextView
+        android:id="@+id/textSystemBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/about_system"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSystemInfo" />
+
     <FrameLayout
         android:id="@+id/webViewContainer"
         android:layout_width="0dp"
@@ -85,24 +100,25 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="top|end"
-            android:layout_margin="8dp"
-            android:src="@drawable/ic_launcher_foreground"
+            android:src="@drawable/ic_btn_refresh"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/refresh"
             android:tooltipText="@string/refresh"/>
     </FrameLayout>
 
     <!-- Кнопка «Назад» -->
+
     <ImageButton
         android:id="@+id/btnBack"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/ic_launcher_foreground"
+        android:layout_marginTop="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/back"
+        android:src="@drawable/ic_btn_back"
         android:tooltipText="@string/back"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
