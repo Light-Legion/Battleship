@@ -20,15 +20,14 @@ interface GameFieldDao {
     suspend fun insert(field: GameField)
 
     /**
-     * Возвращает все сохранённые расстановки, отсортированные по убыванию ID.
-     */
-    @Query("SELECT * FROM game_field ORDER BY field_id DESC")
-    fun getAll(): Flow<List<GameField>>
-
-    /**
      * Получить конкретную расстановку по ID.
      */
     @Query("SELECT * FROM game_field WHERE field_id = :id LIMIT 1")
     suspend fun getById(id: Long): GameField?
 
+    /**
+     * Возвращает все сохранённые расстановки, отсортированные по убыванию ID.
+     */
+    @Query("SELECT * FROM game_field ORDER BY field_id DESC")
+    fun getAll(): Flow<List<GameField>>
 }
