@@ -46,7 +46,7 @@ class StatsActivity : BaseActivity() {
         // RecyclerView
         binding.rvStats.apply {
             layoutManager = LinearLayoutManager(this@StatsActivity)
-            adapter = GameProgressAdapter(emptyList())
+            adapter = GameHistoryAdapter(emptyList())
         }
     }
 
@@ -56,7 +56,7 @@ class StatsActivity : BaseActivity() {
      * чтобы сборка происходила только когда Activity в STARTED.
      */
     private fun observeStats() {
-        val adapter = (binding.rvStats.adapter as GameProgressAdapter)
+        val adapter = (binding.rvStats.adapter as GameHistoryAdapter)
 
         lifecycleScope.launch {
             // Повторяем сбор, когда статус ≥ STARTED

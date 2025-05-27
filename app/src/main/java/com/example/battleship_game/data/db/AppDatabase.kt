@@ -5,25 +5,25 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.battleship_game.data.converters.Converters
-import com.example.battleship_game.data.converters.FieldConverters
-import com.example.battleship_game.data.dao.GameFieldDao
-import com.example.battleship_game.data.dao.GameProgressDao
-import com.example.battleship_game.data.entity.GameField
-import com.example.battleship_game.data.entity.GameProgress
+import com.example.battleship_game.data.converters.EnumConverters
+import com.example.battleship_game.data.converters.PlacementConverters
+import com.example.battleship_game.data.dao.GamePlacementDao
+import com.example.battleship_game.data.dao.GameHistoryDao
+import com.example.battleship_game.data.entity.GamePlacement
+import com.example.battleship_game.data.entity.GameHistory
 
 /**
  * Основной класс базы данных Room.
  */
 @Database(
-    entities = [GameProgress::class, GameField::class],
+    entities = [GameHistory::class, GamePlacement::class],
     version = 2,
     exportSchema = true
 )
-@TypeConverters(Converters::class, FieldConverters::class)
+@TypeConverters(EnumConverters::class, PlacementConverters::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun gameProgressDao(): GameProgressDao
-    abstract fun gameFieldDao(): GameFieldDao
+    abstract fun gameHistoryDao(): GameHistoryDao
+    abstract fun gamePlacementDao(): GamePlacementDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null

@@ -1,6 +1,5 @@
 package com.example.battleship_game.presentation.placement
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.addCallback
 import androidx.activity.viewModels
@@ -8,7 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
-import com.example.battleship_game.databinding.ActivityLoadSavedFieldBinding
+import com.example.battleship_game.databinding.ActivityLoadSavedPlacementBinding
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -16,16 +15,16 @@ import com.google.android.material.snackbar.Snackbar
  * Экран загрузки сохранённой расстановки.
  * Пользователь выбирает одну из сохранённых и нажимает «Загрузить».
  */
-class LoadSavedFieldActivity : BaseActivity() {
+class LoadSavedPlacementActivity : BaseActivity() {
 
-    private lateinit var binding: ActivityLoadSavedFieldBinding
-    private val vm: LoadSavedFieldViewModel by viewModels()
-    private var selectedFieldId: Long? = null
+    private lateinit var binding: ActivityLoadSavedPlacementBinding
+    private val vm: LoadSavedPlacementViewModel by viewModels()
+    private var selectedId: Long? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityLoadSavedFieldBinding.inflate(layoutInflater)
+        binding = ActivityLoadSavedPlacementBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         applyEdgeInsets(binding.main)
@@ -52,25 +51,24 @@ class LoadSavedFieldActivity : BaseActivity() {
             }
 
             // 1) Настроим RecyclerView и адаптер
-            val adapter = SavedFieldAdapter(emptyList()) { field ->
-                // коллбек — сохраняем выбранный ID
-                selectedFieldId = field.fieldId
+            val adapter = SavedPlacementAdapter(emptyList()) {
+                selectedId = it.placementId
             }
             rvSavedFields.apply {
-                layoutManager = LinearLayoutManager(this@LoadSavedFieldActivity)
+                layoutManager = LinearLayoutManager(this@LoadSavedPlacementActivity)
                 this.adapter = adapter
             }
 
             // 2) Сбор списка из ViewModel
             lifecycleScope.launchWhenStarted {
-                vm.fields.collect { list ->
+                vm.placements.collect { list ->
                     adapter.submitList(list)
                 }
             }
 
             // 3) Обработчик кнопки «Загрузить»
             btnLoad.setOnClickListener {
-                selectedFieldId?.let { id ->
+                selectedId?.let { id ->
                     // Передаём ID в ManualPlacementActivity
                     /*startActivity(
                     Intent(this, ManualPlacementActivity::class.java)

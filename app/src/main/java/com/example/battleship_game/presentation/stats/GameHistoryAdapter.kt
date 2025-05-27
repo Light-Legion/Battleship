@@ -4,23 +4,25 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.battleship_game.data.entity.GameProgress
+import com.example.battleship_game.data.entity.GameHistory
 import com.example.battleship_game.databinding.ItemGameProgressBinding
 
 /**
  * Адаптер для RecyclerView статистики.
  */
-class GameProgressAdapter(
-    private var items: List<GameProgress>
-) : RecyclerView.Adapter<GameProgressAdapter.ViewHolder>() {
+class GameHistoryAdapter(
+    private var items: List<GameHistory>
+) : RecyclerView.Adapter<GameHistoryAdapter.ViewHolder>() {
 
-    inner class ViewHolder(private val vb: ItemGameProgressBinding)
-        : RecyclerView.ViewHolder(vb.root) {
-        fun bind(item: GameProgress) {
-            vb.tvName.text   = item.name
-            vb.tvResult.text = item.result.toDisplayString()
-            vb.tvLevel.text  = item.level.toDisplayString()
-            vb.tvDate.text   = item.date
+    inner class ViewHolder(private val binding: ItemGameProgressBinding)
+        : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: GameHistory) {
+            binding.apply {
+                tvName.text = item.name
+                tvResult.text = item.result.toDisplayString()
+                tvLevel.text = item.level.toDisplayString()
+                tvDate.text = item.date
+            }
         }
     }
 
@@ -37,7 +39,7 @@ class GameProgressAdapter(
      * Обновить список (например, при приходе данных из ViewModel).
      */
     @SuppressLint("NotifyDataSetChanged")
-    fun submitList(newItems: List<GameProgress>) {
+    fun submitList(newItems: List<GameHistory>) {
         items = newItems
         notifyDataSetChanged()
     }

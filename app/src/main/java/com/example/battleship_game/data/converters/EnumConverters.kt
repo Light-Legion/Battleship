@@ -7,7 +7,7 @@ import com.example.battleship_game.data.entity.GameResult
 /**
  * Конвертеры enum ↔ String для Room.
  */
-class Converters {
+class EnumConverters {
     @TypeConverter
     fun fromDifficulty(level: Difficulty): String = level.name
 

@@ -14,7 +14,7 @@
         android:theme="@style/Theme.Battleshipgame"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.placement.LoadSavedFieldActivity"
+            android:name=".presentation.placement.LoadSavedPlacementActivity"
             android:exported="false"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.Battleshipgame" />

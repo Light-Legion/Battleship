@@ -8,7 +8,7 @@ import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.common.UserPreferences.battleDifficulty
 import com.example.battleship_game.databinding.ActivityGameSetupBinding
-import com.example.battleship_game.presentation.placement.LoadSavedFieldActivity
+import com.example.battleship_game.presentation.placement.LoadSavedPlacementActivity
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -97,7 +97,7 @@ class GameSetupActivity : BaseActivity() {
                             "Переход в загрузку сохраненной расстановки",
                             Snackbar.LENGTH_SHORT
                         ).show()
-                        startActivity(Intent(this@GameSetupActivity, LoadSavedFieldActivity::class.java))
+                        startActivity(Intent(this@GameSetupActivity, LoadSavedPlacementActivity::class.java))
                     }
                     else -> Snackbar.make(main, "Переход по кнопке справка", Snackbar.LENGTH_SHORT).show()
                 }

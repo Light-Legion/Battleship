@@ -4,34 +4,34 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.battleship_game.data.entity.GameField
+import com.example.battleship_game.data.entity.GamePlacement
 import com.example.battleship_game.databinding.ItemSavedFieldBinding
 
 /**
  * Адаптер для списка сохранённых расстановок (`GameField`).
  *
  * @param items начальный список (обычно пустой, затем обновляется через submitList).
- * @param onSelect вызывается, когда пользователь кликает на элемент — передаёт выбранный [GameField].
+ * @param onSelect вызывается, когда пользователь кликает на элемент — передаёт выбранный [GamePlacement].
  */
-class SavedFieldAdapter(
-    private var items: List<GameField>,
-    private val onSelect: (GameField) -> Unit
-) : RecyclerView.Adapter<SavedFieldAdapter.ViewHolder>() {
+class SavedPlacementAdapter(
+    private var items: List<GamePlacement>,
+    private val onSelect: (GamePlacement) -> Unit
+) : RecyclerView.Adapter<SavedPlacementAdapter.ViewHolder>() {
 
     private var selectedPos = RecyclerView.NO_POSITION
 
     /**
      * Заполняет View данными и настраивает логику выделения.
      *
-     * @param field  модель расстановки
+     * @param item  модель расстановки
      * @param pos    её позиция в списке
      */
     inner class ViewHolder(val binding: ItemSavedFieldBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(field: GameField, pos: Int) {
+        fun bind(item: GamePlacement, pos: Int) {
             binding.apply {
                 // Устанавливаем текст в колонки
-                tvName.text = field.name
-                tvDate.text = field.date
+                tvName.text = item.name
+                tvDate.text = item.date
 
                 // Подсветка выделенного элемента
                 root.isSelected = (pos == selectedPos)
@@ -44,7 +44,7 @@ class SavedFieldAdapter(
                     notifyItemChanged(oldPos)
                     notifyItemChanged(pos)
                     // Вызываем коллбек наружу
-                    onSelect(field)
+                    onSelect(item)
                 }
             }
         }
@@ -64,7 +64,7 @@ class SavedFieldAdapter(
      * @param newItems новый список из ViewModel
      */
     @SuppressLint("NotifyDataSetChanged")
-    fun submitList(newItems: List<GameField>) {
+    fun submitList(newItems: List<GamePlacement>) {
         items = newItems
         selectedPos = RecyclerView.NO_POSITION
         notifyDataSetChanged()

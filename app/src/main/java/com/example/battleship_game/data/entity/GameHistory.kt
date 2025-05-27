@@ -44,7 +44,7 @@ enum class Difficulty {
  * @property date      Дата-время в формате "дд.MM.yyyy HH:mm".
  */
 @Entity(tableName = "game_progress")
-data class GameProgress(
+data class GameHistory(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "game_id")
     val gameId: Long = 0,
