@@ -76,7 +76,7 @@ class SavePlacementActivity : BaseActivity() {
                 // trim + нормализовать пробелы
                 val name = raw.trim().replace(Regex("\\s+"), " ")
                 // разрешаем буквы, цифры, пробел, длина ≤20
-                val valid = Regex("^[\\p{L}\\d ]{1,20}$").matches(name) && name.length <= 20
+                val valid = Regex("^[\\p{L}\\d ]{1,20}$").matches(name)
                 if (!valid) {
                     showExitConfirmDialog()
                     return@setOnClickListener
