@@ -88,7 +88,7 @@ class EditNameActivity : BaseActivity() {
         clearFocusKeyboard()
         if (!valid) {
             binding.tvError.apply {
-                text = getString(R.string.txt_hint_name)
+                text = getString(R.string.hint_name)
                 visibility = View.VISIBLE
             }
             showExitConfirmDialog()

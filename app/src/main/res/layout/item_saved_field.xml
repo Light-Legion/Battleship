@@ -3,13 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app   ="http://schemas.android.com/apk/res-auto"
     xmlns:tools ="http://schemas.android.com/tools"
-    android:id="@+id/cardGameProgress"
+    android:id="@+id/cardSavedField"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="4dp"
     android:minHeight="48dp"
-    android:clickable="false"
-    android:focusable="false"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
     app:cardCornerRadius="8dp"
     app:cardElevation="2dp"
     app:strokeColor="@color/black"
@@ -31,28 +32,9 @@
             tools:text="@string/db_name" />
 
         <TextView
-            android:id="@+id/tvResult"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAppearance="?attr/textAppearanceBody1"
-            android:textColor="?attr/colorOnSurface"
-            tools:text="@string/db_result" />
-
-        <TextView
-            android:id="@+id/tvLevel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAppearance="?attr/textAppearanceBody1"
-            android:textColor="?attr/colorOnSurface"
-            tools:text="@string/db_level" />
-
-        <TextView
             android:id="@+id/tvDate"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?attr/colorOnSurface"
             tools:text="@string/db_date" />
