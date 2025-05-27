@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.battleship_game.data.entity.GameHistory
-import com.example.battleship_game.databinding.ItemGameProgressBinding
+import com.example.battleship_game.databinding.ItemGameHistoryBinding
 
 /**
  * Адаптер для RecyclerView статистики.
@@ -14,7 +14,7 @@ class GameHistoryAdapter(
     private var items: List<GameHistory>
 ) : RecyclerView.Adapter<GameHistoryAdapter.ViewHolder>() {
 
-    inner class ViewHolder(private val binding: ItemGameProgressBinding)
+    inner class ViewHolder(private val binding: ItemGameHistoryBinding)
         : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: GameHistory) {
             binding.apply {
@@ -27,7 +27,7 @@ class GameHistoryAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder(ItemGameProgressBinding.inflate(
+        ViewHolder(ItemGameHistoryBinding.inflate(
             LayoutInflater.from(parent.context), parent, false))
 
     override fun getItemCount(): Int = items.size

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.battleship_game.data.entity.GamePlacement
-import com.example.battleship_game.databinding.ItemSavedFieldBinding
+import com.example.battleship_game.databinding.ItemSavedPlacementBinding
 
 /**
  * Адаптер для списка сохранённых расстановок (`GameField`).
@@ -26,7 +26,7 @@ class SavedPlacementAdapter(
      * @param item  модель расстановки
      * @param pos    её позиция в списке
      */
-    inner class ViewHolder(val binding: ItemSavedFieldBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(val binding: ItemSavedPlacementBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: GamePlacement, pos: Int) {
             binding.apply {
                 // Устанавливаем текст в колонки
@@ -51,7 +51,7 @@ class SavedPlacementAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ViewHolder(ItemSavedFieldBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        ViewHolder(ItemSavedPlacementBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun getItemCount() = items.size
 
