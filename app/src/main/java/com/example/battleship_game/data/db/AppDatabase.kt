@@ -6,6 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.battleship_game.data.converters.Converters
+import com.example.battleship_game.data.converters.FieldConverters
+import com.example.battleship_game.data.dao.GameFieldDao
 import com.example.battleship_game.data.dao.GameProgressDao
 import com.example.battleship_game.data.entity.GameProgress
 
@@ -14,12 +16,13 @@ import com.example.battleship_game.data.entity.GameProgress
  */
 @Database(
     entities = [GameProgress::class],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
-@TypeConverters(Converters::class)
+@TypeConverters(Converters::class, FieldConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun gameProgressDao(): GameProgressDao
+    abstract fun gameFieldDao(): GameFieldDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
