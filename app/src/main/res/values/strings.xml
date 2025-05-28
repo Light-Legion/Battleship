@@ -42,7 +42,6 @@
     </string>
     <string name="txt_error_loading">Ошибка загрузки, попробуйте снова!</string>
     <string name="txt_retry">Повторить попытку!</string>
-    <string name="txt_open_help">Открытие информации о системе</string>
     <string name="txt_avatar">Аватар</string>
     <string name="txt_username">Имя пользователя</string>
     <string name="txt_enter_name">Введите имя пользователя:</string>
@@ -60,6 +59,8 @@
     <string name="hint_username">Имя может содержать только буквы и пробелы между словами!</string>
     <string name="hint_select_setup">Пожалуйста, выберите расстановку…</string>
     <string name="hint_placement_name">Название расстановки может содержать только буквы, цифры и пробелы между словами!</string>
+    <string name="hint_exit_impossible">Выход из данного процесса невозможен!</string>
+    <string name="hint_open_help">Открытие информации о системе</string>
 
     <!-- Названия для модальных окон (диалогов) -->
     <string name="exit_title">Выход из приложения</string>
