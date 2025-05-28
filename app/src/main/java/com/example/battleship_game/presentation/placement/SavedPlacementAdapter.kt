@@ -34,14 +34,16 @@ class SavedPlacementAdapter(
                 tvDate.text = item.date
 
                 // Подсветка выделенного элемента
-                root.isSelected = (pos == selectedPos)
+                cardSavedField.isSelected = position == selectedPos
 
                 // Обработчик клика по строке
-                root.setOnClickListener {
+                cardSavedField.setOnClickListener {
                     val oldPos = selectedPos
                     selectedPos = pos
                     // Обновляем старую и новую позиции, чтобы отрисовать селекцию
-                    notifyItemChanged(oldPos)
+                    if (oldPos != RecyclerView.NO_POSITION) {
+                        notifyItemChanged(oldPos)
+                    }
                     notifyItemChanged(pos)
                     // Вызываем коллбек наружу
                     onSelect(item)

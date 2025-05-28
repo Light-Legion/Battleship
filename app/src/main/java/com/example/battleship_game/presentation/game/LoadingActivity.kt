@@ -1,20 +1,13 @@
 package com.example.battleship_game.presentation.game
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.addCallback
-import androidx.lifecycle.lifecycleScope
 import com.example.battleship_game.R
-import com.example.battleship_game.ai.AiPlacementGenerator
 import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.common.UserPreferences.battleDifficulty
 import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.databinding.ActivityLoadingBinding
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * Загрузочный экран:
@@ -59,7 +52,7 @@ class LoadingActivity : BaseActivity() {
 
         val diff = battleDifficulty
 
-        lifecycleScope.launch {
+        /*lifecycleScope.launch {
             val aiShips = withContext(Dispatchers.Default) {
                 when (diff) {
 
@@ -74,6 +67,6 @@ class LoadingActivity : BaseActivity() {
                 putParcelableArrayListExtra(EXTRA_COMPUTER_SHIPS, ArrayList(aiShips))
             })
             finish()
-        }
+        }*/
     }
 }

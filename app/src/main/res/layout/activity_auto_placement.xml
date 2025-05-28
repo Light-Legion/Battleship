@@ -5,12 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:context=".presentation.placement.AutoPlacementActivity">
 
     <ImageButton
         android:id="@+id/btnBack"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_margin="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/back"
         android:src="@drawable/ic_btn_back"
@@ -35,8 +37,9 @@
 
     <com.example.battleship_game.ui.AutoPlacementFieldView
         android:id="@+id/bfv"
-        android:layout_width="320dp"
-        android:layout_height="320dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_margin="24dp"
         android:tooltipText="@string/game_field"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="88dp"
-        android:layout_marginEnd="36dp"
+        android:layout_marginEnd="32dp"
         android:text="@string/txt_select_placement_strategy"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -59,7 +62,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="32dp"
         android:layout_weight="1"
         android:hint="@string/txt_select_placement_strategy"
         app:layout_constraintEnd_toEndOf="parent"
@@ -76,12 +79,22 @@
         android:id="@+id/btnUpdate"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="200dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/refresh"
         android:src="@drawable/ic_btn_refresh"
         android:tooltipText="@string/refresh"
+        app:layout_constraintEnd_toStartOf="@+id/tvRefresh"
+        app:layout_constraintTop_toBottomOf="@+id/tilStrategy" />
+
+    <TextView
+        android:id="@+id/tvRefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/txt_update_placement"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tilStrategy" />
 
@@ -92,20 +105,21 @@
         android:layout_marginStart="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/save"
+        android:enabled="false"
         android:src="@drawable/ic_btn_save"
         android:tooltipText="@string/save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/bfv"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.178" />
+        app:layout_constraintVertical_bias="0.214" />
 
     <Button
-        android:id="@+id/buttonToBattle"
+        android:id="@+id/btnToBattle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_marginEnd="36dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
         android:enabled="false"
         android:text="@string/to_battle"
         android:tooltipText="@string/to_battle"

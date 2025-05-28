@@ -41,7 +41,7 @@ class EditNameActivity : BaseActivity() {
                 finish()
             }
 
-            etName.setText(nickname)
+            etName.hint = nickname
 
             // Обработчик кнопки «Готово» на клавиатуре:
             etName.setOnEditorActionListener { _, actionId, _ ->
