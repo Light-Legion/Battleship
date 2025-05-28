@@ -13,4 +13,11 @@
         <item>Автоматический</item>
         <item>Загрузка сохранённой расстановки</item>
     </string-array>
+
+    <!-- Стратегии -->
+    <string-array name="strategies">
+        <item>Половина поля</item>
+        <item>Берега</item>
+        <item>Диагональное расположение</item>
+    </string-array>
 </resources>

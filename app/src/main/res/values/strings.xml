@@ -17,7 +17,7 @@
     <string name="next">Далее</string>
     <string name="load">Загрузить</string>
     <string name="clear_field">Очистить поле</string>
-    <string name="fight">В бой!</string>
+    <string name="to_battle">В бой!</string>
     <string name="game_field">Игровое поле</string>
     <string name="ship_templates">Шаблоны кораблей</string>
 
@@ -54,6 +54,9 @@
     <string name="txt_enter_placement_name">Введите название расстановки</string>
     <string name="txt_placement_name">Название расстановки</string>
     <string name="txt_manual_setup">Ручная расстановка</string>
+    <string name="txt_auto_setup">Автоматическая расстановка</string>
+    <string name="txt_select_placement_strategy">Выберите стратегию расстановки</string>
+    <string name="txt_update_placement">Обновить расстановку</string>
 
     <!-- Названия для подсказок -->
     <string name="hint_username">Имя может содержать только буквы и пробелы между словами!</string>
