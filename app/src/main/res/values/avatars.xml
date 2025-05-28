@@ -2,15 +2,15 @@
 <resources>
     <array name="avatar_drawables">
         <!-- перечисляем 10 ваших аватаров -->
-        <item>@drawable/ic_launcher_foreground</item>
-        <item>@drawable/ic_launcher_foreground</item>
-        <item>@drawable/ic_launcher_foreground</item>
-        <item>@drawable/ic_launcher_foreground</item>
-        <item>@drawable/ic_launcher_foreground</item>
-        <item>@drawable/ic_launcher_background</item>
-        <item>@drawable/ic_launcher_foreground</item>
-        <item>@drawable/ic_launcher_foreground</item>
-        <item>@drawable/ic_launcher_foreground</item>
-        <item>@drawable/ic_launcher_foreground</item>
+        <item>@drawable/avatar_male_1</item>
+        <item>@drawable/avatar_female_1</item>
+        <item>@drawable/avatar_male_2</item>
+        <item>@drawable/avatar_female_2</item>
+        <item>@drawable/avatar_male_3</item>
+        <item>@drawable/avatar_female_3</item>
+        <item>@drawable/avatar_male_4</item>
+        <item>@drawable/avatar_female_4</item>
+        <item>@drawable/avatar_male_5</item>
+        <item>@drawable/avatar_female_5</item>
     </array>
 </resources>

@@ -10,14 +10,11 @@
     android:background="@drawable/bg_help_screen"
     tools:context=".presentation.help.HelpActivity">
 
-    <!-- Кнопка «О системе» -->
-
-    <!-- Заголовок -->
-
     <ImageButton
         android:id="@+id/btnSystemInfo"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_margin="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/about_system"
         android:src="@drawable/ic_btn_system"
@@ -29,14 +26,13 @@
         android:id="@+id/tvHelpTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
         android:text="@string/txt_help_title"
         android:textAppearance="?attr/textAppearanceHeadline6"
-        app:layout_constraintTop_toBottomOf="@id/btnSystemInfo"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Прокручиваемый блок с основным текстом справки -->
     <ScrollView
         android:id="@+id/scrollHelp"
         android:layout_width="0dp"
@@ -59,13 +55,11 @@
             android:padding="8dp"/>
     </ScrollView>
 
-    <!-- Контейнер WebView -->
-
     <TextView
         android:id="@+id/textSystemBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_margin="8dp"
         android:text="@string/about_system"
         android:textColor="@android:color/black"
         android:textSize="12sp"
@@ -94,25 +88,24 @@
             android:layout_gravity="center"
             android:visibility="gone" />
 
-        <!-- Кнопка «Обновить» для перезагрузки страницы -->
         <ImageButton
             android:id="@+id/btnRefresh"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_margin="8dp"
             android:layout_gravity="top|end"
             android:src="@drawable/ic_btn_refresh"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/refresh"
-            android:tooltipText="@string/refresh"/>
+            android:tooltipText="@string/refresh"
+            app:tint="@android:color/white" />
     </FrameLayout>
-
-    <!-- Кнопка «Назад» -->
 
     <ImageButton
         android:id="@+id/btnBack"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="8dp"
+        android:layout_margin="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/back"
         android:src="@drawable/ic_btn_back"
