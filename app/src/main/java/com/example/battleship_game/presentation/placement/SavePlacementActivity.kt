@@ -1,47 +1,53 @@
-package com.example.battleship_game.presentation.profile
+package com.example.battleship_game.presentation.placement
 
 import android.os.Bundle
 import android.view.KeyEvent
-import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
-import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.R
-import com.example.battleship_game.databinding.ActivityEditNameBinding
+import com.example.battleship_game.common.BaseActivity
+import com.example.battleship_game.data.model.ShipPlacement
+import com.example.battleship_game.databinding.ActivitySavePlacementBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
-import com.example.battleship_game.common.UserPreferences.nickname
 
-class EditNameActivity : BaseActivity() {
 
-    private lateinit var binding: ActivityEditNameBinding
+/**
+ * Экран «Сохранить расстановку».
+ *
+ * Из Intent ожидаем ArrayList<ShipPlacement> по ключу EXTRA_SHIPS.
+ * После валидации имени — передаём всё в [SavePlacementViewModel].
+ */
+class SavePlacementActivity : BaseActivity() {
+
+    companion object {
+        const val EXTRA_SHIPS = "EXTRA_SHIPS"
+    }
+
+    private lateinit var binding: ActivitySavePlacementBinding
+    private val vm: SavePlacementViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityEditNameBinding.inflate(layoutInflater)
+        binding = ActivitySavePlacementBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // edge-to-edge + immersive
         applyEdgeInsets(binding.main)
         enterImmersiveMode()
 
-        setupListeners()
+        setupUI()
 
-        // Перехват системной кнопки «Назад»
         onBackPressedDispatcher.addCallback(this) {
             finish()
         }
     }
 
-    private fun setupListeners() {
+    private fun setupUI() {
         binding.apply {
-            btnBack.setOnClickListener {
-                finish()
-            }
-
-            etName.setText(nickname)
+            btnBack.setOnClickListener { finish() }
 
             // Обработчик кнопки «Готово» на клавиатуре:
             etName.setOnEditorActionListener { _, actionId, _ ->
@@ -66,7 +72,23 @@ class EditNameActivity : BaseActivity() {
             }
 
             btnSave.setOnClickListener {
-                validateName()
+                val raw = etName.text.toString()
+                // trim + нормализовать пробелы
+                val name = raw.trim().replace(Regex("\\s+"), " ")
+                // разрешаем буквы, цифры, пробел, длина ≤20
+                val valid = Regex("^[\\p{L}\\d ]{1,20}$").matches(name)
+                if (!valid) {
+                    showExitConfirmDialog()
+                    return@setOnClickListener
+                }
+                // достаём список ShipPlacement из Intent
+                val ships = intent
+                    .getParcelableArrayListExtra<ShipPlacement>(EXTRA_SHIPS)
+                    .orEmpty()
+
+                // сохраняем и закрываем
+                vm.save(name, ships)
+                finish()
             }
         }
     }
@@ -80,30 +102,11 @@ class EditNameActivity : BaseActivity() {
         imm?.hideSoftInputFromWindow(binding.etName.windowToken, 0)
     }
 
-    private fun validateName() {
-        val raw = binding.etName.text.toString()
-        val name = raw.trim().replace(Regex("\\s+"), " ")
-        val valid = Regex("^[А-Яа-яA-Za-z ]{1,20}$").matches(name)
-
-        clearFocusKeyboard()
-        if (!valid) {
-            binding.tvError.apply {
-                text = getString(R.string.hint_username)
-                visibility = View.VISIBLE
-            }
-            showExitConfirmDialog()
-        } else {
-            // сохраняем и закрываем
-            nickname = name
-            finish()
-        }
-    }
-
     private fun showExitConfirmDialog() {
         CustomAlertDialog(this)
             .setIcon(R.drawable.ic_launcher_foreground)
             .setTitle(R.string.error_name_title)
-            .setMessage(R.string.error_username_message)
+            .setMessage(R.string.error_placement_name_message)
             .setPositiveButtonText(R.string.action_ok)
             .show()
     }

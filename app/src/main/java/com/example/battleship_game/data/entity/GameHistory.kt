@@ -3,39 +3,11 @@ package com.example.battleship_game.data.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.battleship_game.data.model.Difficulty
+import com.example.battleship_game.data.model.GameResult
 
 /**
- * Результат игры: ПОБЕДА или ПОРАЖЕНИЕ.
- */
-enum class GameResult {
-    WIN, LOSS;
-
-    /** Отображаемое русское название */
-    fun toDisplayString(): String =
-        when(this) {
-            WIN  -> "Победа"
-            LOSS -> "Поражение"
-        }
-}
-
-/**
- * Уровень сложности: ЛЕГКИЙ, СРЕДНИЙ, СЛОЖНЫЙ.
- */
-enum class Difficulty {
-    EASY, MEDIUM, HARD;
-
-    /** Отображаемое русское название */
-    fun toDisplayString(): String =
-        when(this) {
-            EASY   -> "Легкий"
-            MEDIUM -> "Средний"
-            HARD   -> "Сложный"
-        }
-}
-
-
-/**
- * Сущность для таблицы `game_progress`.
+ * Сущность для таблицы `game_history`.
  *
  * @property gameId    Автоинкрементный первичный ключ.
  * @property name      Имя игрока (до 20 символов).
@@ -43,8 +15,8 @@ enum class Difficulty {
  * @property level     Уровень сложности (EASY/MEDIUM/HARD).
  * @property date      Дата-время в формате "дд.MM.yyyy HH:mm".
  */
-@Entity(tableName = "game_progress")
-data class GameProgress(
+@Entity(tableName = "game_history")
+data class GameHistory(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "game_id")
     val gameId: Long = 0,

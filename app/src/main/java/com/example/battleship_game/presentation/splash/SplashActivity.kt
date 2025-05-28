@@ -11,9 +11,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.data.db.AppDatabase
-import com.example.battleship_game.data.entity.Difficulty
-import com.example.battleship_game.data.entity.GameProgress
-import com.example.battleship_game.data.entity.GameResult
+import com.example.battleship_game.data.model.Difficulty
+import com.example.battleship_game.data.entity.GameHistory
+import com.example.battleship_game.data.model.GameResult
 import com.example.battleship_game.databinding.ActivitySplashBinding
 import com.example.battleship_game.presentation.main.MainActivity
 import kotlinx.coroutines.Dispatchers
@@ -46,23 +46,23 @@ class SplashActivity : BaseActivity() {
     private fun simulateLoading() {
         // 1. Добавим 5 тестовых записей
         lifecycleScope.launch(Dispatchers.IO) {
-            val dao = AppDatabase.getInstance(this@SplashActivity).gameProgressDao()
+            val dao = AppDatabase.getInstance(this@SplashActivity).gameHistoryDao()
             val now = LocalDateTime.now()
             val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
 
             val testData = listOf(
-                GameProgress(name = "Test", result = GameResult.WIN,  level = Difficulty.EASY,   date = now.format(formatter)),
-                GameProgress(name = "Test", result = GameResult.LOSS, level = Difficulty.MEDIUM, date = now.format(formatter)),
-                GameProgress(name = "Test", result = GameResult.WIN,  level = Difficulty.HARD,   date = now.format(formatter)),
-                GameProgress(name = "Test", result = GameResult.LOSS, level = Difficulty.EASY,   date = now.format(formatter)),
-                GameProgress(name = "Test", result = GameResult.WIN,  level = Difficulty.MEDIUM, date = now.format(formatter))
+                GameHistory(name = "Test", result = GameResult.WIN,  level = Difficulty.EASY,   date = now.format(formatter)),
+                GameHistory(name = "Test", result = GameResult.LOSS, level = Difficulty.MEDIUM, date = now.format(formatter)),
+                GameHistory(name = "Test", result = GameResult.WIN,  level = Difficulty.HARD,   date = now.format(formatter)),
+                GameHistory(name = "Test", result = GameResult.LOSS, level = Difficulty.EASY,   date = now.format(formatter)),
+                GameHistory(name = "Test", result = GameResult.WIN,  level = Difficulty.MEDIUM, date = now.format(formatter))
             )
 
             testData.forEach { dao.insert(it) }
         }
 
         val animator = ObjectAnimator.ofInt(binding.progress, "progress", 0, 100)
-        animator.duration = 1000L
+        animator.duration = 1000L //в миллисекундах, 1000L = 1 секунда
         animator.interpolator = LinearInterpolator() //равномерное заполнение
         animator.start()
         animator.doOnEnd { openMain() }

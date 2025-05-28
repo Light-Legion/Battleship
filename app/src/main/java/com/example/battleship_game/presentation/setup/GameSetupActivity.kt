@@ -1,5 +1,6 @@
 package com.example.battleship_game.presentation.setup
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import androidx.activity.addCallback
@@ -7,6 +8,8 @@ import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.common.UserPreferences.battleDifficulty
 import com.example.battleship_game.databinding.ActivityGameSetupBinding
+import com.example.battleship_game.presentation.placement.LoadSavedPlacementActivity
+import com.example.battleship_game.presentation.placement.ManualPlacementActivity
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -87,9 +90,20 @@ class GameSetupActivity : BaseActivity() {
                 startActivity(Intent(this@GameSetupActivity, nextCls))*/
 
                 when (index) {
-                    0 -> Snackbar.make(main, "Переход в ручную расстановку", Snackbar.LENGTH_SHORT).show();
+                    0 -> {
+                        Snackbar.make(main, "Переход в ручную расстановку", Snackbar.LENGTH_SHORT)
+                            .show();
+                        startActivity(Intent(this@GameSetupActivity, ManualPlacementActivity::class.java))
+                    }
                     1 -> Snackbar.make(main, "Переход в автоматическую расстановку", Snackbar.LENGTH_SHORT).show()
-                    2 -> Snackbar.make(main, "Переход в загрузку сохраненной расстановки", Snackbar.LENGTH_SHORT).show()
+                    2 -> {
+                        Snackbar.make(
+                            main,
+                            "Переход в загрузку сохраненной расстановки",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                        startActivity(Intent(this@GameSetupActivity, LoadSavedPlacementActivity::class.java))
+                    }
                     else -> Snackbar.make(main, "Переход по кнопке справка", Snackbar.LENGTH_SHORT).show()
                 }
             }

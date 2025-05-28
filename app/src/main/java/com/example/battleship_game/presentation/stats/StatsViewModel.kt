@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.battleship_game.data.db.AppDatabase
-import com.example.battleship_game.data.entity.GameProgress
+import com.example.battleship_game.data.entity.GameHistory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -15,9 +15,9 @@ import kotlinx.coroutines.flow.onEach
  * Загружает данные из DAO и публикует в StateFlow для UI.
  */
 class StatsViewModel(app: Application) : AndroidViewModel(app) {
-    private val dao = AppDatabase.getInstance(app).gameProgressDao()
-    private val _stats = MutableStateFlow<List<GameProgress>>(emptyList())
-    val stats: StateFlow<List<GameProgress>> = _stats
+    private val dao = AppDatabase.getInstance(app).gameHistoryDao()
+    private val _stats = MutableStateFlow<List<GameHistory>>(emptyList())
+    val stats: StateFlow<List<GameHistory>> = _stats
 
     init {
         // Подписываемся на поток всех записей из БД

@@ -5,21 +5,25 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.battleship_game.data.converters.Converters
-import com.example.battleship_game.data.dao.GameProgressDao
-import com.example.battleship_game.data.entity.GameProgress
+import com.example.battleship_game.data.converters.EnumConverters
+import com.example.battleship_game.data.converters.PlacementConverters
+import com.example.battleship_game.data.dao.GamePlacementDao
+import com.example.battleship_game.data.dao.GameHistoryDao
+import com.example.battleship_game.data.entity.GamePlacement
+import com.example.battleship_game.data.entity.GameHistory
 
 /**
  * Основной класс базы данных Room.
  */
 @Database(
-    entities = [GameProgress::class],
-    version = 1,
+    entities = [GameHistory::class, GamePlacement::class],
+    version = 2,
     exportSchema = true
 )
-@TypeConverters(Converters::class)
+@TypeConverters(EnumConverters::class, PlacementConverters::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun gameProgressDao(): GameProgressDao
+    abstract fun gameHistoryDao(): GameHistoryDao
+    abstract fun gamePlacementDao(): GamePlacementDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
@@ -34,7 +38,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "battleship.db"
                 )
-                    .fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigration(true)
                     .build()
                     .also { INSTANCE = it }
             }

@@ -1,13 +1,13 @@
 package com.example.battleship_game.data.converters
 
 import androidx.room.TypeConverter
-import com.example.battleship_game.data.entity.Difficulty
-import com.example.battleship_game.data.entity.GameResult
+import com.example.battleship_game.data.model.Difficulty
+import com.example.battleship_game.data.model.GameResult
 
 /**
  * Конвертеры enum ↔ String для Room.
  */
-class Converters {
+class EnumConverters {
     @TypeConverter
     fun fromDifficulty(level: Difficulty): String = level.name
 

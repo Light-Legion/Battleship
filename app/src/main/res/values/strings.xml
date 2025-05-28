@@ -1,6 +1,8 @@
 <resources>
     <!-- Названия для компонентов -->
     <string name="app_name">Морской бой</string>
+    <string name="player">Игрок</string>
+    <string name="level_medium">Средний</string>
     <string name="play">Играть</string>
     <string name="profile">Профиль</string>
     <string name="stats">Статистика</string>
@@ -13,14 +15,20 @@
     <string name="change_avatar">Изменить аватар</string>
     <string name="save">Сохранить</string>
     <string name="next">Далее</string>
+    <string name="load">Загрузить</string>
+    <string name="clear_field">Очистить поле</string>
+    <string name="fight">В бой!</string>
+    <string name="game_field">Игровое поле</string>
+    <string name="ship_templates">Шаблоны кораблей</string>
 
     <!-- Названия для таблиц -->
-    <string name="db_name">Имя</string>
+    <string name="db_username">Имя пользователя</string>
     <string name="db_result">Результат</string>
     <string name="db_level">Уровень сложности</string>
     <string name="db_date">Дата</string>
 
     <!-- Названия для текстовых ресурсов -->
+    <string name="txt_example">Пример текста</string>
     <string name="txt_help_title">Сведения о разработчиках</string>
     <string name="txt_help_text">
         Самарский университет\n
@@ -39,10 +47,19 @@
     <string name="txt_username">Имя пользователя</string>
     <string name="txt_enter_name">Введите имя пользователя:</string>
     <string name="txt_select_avatar">Выберите аватар:</string>
-    <string name="txt_hint_name">Имя может содержать только буквы и пробелы между словами!</string>
     <string name="txt_game_setup">Настройка игры</string>
     <string name="txt_difficulty">Уровень сложности</string>
     <string name="txt_placement">Способ расстановки</string>
+    <string name="txt_load_saved_setup">Загрузка сохраненной расстановки</string>
+    <string name="txt_select_setup">Выберите расстановку</string>
+    <string name="txt_enter_placement_name">Введите название расстановки</string>
+    <string name="txt_placement_name">Название расстановки</string>
+    <string name="txt_manual_setup">Ручная расстановка</string>
+
+    <!-- Названия для подсказок -->
+    <string name="hint_username">Имя может содержать только буквы и пробелы между словами!</string>
+    <string name="hint_select_setup">Пожалуйста, выберите расстановку…</string>
+    <string name="hint_placement_name">Название расстановки может содержать только буквы, цифры и пробелы между словами!</string>
 
     <!-- Названия для модальных окон (диалогов) -->
     <string name="exit_title">Выход из приложения</string>
@@ -52,5 +69,6 @@
     <string name="action_ok">Ок</string>
     <string name="action_done">Готово</string>
     <string name="error_name_title">Некорректный ввод!</string>
-    <string name="error_name_message">Вы неправильно ввели имя пользователя, попробуйте снова!</string>
+    <string name="error_username_message">Вы неправильно ввели имя пользователя, попробуйте снова!</string>
+    <string name="error_placement_name_message">Вы неправильно ввели название расстановки, попробуйте снова!</string>
 </resources>
