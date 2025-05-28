@@ -18,7 +18,7 @@ object UserPreferences {
         set(v) = prefs(this).edit().putString(KEY_NAME, v).apply()
 
     var Context.avatarRes: Int
-        get() = prefs(this).getInt(KEY_AVATAR, R.drawable.ic_launcher_foreground)
+        get() = prefs(this).getInt(KEY_AVATAR, R.drawable.avatar_male_1)
         set(v) = prefs(this).edit().putInt(KEY_AVATAR, v).apply()
 
     var Context.battleDifficulty: String

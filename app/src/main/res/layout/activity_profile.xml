@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_main_screen"
     android:padding="16dp"
     tools:context=".presentation.profile.ProfileActivity">
 
@@ -14,67 +14,60 @@
         android:id="@+id/btnBack"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/ic_launcher_foreground"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/back"
+        android:src="@drawable/ic_btn_back"
         android:tooltipText="@string/back"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- текст "Аватар" -->
+
+    <!-- изображение аватара -->
+
+    <!-- текст "Имя пользователя:" -->
+
+    <!-- контейнер с ником и кнопкой редактирования -->
+
     <TextView
         android:id="@+id/labelAvatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="24dp"
         android:text="@string/txt_avatar"
-        android:textSize="18sp"
-        android:textStyle="bold"
         android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/btnBack"
+        android:textSize="28sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="24dp"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- изображение аватара -->
     <ImageView
         android:id="@+id/ivAvatar"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/ic_launcher_foreground"
-        android:scaleType="centerCrop"
+        android:layout_width="227dp"
+        android:layout_height="238dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/avatar_male_1"
         android:contentDescription="@string/txt_avatar"
+        android:scaleType="centerCrop"
         android:tooltipText="@string/txt_avatar"
-        android:background="@drawable/ic_launcher_background"
-        app:layout_constraintTop_toBottomOf="@id/labelAvatar"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="8dp"/>
+        app:layout_constraintTop_toBottomOf="@id/labelAvatar" />
 
-    <!-- текст "Имя пользователя:" -->
-    <TextView
-        android:id="@+id/labelName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/txt_username"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        app:layout_constraintTop_toTopOf="@id/ivAvatar"
-        app:layout_constraintStart_toEndOf="@id/ivAvatar"
-        android:layout_marginStart="24dp"/>
-
-    <!-- контейнер с ником и кнопкой редактирования -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="8dp"
+        android:layout_width="340dp"
+        android:layout_height="60dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/labelName"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/labelName"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/labelName">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:padding="12dp">
 
             <TextView
@@ -82,31 +75,49 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/txt_username"
-                android:tooltipText="@string/txt_username"
-                android:textSize="16sp"/>
+                android:textSize="19sp"
+                android:tooltipText="@string/txt_username" />
 
             <ImageButton
                 android:id="@+id/btnEditName"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_launcher_foreground"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/edit_name"
-                android:tooltipText="@string/edit_name"/>
+                android:src="@drawable/ic_btn_edit"
+                android:tooltipText="@string/edit_name"
+                tools:ignore="TouchTargetSizeCheck" />
+
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
     <!-- кнопка Изменить аватар -->
+
     <Button
         android:id="@+id/btnChangeAvatar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="340dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/rounded_btn_custom"
+        android:textSize="18dp"
         android:text="@string/change_avatar"
         android:tooltipText="@string/change_avatar"
-        app:layout_constraintTop_toBottomOf="@id/ivAvatar"
-        app:layout_constraintStart_toStartOf="@id/ivAvatar"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/cardName" />
+
+    <TextView
+        android:id="@+id/labelName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="60dp"
+        android:text="@string/txt_username"
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/ivAvatar"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
