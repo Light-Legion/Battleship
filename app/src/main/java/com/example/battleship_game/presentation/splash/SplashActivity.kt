@@ -62,7 +62,7 @@ class SplashActivity : BaseActivity() {
         }
 
         val animator = ObjectAnimator.ofInt(binding.progress, "progress", 0, 100)
-        animator.duration = 1000L //в миллисекундах, 1000L = 1 секунда
+        animator.duration = 2000L //в миллисекундах, 1000L = 1 секунда
         animator.interpolator = LinearInterpolator() //равномерное заполнение
         animator.start()
         animator.doOnEnd { openMain() }
