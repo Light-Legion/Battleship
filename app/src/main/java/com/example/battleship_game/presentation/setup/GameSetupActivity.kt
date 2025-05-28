@@ -10,6 +10,7 @@ import com.example.battleship_game.common.UserPreferences.battleDifficulty
 import com.example.battleship_game.databinding.ActivityGameSetupBinding
 import com.example.battleship_game.presentation.placement.LoadSavedPlacementActivity
 import com.example.battleship_game.presentation.placement.ManualPlacementActivity
+import com.example.battleship_game.presentation.placement.AutoPlacementActivity
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -80,31 +81,18 @@ class GameSetupActivity : BaseActivity() {
 
                 // 3) По индексу способа выбираем Activity
                 val index = placements.indexOf(chosenPlacement)
-                /*val nextCls = when (index) {
-                    0 -> { ManualPlacementActivity::class.java
-                    1 -> AutoPlacementActivity::class.java
-                    2 -> LoadSavedFieldActivity::class.java
-                    else -> ManualPlacementActivity::class.java
-                }
-
-                startActivity(Intent(this@GameSetupActivity, nextCls))*/
 
                 when (index) {
                     0 -> {
-                        Snackbar.make(main, "Переход в ручную расстановку", Snackbar.LENGTH_SHORT)
-                            .show();
                         startActivity(Intent(this@GameSetupActivity, ManualPlacementActivity::class.java))
                     }
-                    1 -> Snackbar.make(main, "Переход в автоматическую расстановку", Snackbar.LENGTH_SHORT).show()
+                    1 -> {
+                        startActivity(Intent(this@GameSetupActivity, AutoPlacementActivity::class.java))
+                    }
                     2 -> {
-                        Snackbar.make(
-                            main,
-                            "Переход в загрузку сохраненной расстановки",
-                            Snackbar.LENGTH_SHORT
-                        ).show()
                         startActivity(Intent(this@GameSetupActivity, LoadSavedPlacementActivity::class.java))
                     }
-                    else -> Snackbar.make(main, "Переход по кнопке справка", Snackbar.LENGTH_SHORT).show()
+                    else -> Snackbar.make(main, R.string.hint_select_setup, Snackbar.LENGTH_SHORT).show()
                 }
             }
         }

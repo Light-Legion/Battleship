@@ -36,8 +36,9 @@
         <activity
             android:name=".presentation.placement.SavePlacementActivity"
             android:exported="false"
-            android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.Battleshipgame" />
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.Battleshipgame"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".presentation.placement.LoadSavedPlacementActivity"
             android:exported="false"
