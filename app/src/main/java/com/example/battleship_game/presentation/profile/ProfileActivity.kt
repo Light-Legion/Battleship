@@ -41,13 +41,13 @@ class ProfileActivity : BaseActivity() {
             // открываем экран редактирования имени
             binding.btnEditName.setOnClickListener {
                 startActivity(Intent(this@ProfileActivity, EditNameActivity::class.java))
-                Snackbar.make(main, R.string.edit_name, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(main, R.string.hint_changed_name, Snackbar.LENGTH_SHORT).show()
             }
 
             // открываем экран выбора аватара
             binding.btnChangeAvatar.setOnClickListener {
                 startActivity(Intent(this@ProfileActivity, SelectAvatarActivity::class.java))
-                Snackbar.make(main, R.string.change_avatar, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(main, R.string.hint_changed_avatar, Snackbar.LENGTH_SHORT).show()
             }
         }
     }

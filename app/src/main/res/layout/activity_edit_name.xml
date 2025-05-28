@@ -52,7 +52,7 @@
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/txt_username"
+            android:hint=""
             android:inputType="textCapWords"
             android:maxLength="20"
             android:imeOptions="actionDone"/>

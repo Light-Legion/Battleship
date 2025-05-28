@@ -24,6 +24,11 @@
         <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.App.RoundedCorners24</item>
     </style>
 
+    <style name="CardSelectionStyle" parent="">
+        <item name="strokeColor">@android:color/transparent</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
     <!-- Переопределение скругления в Overlay -->
     <style name="ShapeAppearanceOverlay.App.RoundedCorners24" parent="">
         <item name="cornerFamily">rounded</item>

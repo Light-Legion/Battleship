@@ -2,15 +2,29 @@
 <resources>
     <!-- Уровни сложности -->
     <string-array name="difficulty_options">
-        <item>Легкий</item>
-        <item>Средний</item>
-        <item>Сложный</item>
+        <item>@string/difficulty_easy</item>
+        <item>@string/difficulty_medium</item>
+        <item>@string/difficulty_hard</item>
     </string-array>
 
     <!-- Способы расстановки -->
     <string-array name="placement_options">
-        <item>Ручной</item>
-        <item>Автоматический</item>
-        <item>Загрузка сохранённой расстановки</item>
+        <item>@string/placement_manual</item>
+        <item>@string/placement_auto</item>
+        <item>@string/placement_load_saved</item>
+    </string-array>
+
+    <!-- Стратегии расстановки-->
+    <string-array name="strategies_placement">
+        <item>@string/strategy_placement_half_field</item>
+        <item>@string/strategy_placement_coasts</item>
+        <item>@string/strategy_placement_diagonal</item>
+    </string-array>
+
+    <!-- Стратегии стрельбы-->
+    <string-array name="strategies_shooters">
+        <item>@string/strategy_shooters_random</item>
+        <item>@string/strategy_shooters_diagonal</item>
+        <item>@string/strategy_shooters_density_analysis</item>
     </string-array>
 </resources>

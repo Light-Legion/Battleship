@@ -25,7 +25,7 @@ class AvatarAdapter(
 
                 // 2) Подсвечиваем рамку, если этот элемент выбран:
                 val color = if (pos == selected)
-                    android.R.color.holo_blue_light
+                    android.R.color.white
                 else android.R.color.transparent
                 cardAvatar.strokeColor = root.context.getColor(color)
 

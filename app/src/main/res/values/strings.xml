@@ -1,8 +1,6 @@
 <resources>
     <!-- Названия для компонентов -->
     <string name="app_name">Морской бой</string>
-    <string name="player">Игрок</string>
-    <string name="level_medium">Средний</string>
     <string name="play">Играть</string>
     <string name="profile">Профиль</string>
     <string name="stats">Статистика</string>
@@ -17,7 +15,7 @@
     <string name="next">Далее</string>
     <string name="load">Загрузить</string>
     <string name="clear_field">Очистить поле</string>
-    <string name="fight">В бой!</string>
+    <string name="to_battle">В бой!</string>
     <string name="game_field">Игровое поле</string>
     <string name="ship_templates">Шаблоны кораблей</string>
 
@@ -54,17 +52,43 @@
     <string name="txt_enter_placement_name">Введите название расстановки</string>
     <string name="txt_placement_name">Название расстановки</string>
     <string name="txt_manual_setup">Ручная расстановка</string>
+    <string name="txt_auto_setup">Автоматическая расстановка</string>
+    <string name="txt_select_placement_strategy">Выберите стратегию расстановки</string>
+    <string name="txt_update_placement">Обновить расстановку</string>
 
-    <!-- Названия для подсказок -->
+    <!-- Названия для подсказок пользователю -->
     <string name="hint_username">Имя может содержать только буквы и пробелы между словами!</string>
     <string name="hint_select_setup">Пожалуйста, выберите расстановку…</string>
     <string name="hint_placement_name">Название расстановки может содержать только буквы, цифры и пробелы между словами!</string>
     <string name="hint_exit_impossible">Выход из данного процесса невозможен!</string>
     <string name="hint_open_help">Открытие информации о системе</string>
+    <string name="hint_changed_name">Имя пользователя изменено</string>
+    <string name="hint_changed_avatar">Аватар изменен</string>
+
+    <!-- Названия для данных -->
+    <string name="label_player">Игрок</string>
+    <string name="label_opponent">Летучий Голландец</string>
+    <string name="label_role_capitan">Капитан</string>
+
+    <string name="difficulty_easy">Легкий</string>
+    <string name="difficulty_medium">Средний</string>
+    <string name="difficulty_hard">Сложный</string>
+
+    <string name="placement_manual">Ручной</string>
+    <string name="placement_auto">Автоматический</string>
+    <string name="placement_load_saved">Загрузка сохраненной</string>
+
+    <string name="strategy_placement_half_field">Половина поля</string>
+    <string name="strategy_placement_coasts">Берега</string>
+    <string name="strategy_placement_diagonal">Диагональное расположение</string>
+
+    <string name="strategy_shooters_random">Случайная с добиванием</string>
+    <string name="strategy_shooters_diagonal">Диагональная</string>
+    <string name="strategy_shooters_density_analysis">Анализ плотности</string>
 
     <!-- Названия для модальных окон (диалогов) -->
-    <string name="exit_title">Выход из приложения</string>
-    <string name="exit_message">Вы действительно хотите выйти?</string>
+    <string name="error_exit_title">Выход из приложения</string>
+    <string name="error_exit_message">Вы действительно хотите выйти?</string>
     <string name="action_yes">Да</string>
     <string name="action_cancel">Отмена</string>
     <string name="action_ok">Ок</string>
@@ -72,4 +96,6 @@
     <string name="error_name_title">Некорректный ввод!</string>
     <string name="error_username_message">Вы неправильно ввели имя пользователя, попробуйте снова!</string>
     <string name="error_placement_name_message">Вы неправильно ввели название расстановки, попробуйте снова!</string>
+    <string name="error_refresh_title">Ошибка обновления!</string>
+    <string name="error_refresh_message">Чтобы обновить расстановку, необходимо выбрать стратегию!</string>
 </resources>

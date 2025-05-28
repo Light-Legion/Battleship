@@ -127,9 +127,9 @@ class BattleFieldView @JvmOverloads constructor(
     private fun drawShips(canvas: Canvas) {
         ships.forEach { ship ->
             val rect = computeRect(ship)
-            if (ship.hasConflict) {
+            /*if (ship.hasConflict) {
                 canvas.drawRect(rect, conflictPaint)
-            }
+            }*/
             val bmp = if (ship.isVertical) bmpVert else bmpHoriz
             canvas.drawBitmap(bmp, null, rect, null)
 
@@ -148,8 +148,8 @@ class BattleFieldView @JvmOverloads constructor(
 
     /** Экранный прямоугольник корабля */
     private fun computeRect(ship: ShipPlacement): RectF {
-        val x0 = offsetX + ship.startCol * cellSize + ship.tempX
-        val y0 = offsetY + ship.startRow * cellSize + ship.tempY
+        val x0 = offsetX + ship.startCol * cellSize
+        val y0 = offsetY + ship.startRow * cellSize
         val w = if (ship.isVertical) cellSize else ship.length * cellSize
         val h = if (ship.isVertical) ship.length * cellSize else cellSize
         return RectF(x0, y0, x0 + w, y0 + h)
@@ -174,10 +174,10 @@ class BattleFieldView @JvmOverloads constructor(
                 }
             }
             MotionEvent.ACTION_MOVE -> {
-                dragging?.let { ship ->
+                /*dragging?.let { ship ->
                     ship.tempX = ev.x - offsetX - ship.startCol * cellSize - dragOffsetX
                     ship.tempY = ev.y - offsetY - ship.startRow * cellSize - dragOffsetY
-                }
+                }*/
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 dragging?.also { finalizeDrop(it) }
@@ -190,13 +190,13 @@ class BattleFieldView @JvmOverloads constructor(
 
     /** Завершение дропа: ставим, удаляем или откатываем. */
     private fun finalizeDrop(ship: ShipPlacement) {
-        val newCol = ((ship.tempX + ship.startCol * cellSize) / cellSize).toInt()
-        val newRow = ((ship.tempY + ship.startRow * cellSize) / cellSize).toInt()
+        val newCol = ((ship.startCol * cellSize) / cellSize).toInt()
+        val newRow = ((ship.startRow * cellSize) / cellSize).toInt()
 
         // Удаление, если бросили за борт
         if (newCol !in 0 until GRID_SIZE || newRow !in 0 until GRID_SIZE) {
             ships.remove(ship)
-            ship.tempX = 0f; ship.tempY = 0f
+            /*ship.tempX = 0f; ship.tempY = 0f*/
             notifyValidity()
             return
         }
@@ -205,11 +205,11 @@ class BattleFieldView @JvmOverloads constructor(
         if (tryPlace(ship, newRow, newCol)) {
             ship.startRow = newRow
             ship.startCol = newCol
-            ship.tempX = 0f; ship.tempY = 0f
+            /*ship.tempX = 0f; ship.tempY = 0f*/
         } else {
             // Ошибка — дрожь и сброс позиции
             shake {
-                ship.tempX = 0f; ship.tempY = 0f
+                /*ship.tempX = 0f; ship.tempY = 0f*/
                 invalidate()
             }
         }
@@ -223,14 +223,14 @@ class BattleFieldView @JvmOverloads constructor(
         if (!ship.isVertical && col + ship.length > GRID_SIZE) return false
 
         // Сбросим конфликты
-        ships.forEach { it.hasConflict = false }
+        /*ships.forEach { it.hasConflict = false }*/
 
         // Проверка пересечений
         var ok = true
         ships.forEach { other ->
             if (other !== ship && intersects(ship, row, col, other)) {
-                ship.hasConflict = true
-                other.hasConflict = true
+                /*ship.hasConflict = true
+                other.hasConflict = true*/
                 ok = false
             }
         }
@@ -274,9 +274,9 @@ class BattleFieldView @JvmOverloads constructor(
      */
     fun externalDragStart(rawX: Float, rawY: Float, ship: ShipPlacement) {
         // Сбрасываем temp и флаги
-        ship.tempX = 0f
+        /*ship.tempX = 0f
         ship.tempY = 0f
-        ship.hasConflict = false
+        ship.hasConflict = false*/
         ships += ship
 
         // Рассчитываем dragOffset так, чтобы спрайт «прилип»
@@ -316,7 +316,7 @@ class BattleFieldView @JvmOverloads constructor(
 
     /** Проверяем и шлём коллбэк валидности поля */
     private fun notifyValidity() {
-        val ok = ships.size == 10 && ships.all { !it.hasConflict }
+        val ok = ships.size == 10 && ships.all { !it.isVertical }
         listener?.onFieldValidityChanged(ok)
     }
 
