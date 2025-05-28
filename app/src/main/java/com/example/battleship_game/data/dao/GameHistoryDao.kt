@@ -21,6 +21,6 @@ interface GameHistoryDao {
     /**
      * Вернуть все записи, сортируя по убыванию ID (последние сверху).
      */
-    @Query("SELECT * FROM game_progress ORDER BY game_id DESC")
+    @Query("SELECT * FROM game_history ORDER BY game_id DESC")
     fun getAll(): Flow<List<GameHistory>>
 }

@@ -1,6 +1,8 @@
 <resources>
     <!-- Названия для компонентов -->
     <string name="app_name">Морской бой</string>
+    <string name="player">Игрок</string>
+    <string name="level_medium">Средний</string>
     <string name="play">Играть</string>
     <string name="profile">Профиль</string>
     <string name="stats">Статистика</string>
@@ -14,6 +16,10 @@
     <string name="save">Сохранить</string>
     <string name="next">Далее</string>
     <string name="load">Загрузить</string>
+    <string name="clear_field">Очистить поле</string>
+    <string name="fight">В бой!</string>
+    <string name="game_field">Игровое поле</string>
+    <string name="ship_templates">Шаблоны кораблей</string>
 
     <!-- Названия для таблиц -->
     <string name="db_username">Имя пользователя</string>
@@ -48,6 +54,7 @@
     <string name="txt_select_setup">Выберите расстановку</string>
     <string name="txt_enter_placement_name">Введите название расстановки</string>
     <string name="txt_placement_name">Название расстановки</string>
+    <string name="txt_manual_setup">Ручная расстановка</string>
 
     <!-- Названия для подсказок -->
     <string name="hint_username">Имя может содержать только буквы и пробелы между словами!</string>

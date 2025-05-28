@@ -9,6 +9,7 @@ import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.common.UserPreferences.battleDifficulty
 import com.example.battleship_game.databinding.ActivityGameSetupBinding
 import com.example.battleship_game.presentation.placement.LoadSavedPlacementActivity
+import com.example.battleship_game.presentation.placement.ManualPlacementActivity
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -89,7 +90,11 @@ class GameSetupActivity : BaseActivity() {
                 startActivity(Intent(this@GameSetupActivity, nextCls))*/
 
                 when (index) {
-                    0 -> Snackbar.make(main, "Переход в ручную расстановку", Snackbar.LENGTH_SHORT).show();
+                    0 -> {
+                        Snackbar.make(main, "Переход в ручную расстановку", Snackbar.LENGTH_SHORT)
+                            .show();
+                        startActivity(Intent(this@GameSetupActivity, ManualPlacementActivity::class.java))
+                    }
                     1 -> Snackbar.make(main, "Переход в автоматическую расстановку", Snackbar.LENGTH_SHORT).show()
                     2 -> {
                         Snackbar.make(
