@@ -85,7 +85,7 @@ class HelpActivity : BaseActivity() {
         binding.apply {
             btnSystemInfo.setOnClickListener {
                 setHelpMode(true)
-                Snackbar.make(main, R.string.txt_open_help, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(main, R.string.hint_open_help, Snackbar.LENGTH_SHORT).show()
             }
 
             btnBack.setOnClickListener {
