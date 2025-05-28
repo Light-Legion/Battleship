@@ -82,8 +82,8 @@ class EditNameActivity : BaseActivity() {
 
     private fun validateName() {
         val raw = binding.etName.text.toString()
-        val cleaned = raw.trim().replace(Regex("\\s+"), " ")
-        val valid = Regex("^[А-Яа-яA-Za-z ]{1,20}$").matches(cleaned) && cleaned.length <= 20
+        val name = raw.trim().replace(Regex("\\s+"), " ")
+        val valid = Regex("^[А-Яа-яA-Za-z ]{1,20}$").matches(name)
 
         clearFocusKeyboard()
         if (!valid) {
@@ -94,7 +94,7 @@ class EditNameActivity : BaseActivity() {
             showExitConfirmDialog()
         } else {
             // сохраняем и закрываем
-            nickname = cleaned
+            nickname = name
             finish()
         }
     }

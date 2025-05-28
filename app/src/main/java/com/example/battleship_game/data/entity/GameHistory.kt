@@ -7,7 +7,7 @@ import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.data.model.GameResult
 
 /**
- * Сущность для таблицы `game_progress`.
+ * Сущность для таблицы `game_history`.
  *
  * @property gameId    Автоинкрементный первичный ключ.
  * @property name      Имя игрока (до 20 символов).
@@ -15,7 +15,7 @@ import com.example.battleship_game.data.model.GameResult
  * @property level     Уровень сложности (EASY/MEDIUM/HARD).
  * @property date      Дата-время в формате "дд.MM.yyyy HH:mm".
  */
-@Entity(tableName = "game_progress")
+@Entity(tableName = "game_history")
 data class GameHistory(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "game_id")

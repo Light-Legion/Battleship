@@ -49,6 +49,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/txt_placement_name"
             android:inputType="textCapWords"
+            android:maxLength="20"
             android:imeOptions="actionDone"/>
     </com.google.android.material.textfield.TextInputLayout>
 
