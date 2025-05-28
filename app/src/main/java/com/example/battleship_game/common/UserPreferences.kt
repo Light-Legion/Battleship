@@ -14,7 +14,7 @@ object UserPreferences {
         ctx.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     var Context.nickname: String
-        get() = prefs(this).getString(KEY_NAME, R.string.player.toString()) ?: R.string.player.toString()
+        get() = prefs(this).getString(KEY_NAME, getString(R.string.player)) ?: getString(R.string.player)
         set(v) = prefs(this).edit().putString(KEY_NAME, v).apply()
 
     var Context.avatarRes: Int
@@ -22,8 +22,8 @@ object UserPreferences {
         set(v) = prefs(this).edit().putInt(KEY_AVATAR, v).apply()
 
     var Context.battleDifficulty: String
-        get() = prefs(this).getString(KEY_BATTLE_DIFFICULTY, R.string.level_medium.toString())
-            ?: R.string.level_medium.toString()
+        get() = prefs(this).getString(KEY_BATTLE_DIFFICULTY, getString(R.string.level_medium))
+            ?: getString(R.string.level_medium)
         set(v) = prefs(this).edit().putString(KEY_BATTLE_DIFFICULTY, v).apply()
 
 }
