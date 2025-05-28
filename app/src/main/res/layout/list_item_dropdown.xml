@@ -15,6 +15,6 @@
     app:strokeWidth="1dp"
     android:textAppearance="?attr/textAppearanceBodyMedium"
     tools:text="@string/txt_example"
-    tools:background="#FFFFFF"
+    tools:background="#F1F0F0"
     tools:textColor="#000000">
 </TextView>
