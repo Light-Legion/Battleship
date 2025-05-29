@@ -12,6 +12,7 @@ import com.example.battleship_game.dialog.CustomAlertDialog
 import com.example.battleship_game.presentation.game.LoadingActivity
 import com.example.battleship_game.presentation.placement.auto.AutoPlacementViewModel
 import com.example.battleship_game.presentation.placement.save.SavePlacementActivity
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * Экран «Автоматическая расстановка».
@@ -65,38 +66,38 @@ class AutoPlacementActivity : BaseActivity() {
                     showExitConfirmDialog()
                     return@setOnClickListener
                 }
-                // Генерируем новую расстановку
-                val strategy = vm.getStrategyForName(this@AutoPlacementActivity, binding.actvStrategy.text.toString())
-                strategy?.let {
-                    val placement = it.generatePlacement()
-                    vm.currentPlacement = placement
+                val placement = vm.generatePlacement(this@AutoPlacementActivity, sel)
+                if (placement.isNotEmpty()) {
                     bfv.setPlacements(placement)
-                    vm.hasPlacement = true
+                } else {
+                    Snackbar.make(root, R.string.hint_error_placement, Snackbar.LENGTH_LONG).show()
                 }
             }
 
             // Кнопка "Сохранить расстановку"
             btnSave.setOnClickListener {
-                vm.currentPlacement?.let { ships ->
+                vm.currentPlacement.takeIf { it.isNotEmpty() }?.let { ships ->
                     startActivity(
-                        Intent(this@AutoPlacementActivity, SavePlacementActivity::class.java)
-                            .putParcelableArrayListExtra(
-                                SavePlacementActivity.Companion.EXTRA_SHIPS,
+                        Intent(this@AutoPlacementActivity, SavePlacementActivity::class.java).apply {
+                            putParcelableArrayListExtra(
+                                SavePlacementActivity.EXTRA_SHIPS,
                                 ArrayList(ships)
                             )
+                        }
                     )
                 }
             }
 
             // Кнопка "В бой!"
             btnToBattle.setOnClickListener {
-                vm.currentPlacement?.let { ships ->
+                vm.currentPlacement.takeIf { it.isNotEmpty() }?.let { ships ->
                     startActivity(
-                        Intent(this@AutoPlacementActivity, LoadingActivity::class.java)
-                            .putParcelableArrayListExtra(
-                                LoadingActivity.Companion.EXTRA_PLAYER_SHIPS,
+                        Intent(this@AutoPlacementActivity, LoadingActivity::class.java).apply {
+                            putParcelableArrayListExtra(
+                                LoadingActivity.EXTRA_PLAYER_SHIPS,
                                 ArrayList(ships)
                             )
+                        }
                     )
                     finish()
                 }

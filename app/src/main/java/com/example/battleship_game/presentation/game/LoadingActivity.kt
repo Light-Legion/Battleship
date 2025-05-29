@@ -14,6 +14,9 @@ import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.databinding.ActivityLoadingBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -21,7 +24,14 @@ import kotlinx.coroutines.withContext
  * Загрузочный экран:
  * • Показывает круговой ProgressBar с обратным отсчётом 3 с
  * • Генерирует ИИ-расстановку по сложности
+<<<<<<< Updated upstream
  * • Стартует GameActivity
+=======
+ * • Потом стартует GameActivity
+ *
+ * Ожидаемые extras:
+ * - EXTRA_PLAYER_SHIPS: ArrayList<ShipPlacement> игрока
+>>>>>>> Stashed changes
  */
 class LoadingActivity : BaseActivity() {
 
@@ -75,7 +85,9 @@ class LoadingActivity : BaseActivity() {
 
                 // Запускаем генерацию ИИ и переход
                 lifecycleScope.launch {
-                    val playerShips = intent.getParcelableArrayListExtra<ShipPlacement>(EXTRA_PLAYER_SHIPS).orEmpty()
+                    val playerShips =
+                        intent.getParcelableArrayListExtra<ShipPlacement>(EXTRA_PLAYER_SHIPS)
+                            .orEmpty()
                     val diff = battleDifficulty
 
                     val aiShips = withContext(Dispatchers.Default) {
@@ -92,6 +104,44 @@ class LoadingActivity : BaseActivity() {
                 }
             }
             start()
+
+            val playerShips = intent
+                .getParcelableArrayListExtra<ShipPlacement>(EXTRA_PLAYER_SHIPS)
+                .orEmpty()
+
+            val difficulty = battleDifficulty
+
+            lifecycleScope.launch {
+                try {
+                    // Запускаем две задачи параллельно: генерацию кораблей и задержку
+                    val (aiShips) = awaitAll(
+                        async(Dispatchers.Default) {
+                            // generateAiShips(difficulty)
+                        },
+                        async { delay(3000) } // Минимальная задержка 3 секунды
+                    )
+
+                    // Переходим в GameActivity
+                    startActivity(Intent(this@LoadingActivity, GameActivity::class.java).apply {
+                        putParcelableArrayListExtra(EXTRA_PLAYER_SHIPS, ArrayList(playerShips))
+                        //putParcelableArrayListExtra(EXTRA_COMPUTER_SHIPS, ArrayList(aiShips))
+                    })
+                    finish()
+                } catch (e: Exception) {
+                    // Обработка ошибок генерации
+                    Snackbar.make(binding.main, R.string.error_name_title, Snackbar.LENGTH_LONG)
+                        .show()
+                    delay(2000)
+                    finish()
+                }
+            }
+        }
+
+        suspend fun generateAiShips(difficulty: String): List<ShipPlacement> {
+            return withContext(Dispatchers.Default) {
+                // Ваша логика генерации кораблей ИИ
+                emptyList()
+            }
         }
     }
 }

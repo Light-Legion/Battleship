@@ -9,7 +9,7 @@ import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.strategies.placement.CoastsPlacer
 import com.example.battleship_game.strategies.placement.DiagonalPlacer
 import com.example.battleship_game.strategies.placement.HalfFieldPlacer
-import com.example.battleship_game.strategies.placement.PlacementStrategy
+import kotlin.random.Random
 
 /**
  * Хранит текущую расстановку и сигнализирует об её наличии,
@@ -17,30 +17,23 @@ import com.example.battleship_game.strategies.placement.PlacementStrategy
  */
 class AutoPlacementViewModel : ViewModel() {
 
-    /** Текущая расстановка кораблей (или null). */
-    var currentPlacement: List<ShipPlacement>? = null
-        set(value) {
-            field = value
-            _hasPlacement.value = !value.isNullOrEmpty()
+    private val _has = MutableLiveData(false)
+    val hasPlacementLive: LiveData<Boolean> = _has
+
+    private var _current = emptyList<ShipPlacement>()
+    val currentPlacement: List<ShipPlacement> get() = _current
+
+    fun generatePlacement(ctx: Context, name: String): List<ShipPlacement> {
+        val rand = Random.Default
+        val strategy = when (name) {
+            ctx.getString(R.string.strategy_placement_coasts)       -> CoastsPlacer(rand)
+            ctx.getString(R.string.strategy_placement_half_field)   -> HalfFieldPlacer(rand)
+            ctx.getString(R.string.strategy_placement_diagonal)     -> DiagonalPlacer(rand)
+            else -> CoastsPlacer(rand)
         }
-
-    private val _hasPlacement = MutableLiveData(false)
-    /** Доступность кнопок «Сохранить»/«В бой». */
-    val hasPlacementLive: LiveData<Boolean> = _hasPlacement
-
-    /** Удобный локальный флаг. */
-    var hasPlacement: Boolean
-        get() = _hasPlacement.value == true
-        set(v) { _hasPlacement.value = v }
-
-    /**
-     * Фабрика: по локализованному имени возвращает стратегию.
-     * @return экземпляр [com.example.battleship_game.strategies.placement.PlacementStrategy] или null, если имя не распознано.
-     */
-    fun getStrategyForName(ctx: Context, name: String): PlacementStrategy? = when (name) {
-        ctx.getString(R.string.strategy_placement_half_field)     -> HalfFieldPlacer()
-        ctx.getString(R.string.strategy_placement_coasts)         -> CoastsPlacer()
-        ctx.getString(R.string.strategy_placement_diagonal)       -> DiagonalPlacer()
-        else                                                     -> null
+        val res = strategy.generatePlacement()
+        _current = res
+        _has.value = res.isNotEmpty()
+        return res
     }
 }

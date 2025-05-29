@@ -64,6 +64,7 @@
     <string name="hint_open_help">Открытие информации о системе</string>
     <string name="hint_changed_name">Имя пользователя изменено</string>
     <string name="hint_changed_avatar">Аватар изменен</string>
+    <string name="hint_error_placement">Не удалось сгенерировать расстановку</string>
 
     <!-- Названия для данных -->
     <string name="label_player">Игрок</string>
