@@ -19,6 +19,7 @@
         android:contentDescription="@string/back"
         android:tooltipText="@string/back"
         android:src="@drawable/ic_btn_back"
+        android:background="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
