@@ -1,5 +1,4 @@
-package com.example.battleship_game.presentation.placement
-
+package com.example.battleship_game.presentation.placement.save
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -10,7 +9,8 @@ import com.example.battleship_game.data.model.ShipPlacement
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 /**
  * ViewModel экрана «Сохранить расстановку».
@@ -18,7 +18,7 @@ import java.util.*
  */
 class SavePlacementViewModel(app: Application) : AndroidViewModel(app) {
 
-    private val dao = AppDatabase.getInstance(app).gamePlacementDao()
+    private val dao = AppDatabase.Companion.getInstance(app).gamePlacementDao()
     private val gson = Gson()
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
 
@@ -26,7 +26,7 @@ class SavePlacementViewModel(app: Application) : AndroidViewModel(app) {
      * Сохранить расстановку.
      *
      * @param name  Введённое пользователем название (уже валидированное).
-     * @param ships Список [ShipPlacement], полученный из Intent.
+     * @param ships Список [com.example.battleship_game.data.model.ShipPlacement], полученный из Intent.
      */
     fun save(name: String, ships: List<ShipPlacement>) {
         viewModelScope.launch {
@@ -34,9 +34,9 @@ class SavePlacementViewModel(app: Application) : AndroidViewModel(app) {
             // Превращаем список кораблей в JSON
             val json = gson.toJson(ships)
             val entity = GamePlacement(
-                name           = name,
-                placementJson  = json,
-                date           = now
+                name = name,
+                placementJson = json,
+                date = now
             )
             dao.insert(entity)
         }

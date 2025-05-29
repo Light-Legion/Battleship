@@ -8,9 +8,9 @@ import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.common.UserPreferences.battleDifficulty
 import com.example.battleship_game.databinding.ActivityGameSetupBinding
-import com.example.battleship_game.presentation.placement.LoadSavedPlacementActivity
-import com.example.battleship_game.presentation.placement.ManualPlacementActivity
-import com.example.battleship_game.presentation.placement.AutoPlacementActivity
+import com.example.battleship_game.presentation.placement.load.LoadSavedPlacementActivity
+import com.example.battleship_game.presentation.placement.manual.ManualPlacementActivity
+import com.example.battleship_game.presentation.placement.auto.AutoPlacementActivity
 import com.google.android.material.snackbar.Snackbar
 
 

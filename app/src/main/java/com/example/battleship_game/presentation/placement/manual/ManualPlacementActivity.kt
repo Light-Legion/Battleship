@@ -1,4 +1,4 @@
-package com.example.battleship_game.presentation.placement
+package com.example.battleship_game.presentation.placement.manual
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,13 +8,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.databinding.ActivityManualPlacementBinding
+import com.example.battleship_game.presentation.placement.manual.ManualPlacementViewModel
+import com.example.battleship_game.presentation.placement.save.SavePlacementActivity
+import com.example.battleship_game.presentation.placement.manual.ShipTemplateAdapter
 import com.example.battleship_game.ui.BattleFieldView
 
 /**
  * Activity для ручной расстановки кораблей.
  *
  * Показывает:
- *  - [BattleFieldView] слева,
+ *  - [com.example.battleship_game.ui.BattleFieldView] слева,
  *  - шаблоны кораблей справа (1–2–3–4 в строках),
  *  - кнопки «Назад», «Сохранить», «Очистить», «В бой!».
  */

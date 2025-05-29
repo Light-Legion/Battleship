@@ -1,4 +1,4 @@
-package com.example.battleship_game.presentation.placement
+package com.example.battleship_game.presentation.placement.auto
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -35,7 +35,7 @@ class AutoPlacementViewModel : ViewModel() {
 
     /**
      * Фабрика: по локализованному имени возвращает стратегию.
-     * @return экземпляр [PlacementStrategy] или null, если имя не распознано.
+     * @return экземпляр [com.example.battleship_game.strategies.placement.PlacementStrategy] или null, если имя не распознано.
      */
     fun getStrategyForName(ctx: Context, name: String): PlacementStrategy? = when (name) {
         ctx.getString(R.string.strategy_placement_half_field)     -> HalfFieldPlacer()

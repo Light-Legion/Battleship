@@ -31,6 +31,7 @@ class EditNameActivity : BaseActivity() {
 
         // Перехват системной кнопки «Назад»
         onBackPressedDispatcher.addCallback(this) {
+            setResult(RESULT_CANCELED)
             finish()
         }
     }
@@ -38,6 +39,7 @@ class EditNameActivity : BaseActivity() {
     private fun setupListeners() {
         binding.apply {
             btnBack.setOnClickListener {
+                setResult(RESULT_CANCELED)
                 finish()
             }
 
@@ -95,6 +97,8 @@ class EditNameActivity : BaseActivity() {
         } else {
             // сохраняем и закрываем
             nickname = name
+
+            setResult(RESULT_OK)
             finish()
         }
     }

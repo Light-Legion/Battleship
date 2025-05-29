@@ -1,4 +1,4 @@
-package com.example.battleship_game.presentation.placement
+package com.example.battleship_game.presentation.placement.manual
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,44 +23,49 @@ class ManualPlacementViewModel : ViewModel() {
          */
         private fun generateTemplates(): List<ShipPlacement> {
             val list = mutableListOf<ShipPlacement>()
+
             // 1 четырёхпалубный
-            list += ShipPlacement(
+            list.add(ShipPlacement(
                 shipId = 1,
                 startRow = 0,
                 startCol = 0,
                 length = 4,
                 isVertical = false
-            )
+            ))
+
             // 2 трёхпалубных
-            repeat(2) { i ->
-                list += ShipPlacement(
+            for (i in 0 until 2) {
+                list.add(ShipPlacement(
                     shipId = 2 + i,
                     startRow = 0,
                     startCol = 0,
                     length = 3,
                     isVertical = false
-                )
+                ))
             }
+
             // 3 двухпалубных
-            repeat(3) { i ->
-                list += ShipPlacement(
+            for (i in 0 until 3) {
+                list.add(ShipPlacement(
                     shipId = 4 + i,
                     startRow = 0,
                     startCol = 0,
                     length = 2,
                     isVertical = false
-                )
+                ))
             }
+
             // 4 однопалубных
-            repeat(4) { i ->
-                list += ShipPlacement(
+            for (i in 0 until 4) {
+                list.add(ShipPlacement(
                     shipId = 7 + i,
                     startRow = 0,
                     startCol = 0,
                     length = 1,
                     isVertical = false
-                )
+                ))
             }
+
             return list
         }
     }

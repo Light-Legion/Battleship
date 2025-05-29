@@ -1,4 +1,4 @@
-package com.example.battleship_game.presentation.placement
+package com.example.battleship_game.presentation.placement.load
 
 import android.os.Bundle
 import androidx.activity.addCallback
@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.databinding.ActivityLoadSavedPlacementBinding
+import com.example.battleship_game.presentation.placement.load.LoadSavedPlacementViewModel
+import com.example.battleship_game.presentation.placement.load.SavedPlacementAdapter
 import com.google.android.material.snackbar.Snackbar
-
 
 /**
  * Экран загрузки сохранённой расстановки.

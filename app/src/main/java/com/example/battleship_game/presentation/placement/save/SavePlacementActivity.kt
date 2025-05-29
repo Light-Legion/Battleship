@@ -1,4 +1,4 @@
-package com.example.battleship_game.presentation.placement
+package com.example.battleship_game.presentation.placement.save
 
 import android.os.Bundle
 import android.view.KeyEvent
@@ -12,7 +12,7 @@ import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.databinding.ActivitySavePlacementBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
-
+import com.example.battleship_game.presentation.placement.save.SavePlacementViewModel
 
 /**
  * Экран «Сохранить расстановку».

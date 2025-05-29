@@ -14,7 +14,7 @@
         android:theme="@style/Theme.Battleshipgame"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.placement.AutoPlacementActivity"
+            android:name=".presentation.placement.auto.AutoPlacementActivity"
             android:exported="false"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.Battleshipgame" />
@@ -29,18 +29,18 @@
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.Battleshipgame" />
         <activity
-            android:name=".presentation.placement.ManualPlacementActivity"
+            android:name=".presentation.placement.manual.ManualPlacementActivity"
             android:exported="false"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.Battleshipgame" />
         <activity
-            android:name=".presentation.placement.SavePlacementActivity"
+            android:name=".presentation.placement.save.SavePlacementActivity"
             android:exported="false"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.Battleshipgame"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".presentation.placement.LoadSavedPlacementActivity"
+            android:name=".presentation.placement.load.LoadSavedPlacementActivity"
             android:exported="false"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.Battleshipgame" />

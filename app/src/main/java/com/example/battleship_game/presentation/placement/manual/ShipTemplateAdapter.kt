@@ -1,12 +1,12 @@
-package com.example.battleship_game.presentation.placement
+package com.example.battleship_game.presentation.placement.manual
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.battleship_game.databinding.ItemShipTemplateBinding
 import com.example.battleship_game.data.model.ShipPlacement
+import com.example.battleship_game.databinding.ItemShipTemplateBinding
 
 /**
  * Adapter для шаблонов кораблей.

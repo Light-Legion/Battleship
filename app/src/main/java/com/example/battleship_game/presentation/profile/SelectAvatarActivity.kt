@@ -26,6 +26,7 @@ class SelectAvatarActivity : BaseActivity() {
         setupListeners()
 
         onBackPressedDispatcher.addCallback(this) {
+            setResult(RESULT_CANCELED)
             finish()
         }
     }
@@ -43,6 +44,7 @@ class SelectAvatarActivity : BaseActivity() {
         binding.apply {
             // кнопка "Назад"
             btnBack.setOnClickListener {
+                setResult(RESULT_CANCELED)
                 finish()
             }
 
@@ -59,6 +61,7 @@ class SelectAvatarActivity : BaseActivity() {
             // Кнопка "Сохранить"
             btnSave.setOnClickListener {
                 avatarRes = avatars.getOrNull(selectedIdx) ?: R.drawable.ic_launcher_foreground
+                setResult(RESULT_OK)
                 finish()
             }
         }

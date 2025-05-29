@@ -1,4 +1,4 @@
-package com.example.battleship_game.presentation.placement
+package com.example.battleship_game.presentation.placement.load
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import com.example.battleship_game.databinding.ItemSavedPlacementBinding
  * Адаптер для списка сохранённых расстановок (`GameField`).
  *
  * @param items начальный список (обычно пустой, затем обновляется через submitList).
- * @param onSelect вызывается, когда пользователь кликает на элемент — передаёт выбранный [GamePlacement].
+ * @param onSelect вызывается, когда пользователь кликает на элемент — передаёт выбранный [com.example.battleship_game.data.entity.GamePlacement].
  */
 class SavedPlacementAdapter(
     private var items: List<GamePlacement>,

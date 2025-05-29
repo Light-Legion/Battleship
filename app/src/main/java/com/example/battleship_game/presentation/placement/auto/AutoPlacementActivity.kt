@@ -1,4 +1,4 @@
-package com.example.battleship_game.presentation.placement
+package com.example.battleship_game.presentation.placement.auto
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,9 +10,8 @@ import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.databinding.ActivityAutoPlacementBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
 import com.example.battleship_game.presentation.game.LoadingActivity
-import com.example.battleship_game.strategies.placement.CoastsPlacer
-import com.example.battleship_game.strategies.placement.DiagonalPlacer
-import com.example.battleship_game.strategies.placement.HalfFieldPlacer
+import com.example.battleship_game.presentation.placement.auto.AutoPlacementViewModel
+import com.example.battleship_game.presentation.placement.save.SavePlacementActivity
 
 /**
  * Экран «Автоматическая расстановка».
@@ -82,7 +81,7 @@ class AutoPlacementActivity : BaseActivity() {
                     startActivity(
                         Intent(this@AutoPlacementActivity, SavePlacementActivity::class.java)
                             .putParcelableArrayListExtra(
-                                SavePlacementActivity.EXTRA_SHIPS,
+                                SavePlacementActivity.Companion.EXTRA_SHIPS,
                                 ArrayList(ships)
                             )
                     )
@@ -95,7 +94,7 @@ class AutoPlacementActivity : BaseActivity() {
                     startActivity(
                         Intent(this@AutoPlacementActivity, LoadingActivity::class.java)
                             .putParcelableArrayListExtra(
-                                LoadingActivity.EXTRA_PLAYER_SHIPS,
+                                LoadingActivity.Companion.EXTRA_PLAYER_SHIPS,
                                 ArrayList(ships)
                             )
                     )

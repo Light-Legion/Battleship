@@ -1,4 +1,4 @@
-package com.example.battleship_game.presentation.placement
+package com.example.battleship_game.presentation.placement.load
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.onEach
  * ViewModel для LoadSavedPlacementActivity.
  */
 class LoadSavedPlacementViewModel(app: Application) : AndroidViewModel(app) {
-    private val dao = AppDatabase.getInstance(app).gamePlacementDao()
+    private val dao = AppDatabase.Companion.getInstance(app).gamePlacementDao()
     private val _placements = MutableStateFlow<List<GamePlacement>>(emptyList())
     val placements: StateFlow<List<GamePlacement>> = _placements
 
