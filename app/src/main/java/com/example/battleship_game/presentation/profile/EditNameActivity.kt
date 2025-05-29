@@ -101,7 +101,7 @@ class EditNameActivity : BaseActivity() {
 
     private fun showExitConfirmDialog() {
         CustomAlertDialog(this)
-            .setIcon(R.drawable.ic_launcher_foreground)
+            .setIcon(R.drawable.ic_warning)
             .setTitle(R.string.error_name_title)
             .setMessage(R.string.error_username_message)
             .setPositiveButtonText(R.string.action_ok)
