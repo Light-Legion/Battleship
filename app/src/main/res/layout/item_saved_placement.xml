@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="4dp"
-    android:minHeight="48dp"
+    android:minHeight="40dp"
     android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
@@ -35,7 +35,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textAppearance="?attr/textAppearanceBody1"
-                android:textColor="?attr/colorOnSurface"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="15sp"
                 tools:text="@string/db_username" />
 
             <TextView
@@ -43,7 +45,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?attr/colorOnSurface"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="15sp"
                 tools:text="@string/db_date" />
         </LinearLayout>
     </FrameLayout>
