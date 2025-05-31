@@ -12,7 +12,7 @@
         <!-- Для кнопок CustomAlertDialog -->
         <item name="customDialogPositiveButtonTint">@color/blue_200</item>
         <item name="customDialogPositiveButtonTextColor">@color/white</item>
-        <item name="customDialogNegativeButtonTint">@color/gray</item>
+        <item name="customDialogNegativeButtonTint">@color/gray_200</item>
         <item name="customDialogNegativeButtonTextColor">@color/white</item>
     </style>
 

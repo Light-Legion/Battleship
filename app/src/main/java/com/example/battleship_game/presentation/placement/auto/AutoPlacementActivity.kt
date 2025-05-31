@@ -106,7 +106,7 @@ class AutoPlacementActivity : BaseActivity() {
                 startActivity(
                     Intent(this@AutoPlacementActivity, LoadingActivity::class.java)
                         .putParcelableArrayListExtra(
-                            LoadingActivity.Companion.EXTRA_PLAYER_SHIPS,
+                            LoadingActivity.EXTRA_PLAYER_SHIPS,
                             ArrayList(ships)
                         )
                 )

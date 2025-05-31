@@ -14,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.common.UserPreferences.battleDifficulty
-import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.databinding.ActivityLoadingBinding
 import com.google.android.material.snackbar.Snackbar
@@ -36,7 +35,7 @@ class LoadingActivity : BaseActivity() {
 
     private lateinit var binding: ActivityLoadingBinding
     private val viewModel: LoadingActivityViewModel by viewModels()
-    private var computerShips: List<ShipPlacement> = emptyList()
+
     private var animationComplete = false
     private var generationComplete = false
 
@@ -62,17 +61,11 @@ class LoadingActivity : BaseActivity() {
             insets
         }
 
-        // Получаем данные из интента
-        val playerShips = intent
-            .getParcelableArrayListExtra<ShipPlacement>(EXTRA_PLAYER_SHIPS)
-            .orEmpty()
-
-        // Получаем сложность из настроек
-        val difficulty = battleDifficulty
+        parseData()
 
         // Параллельно запускаем генерацию и анимацию
-        startComputerShipGeneration(difficulty)
-        startCountdownAnimation(playerShips)
+        startComputerShipGeneration()
+        startCountdownAnimation()
 
         onBackPressedDispatcher.addCallback(this) {
             Snackbar.make(binding.main, R.string.hint_exit_impossible, Snackbar.LENGTH_SHORT).show()
@@ -80,11 +73,25 @@ class LoadingActivity : BaseActivity() {
     }
 
     /**
+     * Извлекает из intent список кораблей и уровень сложности.
+     * Записывает их в viewModel.
+     */
+    private fun parseData() {
+        // Получаем данные из интента и сохраняем в viewModel
+        viewModel.playerShips = intent
+            .getParcelableArrayListExtra<ShipPlacement>(EXTRA_PLAYER_SHIPS)
+            .orEmpty()
+
+        // Получаем сложность из настроек и сохраняем в viewModel
+        viewModel.difficulty = battleDifficulty
+    }
+
+    /**
      * Запускает генерацию кораблей компьютера в фоновом потоке
      */
-    private fun startComputerShipGeneration(difficulty: Difficulty) {
+    private fun startComputerShipGeneration() {
         lifecycleScope.launch(Dispatchers.IO) {
-            computerShips = viewModel.generateComputerShips(difficulty)
+            viewModel.computerShips = viewModel.generateComputerShips(viewModel.difficulty)
             generationComplete = true
 
             // Если анимация уже завершена, сразу переходим
@@ -99,7 +106,7 @@ class LoadingActivity : BaseActivity() {
     /**
      * Запускает анимацию таймера и прогресс-бара
      */
-    private fun startCountdownAnimation(playerShips: List<ShipPlacement>) {
+    private fun startCountdownAnimation() {
         // Анимация прогресс-бара (от 100 до 0 за 3 секунды)
         val progressAnimator = ObjectAnimator.ofInt(binding.progressBar, "progress", 100, 0).apply {
             duration = COUNTDOWN_DURATION_MS
@@ -150,8 +157,8 @@ class LoadingActivity : BaseActivity() {
         val playerShips = intent.getParcelableArrayListExtra<ShipPlacement>(EXTRA_PLAYER_SHIPS) ?: arrayListOf()
 
         startActivity(Intent(this@LoadingActivity, GameActivity::class.java).apply {
-            putParcelableArrayListExtra(EXTRA_PLAYER_SHIPS, ArrayList(playerShips))
-            putParcelableArrayListExtra(EXTRA_COMPUTER_SHIPS, ArrayList(computerShips))
+            putParcelableArrayListExtra(EXTRA_PLAYER_SHIPS, ArrayList(viewModel.playerShips))
+            putParcelableArrayListExtra(EXTRA_COMPUTER_SHIPS, ArrayList(viewModel.computerShips))
         })
         finish()
     }

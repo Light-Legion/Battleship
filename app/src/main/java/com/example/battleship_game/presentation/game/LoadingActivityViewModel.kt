@@ -10,6 +10,10 @@ import kotlin.random.Random
 
 class LoadingActivityViewModel : ViewModel() {
 
+    var playerShips: List<ShipPlacement> = emptyList()
+    var computerShips: List<ShipPlacement> = emptyList()
+    var difficulty: Difficulty = Difficulty.MEDIUM
+
     /**
      * Генерирует расстановку кораблей для компьютера
      * @param difficulty Уровень сложности для выбора стратегии
