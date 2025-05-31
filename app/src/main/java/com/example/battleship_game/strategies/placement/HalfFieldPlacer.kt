@@ -107,7 +107,7 @@ class HalfFieldPlacer(rand: Random = Random.Default)
         return emptyList()
     }
 
-    // Переопределяем canPlace, чтобы запретить палубы на диагоналях
+    // Переопределяем canPlace, чтобы запретить палубы на вне выбранной половины
     override fun canPlace(
         occ: Array<BooleanArray>,
         x0: Int, y0: Int,
@@ -119,7 +119,7 @@ class HalfFieldPlacer(rand: Random = Random.Default)
 
         val dx = if (horizontal) 1 else 0
         val endX = x0 + dx * (size - 1)
-        // 1) выход за границы?
+
         if (useLeft) {
             if (endX !in 0..4) return false
         }
