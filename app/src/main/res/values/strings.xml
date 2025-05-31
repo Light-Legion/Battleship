@@ -18,6 +18,8 @@
     <string name="to_battle">В бой!</string>
     <string name="game_field">Игровое поле</string>
     <string name="ship_templates">Шаблоны кораблей</string>
+    <string name="main_menu">Главное меню</string>
+    <string name="play_again">Сыграть снова</string>
 
     <!-- Названия для таблиц -->
     <string name="db_username">Имя пользователя</string>
@@ -75,6 +77,9 @@
     <string name="difficulty_medium">Средний</string>
     <string name="difficulty_hard">Сложный</string>
 
+    <string name="result_win">Победа</string>
+    <string name="result_loss">Поражение</string>
+
     <string name="placement_manual">Ручной</string>
     <string name="placement_auto">Автоматический</string>
     <string name="placement_load_saved">Загрузка сохраненной</string>
@@ -90,8 +95,10 @@
     <string name="initial_countdown_value">3</string>
 
     <!-- Названия для модальных окон (диалогов) -->
-    <string name="error_exit_title">Выход из приложения</string>
-    <string name="error_exit_message">Вы действительно хотите выйти?</string>
+    <string name="exit_title">Выход из приложения</string>
+    <string name="exit_message">Вы действительно хотите выйти?</string>
+    <string name="game_over_title">Конец игры</string>
+    <string name="game_over_message">Вы действительно хотите сдаться?</string>
     <string name="action_yes">Да</string>
     <string name="action_cancel">Отмена</string>
     <string name="action_ok">Ок</string>
