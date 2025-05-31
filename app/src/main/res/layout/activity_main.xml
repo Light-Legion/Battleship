@@ -106,7 +106,7 @@
         android:id="@+id/btnMusic"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="16dp"
         android:text="@string/music_on"
         android:textColor="@android:color/white"
         android:background="@drawable/btn_secondary_transparent"

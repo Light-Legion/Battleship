@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.addCallback
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
+import com.example.battleship_game.common.UserPreferences.isMusicEnabled
 import com.example.battleship_game.databinding.ActivityMainBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
 import com.example.battleship_game.presentation.help.HelpActivity
@@ -16,9 +17,6 @@ import com.example.battleship_game.services.MusicService
 class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-    /** Флаг, указывающий, играет ли сейчас музыка */
-    private var isMusicPlaying: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,16 +54,16 @@ class MainActivity : BaseActivity() {
                 startActivity(Intent(this@MainActivity, HelpActivity::class.java))
             }
 
-            btnMusic.text = getString(R.string.music_on)
+            btnMusic.text = if (isMusicEnabled) getString(R.string.music_off) else getString(R.string.music_on)
             btnMusic.setOnClickListener {
-                if (isMusicPlaying) {
+                if (isMusicEnabled) {
                     // Если музыка сейчас играет, отправляем команду остановки в сервис
                     val stopIntent = Intent(this@MainActivity, MusicService::class.java).apply {
                         action = MusicService.ACTION_STOP
                     }
                     stopService(stopIntent)
 
-                    isMusicPlaying = false
+                    isMusicEnabled = false
                     btnMusic.text = getString(R.string.music_on)
                 } else {
                     // Если музыка не играет, отправляем команду запуска
@@ -74,7 +72,7 @@ class MainActivity : BaseActivity() {
                     }
                     startService(playIntent)
 
-                    isMusicPlaying = true
+                    isMusicEnabled = true
                     btnMusic.text = getString(R.string.music_off)
                 }
             }
