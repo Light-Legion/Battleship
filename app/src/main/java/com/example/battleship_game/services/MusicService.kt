@@ -8,25 +8,36 @@ import androidx.annotation.RawRes
 import com.example.battleship_game.R
 
 /**
- * MusicService — простой (не-лоченный) сервис для фонового проигрывания музыки.
+ * MusicService - сервис для фонового воспроизведения музыки в приложении.
  *
- * Сервис управляется через ACTION-поля Intent:
- *  • ACTION_PLAY  — начать (или продолжить) проигрывание плейлиста с текущего трека
- *  • ACTION_STOP  — остановить проигрывание и завершить сервис
+ * Особенности:
+ * - Поддерживает плейлист из нескольких треков
+ * - Автоматически переходит к следующему треку после окончания текущего
+ * - Циклическое воспроизведение всего плейлиста
+ * - Поддерживает команды воспроизведения, паузы и остановки
  *
- * Внутри сервис хранит список музыкальных треков (ресурсов raw) и проигрывает их
- * по очереди. Когда последний трек заканчивается, начинается первый (зацикливание).
+ * Управление осуществляется через Intent с действиями:
+ * - ACTION_PLAY: начать/возобновить воспроизведение
+ * - ACTION_PAUSE: приостановить воспроизведение
+ * - ACTION_STOP: полностью остановить воспроизведение и сервис
  */
 class MusicService : Service() {
 
     companion object {
-        /** Действие для Intent при запуске музыки */
+        /** Действие: начать или возобновить воспроизведение */
         const val ACTION_PLAY = "com.example.battleship_game.services.action.PLAY"
-        /** Действие для Intent при остановке музыки */
+
+        /** Действие: приостановить воспроизведение */
+        const val ACTION_PAUSE = "com.example.battleship_game.services.action.PAUSE"
+
+        /** Действие: полностью остановить воспроизведение и сервис */
         const val ACTION_STOP = "com.example.battleship_game.services.action.STOP"
     }
 
-    /** Список идентификаторов музыкальных файлов (из res/raw) */
+    /**
+     * Плейлист: список идентификаторов аудиоресурсов.
+     * Добавляйте сюда все фоновые треки для циклического воспроизведения.
+     */
     @RawRes
     private val playlist = listOf(
         R.raw.background_music_1,
@@ -34,83 +45,116 @@ class MusicService : Service() {
         R.raw.background_music_3
     )
 
-    /** Индекс текущего трека в плейлисте */
+    /**
+     * Индекс текущего трека в плейлисте.
+     * Автоматически обновляется при переходе к следующему треку.
+     */
     private var currentTrackIndex: Int = 0
 
-    /** Экземпляр MediaPlayer для проигрывания текущего трека */
+    /**
+     * Экземпляр MediaPlayer для управления воспроизведением.
+     * Инициализируется при создании сервиса и при переходе к новому треку.
+     */
     private var mediaPlayer: MediaPlayer? = null
 
+    /**
+     * Флаг, указывающий, находится ли воспроизведение на паузе.
+     * Используется для корректного возобновления воспроизведения.
+     */
+    private var isPaused: Boolean = false
+
+    override fun onBind(intent: Intent?): IBinder? = null
+
+    /**
+     * Вызывается при создании сервиса.
+     * Инициализирует MediaPlayer для первого трека в плейлисте.
+     */
     override fun onCreate() {
         super.onCreate()
-        // Здесь мы не инициализируем mediaPlayer — это делается при ACTION_PLAY
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // Проверяем, что Intent не null, считываем action
-        intent?.action?.let { action ->
-            when (action) {
-                ACTION_PLAY -> handleActionPlay()
-                ACTION_STOP -> handleActionStop()
-            }
-        }
-        // Возвращаем START_NOT_STICKY, чтобы система не перезапускала сервис автоматически
-        return START_NOT_STICKY
+        initializeMediaPlayer()
     }
 
     /**
-     * Обработка команды PLAY.
-     * Если mediaPlayer еще не создан, создаём его и запускаем первый (или текущий) трек.
-     * Если mediaPlayer создан, но музыка на паузе, просто возобновляем.
+     * Инициализирует MediaPlayer для текущего трека.
+     * Настраивает обработчик завершения трека для автоматического перехода к следующему.
      */
-    private fun handleActionPlay() {
-        if (mediaPlayer == null) {
-            // Создаём новый MediaPlayer для текущего трека
-            mediaPlayer = MediaPlayer.create(this, playlist[currentTrackIndex]).apply {
-                isLooping = false // Зацикливать будем вручную, по окончанию трека
-                setOnCompletionListener {
-                    // Как только текущий трек заканчивается:
-                    onTrackCompletion()
-                }
-                start()
-            }
-        } else {
-            // Если mediaPlayer уже есть, просто проверим и запустим, если он на паузе
-            mediaPlayer?.let { player ->
-                if (!player.isPlaying) {
-                    player.start()
-                }
-            }
-        }
-    }
-
-    /**
-     * Действия, которые нужно выполнить, когда текущий трек доиграл до конца:
-     *  - Увеличить индекс до следующего (с учётом цикличности)
-     *  - Освободить предыдущий mediaPlayer
-     *  - Создать и запустить новый mediaPlayer для следующего трека
-     */
-    private fun onTrackCompletion() {
-        // Сдвигаем индекс к следующему треку; если дошли до конца, возвращаемся к нулю
-        currentTrackIndex = (currentTrackIndex + 1) % playlist.size
-
-        // Освобождаем предыдущий player
-        mediaPlayer?.release()
-        mediaPlayer = null
-
-        // Создаём новый player для следующего трека
+    private fun initializeMediaPlayer() {
         mediaPlayer = MediaPlayer.create(this, playlist[currentTrackIndex]).apply {
+            // Настраиваем переход к следующему треку по завершении текущего
+            setOnCompletionListener { nextTrack() }
+
+            // Отключаем зацикливание отдельного трека (циклим весь плейлист)
             isLooping = false
-            setOnCompletionListener {
-                onTrackCompletion()
-            }
-            start()
+
+            // Устанавливаем громкость (70% от максимальной)
+            setVolume(0.25f, 0.25f)
         }
     }
 
     /**
-     * Остановка проигрывания и завершение сервиса.
+     * Обрабатывает входящие команды для управления воспроизведением.
+     *
+     * @param intent Intent с действием (ACTION_PLAY, ACTION_PAUSE или ACTION_STOP)
+     * @param flags Флаги запуска
+     * @param startId Идентификатор запуска
+     * @return Режим работы сервиса (START_STICKY для автоматического перезапуска)
      */
-    private fun handleActionStop() {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // Обрабатываем действие из Intent
+        when (intent?.action) {
+            ACTION_PLAY -> play()
+            ACTION_PAUSE -> pause()
+            ACTION_STOP -> stop()
+        }
+
+        // Возвращаем START_STICKY для автоматического перезапуска сервиса
+        return START_STICKY
+    }
+
+    /**
+     * Начинает или возобновляет воспроизведение музыки.
+     *
+     * - Если медиаплеер не инициализирован, создает новый
+     * - Если воспроизведение на паузе, возобновляет с текущей позиции
+     * - Если ничего не играет, начинает текущий трек
+     */
+    private fun play() {
+        mediaPlayer?.let { player ->
+            when {
+                // Возобновляем с паузы
+                isPaused -> {
+                    player.start()
+                    isPaused = false
+                }
+
+                // Начинаем текущий трек (если не играет)
+                !player.isPlaying -> player.start()
+            }
+        } ?: run {
+            // Инициализируем и запускаем, если плеер не создан
+            initializeMediaPlayer()
+            mediaPlayer?.start()
+        }
+    }
+
+    /**
+     * Приостанавливает воспроизведение музыки.
+     * Устанавливает флаг isPaused в true.
+     */
+    private fun pause() {
+        mediaPlayer?.let { player ->
+            if (player.isPlaying) {
+                player.pause()
+                isPaused = true
+            }
+        }
+    }
+
+    /**
+     * Полностью останавливает воспроизведение и освобождает ресурсы.
+     * Вызывает остановку сервиса.
+     */
+    private fun stop() {
         mediaPlayer?.let { player ->
             if (player.isPlaying) {
                 player.stop()
@@ -118,25 +162,40 @@ class MusicService : Service() {
             player.release()
         }
         mediaPlayer = null
+        isPaused = false
 
-        // Завершаем работу сервиса
+        // Останавливаем сервис
         stopSelf()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        // Если сервис уничтожается (например, приложение свернулось), освобождаем ресурсы
-        mediaPlayer?.let { player ->
-            if (player.isPlaying) {
-                player.stop()
-            }
-            player.release()
-        }
-        mediaPlayer = null
+    /**
+     * Переходит к следующему треку в плейлисте.
+     *
+     * 1. Освобождает текущий MediaPlayer
+     * 2. Увеличивает индекс текущего трека (с возвратом к 0 в конце плейлиста)
+     * 3. Инициализирует новый MediaPlayer для следующего трека
+     * 4. Начинает воспроизведение
+     */
+    private fun nextTrack() {
+        // Освобождаем ресурсы текущего плеера
+        mediaPlayer?.release()
+
+        // Переходим к следующему треку (с цикличностью)
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.size
+
+        // Инициализируем плеер для нового трека
+        initializeMediaPlayer()
+
+        // Начинаем воспроизведение
+        mediaPlayer?.start()
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
-        // Поскольку это «простой» сервис (не биндовый), возвращаем null
-        return null
+    /**
+     * Вызывается при уничтожении сервиса.
+     * Гарантирует освобождение ресурсов MediaPlayer.
+     */
+    override fun onDestroy() {
+        stop()
+        super.onDestroy()
     }
 }

@@ -30,12 +30,22 @@ class MainActivity : BaseActivity() {
         // Скрываем SystemBars
         enterImmersiveMode()
 
+        initializeMusic()
         // Навешиваем слушатели на кнопки
         setupListeners()
+        updateMusicButton()
 
         // Перехват системной кнопки «Назад»
         onBackPressedDispatcher.addCallback(this) {
             showExitConfirmDialog()
+        }
+    }
+
+    private fun initializeMusic() {
+        if (isMusicEnabled) {
+            startService(Intent(this, MusicService::class.java).apply {
+                action = MusicService.ACTION_PLAY
+            })
         }
     }
 
@@ -54,28 +64,32 @@ class MainActivity : BaseActivity() {
                 startActivity(Intent(this@MainActivity, HelpActivity::class.java))
             }
 
-            btnMusic.text = if (isMusicEnabled) getString(R.string.music_off) else getString(R.string.music_on)
             btnMusic.setOnClickListener {
-                if (isMusicEnabled) {
-                    // Если музыка сейчас играет, отправляем команду остановки в сервис
-                    val stopIntent = Intent(this@MainActivity, MusicService::class.java).apply {
-                        action = MusicService.ACTION_STOP
-                    }
-                    stopService(stopIntent)
-
-                    isMusicEnabled = false
-                    btnMusic.text = getString(R.string.music_on)
-                } else {
-                    // Если музыка не играет, отправляем команду запуска
-                    val playIntent = Intent(this@MainActivity, MusicService::class.java).apply {
-                        action = MusicService.ACTION_PLAY
-                    }
-                    startService(playIntent)
-
-                    isMusicEnabled = true
-                    btnMusic.text = getString(R.string.music_off)
-                }
+                toggleMusic()
             }
+        }
+    }
+
+    private fun toggleMusic() {
+        isMusicEnabled = !isMusicEnabled
+
+        val musicIntent = Intent(this, MusicService::class.java).apply {
+            action = if (isMusicEnabled) {
+                MusicService.ACTION_PLAY
+            } else {
+                MusicService.ACTION_PAUSE
+            }
+        }
+        startService(musicIntent)
+
+        updateMusicButton()
+    }
+
+    private fun updateMusicButton() {
+        binding.btnMusic.text = if (isMusicEnabled) {
+            getString(R.string.music_off)
+        } else {
+            getString(R.string.music_on)
         }
     }
 
@@ -90,6 +104,11 @@ class MainActivity : BaseActivity() {
                 finishAffinity()
             }
             .show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateMusicButton()
     }
 
 }

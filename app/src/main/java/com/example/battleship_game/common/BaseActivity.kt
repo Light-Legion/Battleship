@@ -1,5 +1,6 @@
 package com.example.battleship_game.common
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -9,6 +10,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.battleship_game.common.UserPreferences.isMusicEnabled
+import com.example.battleship_game.services.MusicService
 
 abstract class BaseActivity : ComponentActivity()  {
 
@@ -67,6 +70,32 @@ abstract class BaseActivity : ComponentActivity()  {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) enterImmersiveMode()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        resumeMusic()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pauseMusic()
+    }
+
+    private fun resumeMusic() {
+        if (isMusicEnabled) {
+            startService(Intent(this, MusicService::class.java).apply {
+                action = MusicService.ACTION_PLAY
+            })
+        }
+    }
+
+    private fun pauseMusic() {
+        if (isMusicEnabled) {
+            startService(Intent(this, MusicService::class.java).apply {
+                action = MusicService.ACTION_PAUSE
+            })
+        }
     }
 
 }
