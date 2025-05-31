@@ -20,6 +20,8 @@
     <string name="ship_templates">Шаблоны кораблей</string>
     <string name="main_menu">Главное меню</string>
     <string name="play_again">Сыграть снова</string>
+    <string name="music_on">Музыка: Вкл</string>
+    <string name="music_off">Музыка: Выкл</string>
 
     <!-- Названия для таблиц -->
     <string name="db_username">Имя пользователя</string>

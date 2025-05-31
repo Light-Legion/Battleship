@@ -11,10 +11,14 @@ import com.example.battleship_game.presentation.help.HelpActivity
 import com.example.battleship_game.presentation.profile.ProfileActivity
 import com.example.battleship_game.presentation.setup.GameSetupActivity
 import com.example.battleship_game.presentation.stats.StatsActivity
+import com.example.battleship_game.services.MusicService
 
 class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    /** Флаг, указывающий, играет ли сейчас музыка */
+    private var isMusicPlaying: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +54,29 @@ class MainActivity : BaseActivity() {
             }
             btnHelp.setOnClickListener {
                 startActivity(Intent(this@MainActivity, HelpActivity::class.java))
+            }
+
+            btnMusic.text = getString(R.string.music_on)
+            btnMusic.setOnClickListener {
+                if (isMusicPlaying) {
+                    // Если музыка сейчас играет, отправляем команду остановки в сервис
+                    val stopIntent = Intent(this@MainActivity, MusicService::class.java).apply {
+                        action = MusicService.ACTION_STOP
+                    }
+                    stopService(stopIntent)
+
+                    isMusicPlaying = false
+                    btnMusic.text = getString(R.string.music_on)
+                } else {
+                    // Если музыка не играет, отправляем команду запуска
+                    val playIntent = Intent(this@MainActivity, MusicService::class.java).apply {
+                        action = MusicService.ACTION_PLAY
+                    }
+                    startService(playIntent)
+
+                    isMusicPlaying = true
+                    btnMusic.text = getString(R.string.music_off)
+                }
             }
         }
     }
