@@ -24,47 +24,72 @@
 
     <TextView
         android:id="@+id/tvTitle"
-        android:layout_width="312dp"
-        android:layout_height="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="@string/txt_auto_setup"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.example.battleship_game.ui.AutoPlacementFieldView
         android:id="@+id/bfv"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_margin="24dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="32dp"
         android:tooltipText="@string/game_field"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/btnSave"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+    <ImageButton
+        android:id="@+id/btnSave"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/save"
+        android:src="@drawable/ic_btn_save"
+        android:tooltipText="@string/save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tilStrategy"
+        app:layout_constraintStart_toEndOf="@+id/bfv"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/tvHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginTop="96dp"
+        android:layout_marginEnd="64dp"
         android:text="@string/txt_select_placement_strategy"
+        android:textColor="@color/black"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilStrategy"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-        android:layout_width="250dp"
+        android:id="@+id/tilStrategy"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="64dp"
         android:layout_weight="1"
         android:hint="@string/txt_select_placement_strategy"
+        android:textColor="@color/black"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvHint">
 
@@ -79,7 +104,7 @@
         android:id="@+id/btnUpdate"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/refresh"
@@ -93,36 +118,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="64dp"
         android:text="@string/txt_update_placement"
+        android:textColor="@color/black"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tilStrategy" />
 
-    <ImageButton
-        android:id="@+id/btnSave"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/save"
-        android:enabled="false"
-        android:src="@drawable/ic_btn_save"
-        android:tooltipText="@string/save"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/bfv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.214" />
-
     <Button
         android:id="@+id/btnToBattle"
-        android:layout_width="0dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
+        android:layout_margin="16dp"
         android:enabled="false"
         android:text="@string/to_battle"
         android:tooltipText="@string/to_battle"
+        android:background="@drawable/btn_to_battle_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

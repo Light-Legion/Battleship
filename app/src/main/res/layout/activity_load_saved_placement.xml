@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,54 +13,68 @@
         android:id="@+id/btnBack"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/ic_launcher_foreground"
-        android:contentDescription="@string/back"
-        android:tooltipText="@string/back"
+        android:layout_margin="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/back"
+        android:src="@drawable/ic_btn_back"
+        android:tooltipText="@string/back"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <!-- Заголовок -->
     <TextView
         android:id="@+id/tvTitle"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
         android:text="@string/txt_load_saved_setup"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/btnBack"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Подзаголовок -->
     <TextView
         android:id="@+id/tvHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="@string/txt_select_setup"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
     <!-- Список сохранённых расстановок -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSavedFields"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="120dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="120dp"
+        android:layout_marginBottom="24dp"
         android:tooltipText="@string/txt_load_saved_setup"
-        app:layout_constraintTop_toBottomOf="@id/tvHint"
         app:layout_constraintBottom_toTopOf="@id/btnLoad"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/tvHint" />
 
     <!-- Кнопка Загрузить -->
     <Button
         android:id="@+id/btnLoad"
-        android:layout_width="0dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/btn_secondary_transparent"
         android:text="@string/load"
+        android:textColor="@color/black"
+        android:textSize="15sp"
         android:tooltipText="@string/load"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

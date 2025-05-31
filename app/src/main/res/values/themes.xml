@@ -6,11 +6,11 @@
         <item name="colorOnPrimary">@color/white</item>
 
         <!-- Фон для AlertDialog и цвет текста внутри -->
-        <item name="alertBackground">@color/teal_200</item>
+        <item name="alertBackground">@color/cyan_200</item>
         <item name="alertTextColor">@color/black</item>
 
         <!-- Для кнопок CustomAlertDialog -->
-        <item name="customDialogPositiveButtonTint">@color/blue</item>
+        <item name="customDialogPositiveButtonTint">@color/blue_200</item>
         <item name="customDialogPositiveButtonTextColor">@color/white</item>
         <item name="customDialogNegativeButtonTint">@color/gray</item>
         <item name="customDialogNegativeButtonTextColor">@color/white</item>

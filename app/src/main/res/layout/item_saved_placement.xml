@@ -12,7 +12,7 @@
     android:clickable="true"
     android:focusable="true"
     app:cardCornerRadius="8dp"
-    app:cardElevation="2dp"
+    app:cardElevation="0dp"
     app:strokeColor="@android:color/transparent"
     app:strokeWidth="0dp"
     app:shapeAppearanceOverlay="@style/CardSelectionStyle">
@@ -21,6 +21,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="horizontal"
         android:background="@drawable/item_selection">
         
         <LinearLayout
@@ -35,7 +36,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textAppearance="?attr/textAppearanceBody1"
-                android:textColor="?attr/colorOnSurface"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="15sp"
                 tools:text="@string/db_username" />
 
             <TextView
@@ -43,7 +46,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?attr/colorOnSurface"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="15sp"
                 tools:text="@string/db_date" />
         </LinearLayout>
     </FrameLayout>
