@@ -1,5 +1,6 @@
 package com.example.battleship_game.presentation.placement.load
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.addCallback
 import androidx.activity.viewModels
@@ -10,6 +11,7 @@ import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.databinding.ActivityLoadSavedPlacementBinding
 import com.example.battleship_game.presentation.placement.load.LoadSavedPlacementViewModel
 import com.example.battleship_game.presentation.placement.load.SavedPlacementAdapter
+import com.example.battleship_game.presentation.placement.manual.ManualPlacementActivity
 import com.google.android.material.snackbar.Snackbar
 
 /**
@@ -71,10 +73,10 @@ class LoadSavedPlacementActivity : BaseActivity() {
             btnLoad.setOnClickListener {
                 selectedId?.let { id ->
                     // Передаём ID в ManualPlacementActivity
-                    /*startActivity(
-                    Intent(this, ManualPlacementActivity::class.java)
+                    startActivity(
+                    Intent(this@LoadSavedPlacementActivity, ManualPlacementActivity::class.java)
                         .putExtra("FIELD_ID", id)
-                )*/
+                    )
                 } ?: run {
                     // Если ничего не выбрано — предупредим пользователя
                     Snackbar.make(main, R.string.hint_select_setup, Snackbar.LENGTH_SHORT).show()

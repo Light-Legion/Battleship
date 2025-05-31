@@ -1,67 +1,43 @@
 package com.example.battleship_game.strategies.placement
 
-import com.example.battleship_game.data.model.ShipPlacement
-import java.util.Random
+import kotlin.random.Random
 
-/**
- * Расставляет корабли так, чтобы их начальная клетка лежала на главной диагонали (x==y).
- */
-class DiagonalPlacer : PlacementStrategy {
+class DiagonalPlacer(rand: Random = Random.Default)
+    : BasePlacementStrategy(rand) {
 
-    override fun generatePlacement(): List<ShipPlacement> {
-        val sizes = listOf(4,3,3,2,2,2,1,1,1,1)
-        val occupied = Array(10) { BooleanArray(10) }
-        val rand = Random()
-
-        placement@ while (true) {
-            val placements = mutableListOf<ShipPlacement>()
-            for (row in occupied) row.fill(false)
-
-            for (i in sizes.indices) {
-                val size = sizes[i]
-                val shipId = i + 1
-                var placed = false
-
-                for (attempt in 1..100) {
-                    val horizontal = rand.nextBoolean()
-                    val start = rand.nextInt(11 - size) // индекс на диагонали
-                    val x = start
-                    val y = start
-
-                    // Проверка, что все клетки свободны
-                    var ok = true
-                    for (k in 0 until size) {
-                        val cx = if (horizontal) x + k else x
-                        val cy = if (horizontal) y else y + k
-                        if (cx !in 0..9 || cy !in 0..9 || occupied[cy][cx]) {
-                            ok = false; break
-                        }
-                    }
-                    if (!ok) continue
-
-                    for (k in 0 until size) {
-                        val cx = if (horizontal) x + k else x
-                        val cy = if (horizontal) y else y + k
-                        occupied[cy][cx] = true
-                    }
-
-                    placements.add(
-                        ShipPlacement(
-                            shipId     = shipId,
-                            length     = size,
-                            startRow   = y,
-                            startCol   = x,
-                            isVertical = !horizontal
-                        )
-                    )
-                    placed = true
-                    break
-                }
-
-                if (!placed) continue@placement
+    override fun scanCells(): List<Pair<Int, Int>> {
+        val out = mutableListOf<Pair<Int,Int>>()
+        for (r in 0..9) {
+            for (c in 0..9) {
+                // пропускаем клетки на главной и побочной диагонали
+                if (r == c || r + c == 9) continue
+                out += r to c
             }
-
-            return placements
         }
+        return out.shuffled(rand)
+    }
+
+    // Переопределяем canPlace, чтобы запретить палубы на диагоналях
+    override fun canPlace(
+        occ: Array<BooleanArray>,
+        x0: Int, y0: Int,
+        size: Int,
+        horizontal: Boolean
+    ): Boolean {
+        // сначала проверяем базовые границы
+        if (!super.canPlace(occ, x0, y0, size, horizontal)) return false
+
+        // теперь проверяем, что ни одна палуба не попадёт на r==c или r+c==9
+        val dx = if (horizontal) 1 else 0
+        val dy = if (horizontal) 0 else 1
+        for (k in 0 until size) {
+            val x = x0 + dx * k
+            val y = y0 + dy * k
+
+            if (x == y || x + y == 9) {
+                return false
+            }
+        }
+        return true
     }
 }

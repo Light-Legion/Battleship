@@ -5,13 +5,16 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import androidx.activity.addCallback
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.databinding.ActivityAutoPlacementBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
 import com.example.battleship_game.presentation.game.LoadingActivity
+import com.example.battleship_game.presentation.placement.PlacementStrategyType
 import com.example.battleship_game.presentation.placement.auto.AutoPlacementViewModel
 import com.example.battleship_game.presentation.placement.save.SavePlacementActivity
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * Экран «Автоматическая расстановка».
@@ -62,44 +65,52 @@ class AutoPlacementActivity : BaseActivity() {
             btnUpdate.setOnClickListener {
                 val sel = actvStrategy.text.toString()
                 if (sel.isBlank()) {
-                    showExitConfirmDialog()
+                    showExitConfirmDialog(R.string.error_refresh_title, R.string.error_refresh_message)
                     return@setOnClickListener
                 }
+
                 // Генерируем новую расстановку
-                val strategy = vm.getStrategyForName(this@AutoPlacementActivity, binding.actvStrategy.text.toString())
-                strategy?.let {
-                    val placement = it.generatePlacement()
-                    vm.currentPlacement = placement
-                    bfv.setPlacements(placement)
-                    vm.hasPlacement = true
+                val type = PlacementStrategyType.fromString(this@AutoPlacementActivity, sel)
+                vm.generate(type)
+
+                val ships = vm.placement.value
+                if (ships.isNullOrEmpty()) {
+                    Snackbar.make(binding.root, R.string.hint_error_placement, Snackbar.LENGTH_LONG).show()
+                } else {
+                    bfv.setPlacements(ships)
                 }
             }
 
             // Кнопка "Сохранить расстановку"
             btnSave.setOnClickListener {
-                vm.currentPlacement?.let { ships ->
-                    startActivity(
-                        Intent(this@AutoPlacementActivity, SavePlacementActivity::class.java)
-                            .putParcelableArrayListExtra(
-                                SavePlacementActivity.Companion.EXTRA_SHIPS,
-                                ArrayList(ships)
-                            )
-                    )
+                val ships = vm.placement.value ?: emptyList()
+
+                if (ships.isEmpty()) {
+                    showExitConfirmDialog(R.string.error_save_title, R.string.error_save_message)
+                    return@setOnClickListener
                 }
+
+                startActivity(
+                    Intent(this@AutoPlacementActivity, SavePlacementActivity::class.java)
+                        .putParcelableArrayListExtra(
+                            SavePlacementActivity.Companion.EXTRA_SHIPS,
+                            ArrayList(ships)
+                        )
+                )
             }
 
             // Кнопка "В бой!"
             btnToBattle.setOnClickListener {
-                vm.currentPlacement?.let { ships ->
-                    startActivity(
-                        Intent(this@AutoPlacementActivity, LoadingActivity::class.java)
-                            .putParcelableArrayListExtra(
-                                LoadingActivity.Companion.EXTRA_PLAYER_SHIPS,
-                                ArrayList(ships)
-                            )
-                    )
-                    finish()
-                }
+                val ships = vm.placement.value!!
+
+                startActivity(
+                    Intent(this@AutoPlacementActivity, LoadingActivity::class.java)
+                        .putParcelableArrayListExtra(
+                            LoadingActivity.Companion.EXTRA_PLAYER_SHIPS,
+                            ArrayList(ships)
+                        )
+                )
+                finish()
             }
         }
     }
@@ -107,16 +118,15 @@ class AutoPlacementActivity : BaseActivity() {
     /** Подписываемся на изменения ViewModel, чтобы обновлять доступность кнопок. */
     private fun observeViewModel() {
         vm.hasPlacementLive.observe(this) { has ->
-            binding.btnSave.isEnabled     = has
             binding.btnToBattle.isEnabled = has
         }
     }
 
-    private fun showExitConfirmDialog() {
+    private fun showExitConfirmDialog(@StringRes title : Int, @StringRes message : Int) {
         CustomAlertDialog(this)
-            .setIcon(R.drawable.ic_launcher_foreground)
-            .setTitle(R.string.error_refresh_title)
-            .setMessage(R.string.error_refresh_message)
+            .setIcon(R.drawable.ic_dialog_warning)
+            .setTitle(title)
+            .setMessage(message)
             .setPositiveButtonText(R.string.action_ok)
             .show()
     }

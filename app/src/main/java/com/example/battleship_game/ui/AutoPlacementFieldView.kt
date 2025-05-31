@@ -14,19 +14,37 @@ import com.example.battleship_game.data.model.ShipPlacement
 import kotlin.math.min
 
 /**
- * View для отображения поля 10×10 с метками и
- * автоматической расстановкой кораблей.
+ * Кастомная View для отображения игрового поля 10×10 с автоматической расстановкой кораблей.
+ *
+ * Особенности:
+ * - Отображение сетки с координатными метками (A-J, 1-10)
+ * - Визуализация кораблей с правильной ориентацией
+ * - Адаптация под разные размеры экранов
+ * - Оптимизированное использование памяти
+ * - Центрированное расположение игрового поля
+ *
+ * @property context Контекст приложения
+ * @property attrs Набор атрибутов из XML
  */
 class AutoPlacementFieldView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null
+    context: Context,
+    attrs: AttributeSet? = null
 ) : View(context, attrs) {
 
-    //  — paint’ы для сетки и текста
+    // Paint для отрисовки сетки
     private val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.STROKE; color = Color.BLACK; strokeWidth = 2f
+        style = Paint.Style.STROKE
+        color = Color.BLACK
+        // Толщина линии адаптируется под плотность экрана
+        strokeWidth = 1.5f * resources.displayMetrics.density
     }
+
+    // Paint для отрисовки текстовых меток
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.BLACK; textSize = 32f; textAlign = Paint.Align.CENTER
+        color = Color.BLACK
+        // Размер текста в sp (масштабируется с настройками системы)
+        textSize = 12f * resources.displayMetrics.scaledDensity
+        textAlign = Paint.Align.CENTER
     }
 
     //  — ресурсные ID для кораблей (“{size}_{h|v}” → drawable)
@@ -41,60 +59,84 @@ class AutoPlacementFieldView @JvmOverloads constructor(
         "4_v" to R.drawable.ship_vertical_4
     )
 
-    //  — кэш загруженных и down­sampled Bitmap’ов
+    // Кэш для загруженных и оптимизированных изображений кораблей
     private val shipBitmaps = mutableMapOf<String, Bitmap>()
 
-    //  — параметры отрисовки
-    private var cellSize = 0f
-    private var offsetX = 0f
-    private var offsetY = 0f
+    // Параметры отрисовки игрового поля
+    private var cellSize = 0f    // Размер одной клетки в пикселях
+    private var offsetX = 0f     // Смещение по X для начала игрового поля
+    private var offsetY = 0f     // Смещение по Y для начала игрового поля
 
-    //  — текущая расстановка
+    // Текущая расстановка кораблей на поле
     private var placements: List<ShipPlacement> = emptyList()
 
     init {
-        // Предзагружаем все битмапы один раз
+        // Предварительная загрузка ресурсов
         preloadShipBitmaps()
     }
 
     /**
-     * Загружает из ресурсов все битмапы для кораблей,
-     * автоматически рассчитывая downSampling по размеру на экране.
+     * Загружает и оптимизирует изображения кораблей.
+     *
+     * Изображения масштабируются с учетом плотности экрана и размера ячейки,
+     * чтобы минимизировать использование памяти.
      */
     private fun preloadShipBitmaps() {
-        // предположим, что cellSize ещё не вычислен — используем density, потом ресайзим при рисовании
-        val metrics = resources.displayMetrics
-        val target = (metrics.density * 48).toInt() // ориентирамся на 48dp
+        // Расчет целевого размера на основе плотности экрана
+        val targetSize = (48 * resources.displayMetrics.density).toInt()
 
         shipResources.forEach { (key, resId) ->
-            // 1) Узнаём размеры
-            val opts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-            BitmapFactory.decodeResource(resources, resId, opts)
-            val scale = calculateInSampleSize(opts.outWidth, opts.outHeight, target, target)
+            val options = BitmapFactory.Options().apply {
+                inJustDecodeBounds = true
+            }
 
-            // 2) Загружаем с inSampleSize
-            opts.inJustDecodeBounds = false
-            opts.inSampleSize = scale
-            opts.inScaled = false
+            // Получаем размеры изображения без загрузки в память
+            BitmapFactory.decodeResource(resources, resId, options)
 
-            val bmp = BitmapFactory.decodeResource(resources, resId, opts)
-            shipBitmaps[key] = bmp
+            // Рассчитываем коэффициент масштабирования
+            val scale = calculateInSampleSize(
+                options.outWidth,
+                options.outHeight,
+                targetSize,
+                targetSize
+            )
+
+            // Загружаем изображение с оптимальным масштабированием
+            options.inJustDecodeBounds = false
+            options.inSampleSize = scale
+            shipBitmaps[key] = BitmapFactory.decodeResource(resources, resId, options)
         }
     }
 
-    /** Алгоритм подбора inSampleSize из документации Android. */
+    /**
+     * Рассчитывает коэффициент масштабирования для загрузки битмапа.
+     *
+     * @param width Исходная ширина изображения
+     * @param height Исходная высота изображения
+     * @param reqWidth Требуемая ширина
+     * @param reqHeight Требуемая высота
+     * @return Коэффициент уменьшения (inSampleSize)
+     */
     private fun calculateInSampleSize(
-        width: Int, height: Int,
-        reqWidth: Int, reqHeight: Int
+        width: Int,
+        height: Int,
+        reqWidth: Int,
+        reqHeight: Int
     ): Int {
         var inSampleSize = 1
+
+        // Вычисляем размеры только если исходное изображение больше требуемого
         if (height > reqHeight || width > reqWidth) {
-            val halfH = height / 2
-            val halfW = width  / 2
-            while (halfH / inSampleSize >= reqHeight && halfW / inSampleSize >= reqWidth) {
+            val halfHeight = height / 2
+            val halfWidth = width / 2
+
+            // Удваиваем коэффициент, пока не достигнем нужного размера
+            while (halfHeight / inSampleSize >= reqHeight &&
+                halfWidth / inSampleSize >= reqWidth) {
                 inSampleSize *= 2
             }
         }
+
         return inSampleSize
     }
 
@@ -112,12 +154,22 @@ class AutoPlacementFieldView @JvmOverloads constructor(
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        // высчитываем cellSize так, чтобы 10 клеток + метки помещались
-        val availW = w - paddingLeft - paddingRight
-        val availH = h - paddingTop - paddingBottom
+        super.onSizeChanged(w, h, oldw, oldh)
+
+        // Учитываем padding с обеих сторон
+        val horizontalPadding = paddingLeft + paddingRight
+        val verticalPadding = paddingTop + paddingBottom
+
+        // Доступное пространство для сетки (10x10 клеток)
+        val availW = w - horizontalPadding
+        val availH = h - verticalPadding
+
+        // Размер клетки = мин. значение из (ширина/11, высота/11)
         cellSize = min(availW / 11f, availH / 11f)
+
+        // Смещение для меток (левая и верхняя полоса)
         offsetX = paddingLeft + cellSize
-        offsetY = paddingTop  + cellSize
+        offsetY = paddingTop + cellSize
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -132,8 +184,8 @@ class AutoPlacementFieldView @JvmOverloads constructor(
         for (i in 0..10) {
             val x = offsetX + i * cellSize
             val y = offsetY + i * cellSize
-            canvas.drawLine(x, offsetY, x, offsetY + 10*cellSize, gridPaint)
-            canvas.drawLine(offsetX, y, offsetX + 10*cellSize, y, gridPaint)
+            canvas.drawLine(x, offsetY, x, offsetY + 10 * cellSize, gridPaint)
+            canvas.drawLine(offsetX, y, offsetX + 10 * cellSize, y, gridPaint)
         }
     }
 
@@ -141,30 +193,41 @@ class AutoPlacementFieldView @JvmOverloads constructor(
     private fun drawLabels(canvas: Canvas) {
         for (i in 0 until 10) {
             // цифра
-            canvas.drawText("${i+1}",
-                offsetX + (i+0.5f)*cellSize,
-                offsetY - cellSize/3,
-                textPaint)
+            canvas.drawText(
+                "${i + 1}",
+                offsetX + (i + 0.5f) * cellSize,
+                offsetY - cellSize / 3,
+                textPaint
+            )
             // буква
-            canvas.drawText(('A'+i).toString(),
-                offsetX - cellSize/2,
-                offsetY + (i+0.7f)*cellSize,
-                textPaint)
+            canvas.drawText(
+                ('A' + i).toString(),
+                offsetX - cellSize / 2,
+                offsetY + (i + 0.7f) * cellSize,
+                textPaint
+            )
         }
     }
 
     /** Рисует каждую картинку корабля, растягивая её на нужное число клеток. */
     private fun drawShips(canvas: Canvas) {
-        for (s in placements) {
-            val key = "${s.length}_${if (s.isVertical) "v" else "h"}"
-            val bmp = shipBitmaps[key] ?: continue
+        val shipPaint = Paint().apply {
+            isAntiAlias = true
+            isFilterBitmap = true
+        }
 
-            val left   = offsetX + s.startCol * cellSize
-            val top    = offsetY + s.startRow * cellSize
-            val right  = left + if (s.isVertical) cellSize else s.length * cellSize
-            val bottom = top  + if (!s.isVertical) cellSize else s.length * cellSize
+        placements.forEach { ship ->
+            val key = "${ship.length}_${if (ship.isVertical) "v" else "h"}"
+            val bitmap = shipBitmaps[key] ?: return@forEach
 
-            canvas.drawBitmap(bmp, null, RectF(left, top, right, bottom), null)
+            val left = offsetX + ship.startCol * cellSize
+            val top = offsetY + ship.startRow * cellSize
+            val width = if (ship.isVertical) cellSize else ship.length * cellSize
+            val height = if (!ship.isVertical) cellSize else ship.length * cellSize
+
+            // Используем матрицу для сохранения пропорций
+            val destRect = RectF(left, top, left + width, top + height)
+            canvas.drawBitmap(bitmap, null, destRect, shipPaint)
         }
     }
 }
