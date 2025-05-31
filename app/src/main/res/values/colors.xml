@@ -8,11 +8,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#4E4C4C</color>
+    <color name="gray_200">#5B5959</color>
     <color name="blue">#2B43D1</color>
     <color name="blue_200">#0D2CD9</color>
     <color name="blue_400">#1B29C1</color>
     <color name="cyan">#78BCDC</color>
     <color name="cyan_200">#99CAE4</color>
+    <color name="cyan_400">#95CAFF</color>
     <color name="red">#DC2828</color>
     <color name="gray_lite">#C0C0C0</color>
 </resources>
