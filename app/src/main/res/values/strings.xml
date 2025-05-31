@@ -87,6 +87,8 @@
     <string name="strategy_shooters_diagonal">Диагональная</string>
     <string name="strategy_shooters_density_analysis">Анализ плотности</string>
 
+    <string name="initial_countdown_value">3</string>
+
     <!-- Названия для модальных окон (диалогов) -->
     <string name="error_exit_title">Выход из приложения</string>
     <string name="error_exit_message">Вы действительно хотите выйти?</string>

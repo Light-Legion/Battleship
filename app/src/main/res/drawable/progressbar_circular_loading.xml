@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 1) Статичный фон (серый, полностью нарисованный) -->
+    <item>
+        <shape
+            android:shape="ring"
+            android:useLevel="false"
+            android:innerRadiusRatio="3"
+            android:thickness="12dp">
+            <!-- Размер круга, совпадает с layout_width/layout_height ProgressBar -->
+            <size
+                android:width="100dp"
+                android:height="100dp" />
+            <!-- Цвет «пустой» (фоновой) части -->
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+
+    <!--
+        2) «Заливка» (цветная часть) — useLevel="true".
+           Мы оборачиваем это в rotate, чтобы заполнение шло от 90° (сверху) по часовой стрелке.
+    -->
+    <item>
+        <rotate
+            android:fromDegrees="-90"
+            android:toDegrees="-90">
+            <shape
+                android:shape="ring"
+                android:useLevel="true"
+                android:innerRadiusRatio="3"
+                android:thickness="12dp">
+                <!-- Тот же размер, чтобы слои совпадали -->
+                <size
+                    android:width="100dp"
+                    android:height="100dp" />
+                <!-- Цвет «заливки» (синий или любой другой) -->
+                <solid android:color="@color/blue_400" />
+            </shape>
+        </rotate>
+    </item>
+</layer-list>
