@@ -7,6 +7,7 @@ import androidx.activity.addCallback
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.common.UserPreferences.battleDifficulty
+import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.databinding.ActivityGameSetupBinding
 import com.example.battleship_game.presentation.placement.load.LoadSavedPlacementActivity
 import com.example.battleship_game.presentation.placement.manual.ManualPlacementActivity
@@ -77,7 +78,7 @@ class GameSetupActivity : BaseActivity() {
                 val chosenPlacement  = binding.actvPlacement.text.toString()
 
                 // 2) Сохраняем только сложность
-                battleDifficulty = chosenDifficulty
+                battleDifficulty = Difficulty.fromString(this@GameSetupActivity, chosenDifficulty)
 
                 // 3) По индексу способа выбираем Activity
                 val index = placements.indexOf(chosenPlacement)
