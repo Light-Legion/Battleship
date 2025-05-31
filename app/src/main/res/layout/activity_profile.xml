@@ -115,7 +115,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="80dp"
         android:layout_marginBottom="80dp"
-        android:background="@drawable/rounded_btn_custom"
+        android:background="@drawable/btn_primary_rounded_blue"
         android:text="@string/change_avatar"
         android:textSize="18sp"
         android:tooltipText="@string/change_avatar"

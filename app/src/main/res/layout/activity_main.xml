@@ -12,7 +12,7 @@
         android:id="@+id/btnPlay"
         android:layout_width="282dp"
         android:layout_height="67dp"
-        android:background="@drawable/rounded_btn_custom"
+        android:background="@drawable/btn_primary_rounded_blue"
         android:contentDescription="@string/play"
         android:padding="12dp"
         android:text="@string/play"

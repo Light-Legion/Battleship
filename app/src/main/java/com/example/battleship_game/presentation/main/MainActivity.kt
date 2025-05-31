@@ -56,7 +56,7 @@ class MainActivity : BaseActivity() {
 
     private fun showExitConfirmDialog() {
         CustomAlertDialog(this)
-            .setIcon(R.drawable.ic_launcher_foreground)
+            .setIcon(R.drawable.ic_dialog_warning)
             .setTitle(R.string.error_exit_title)
             .setMessage(R.string.error_exit_message)
             .setNegativeButtonText(R.string.action_cancel)

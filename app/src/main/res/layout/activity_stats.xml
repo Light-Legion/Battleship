@@ -19,6 +19,7 @@
         android:contentDescription="@string/back"
         android:tooltipText="@string/back"
         android:src="@drawable/ic_btn_back"
+        android:background="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -30,7 +31,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
-        android:background="@drawable/header_background"
+        android:background="@drawable/bg_table_header"
         android:orientation="horizontal"
         android:paddingVertical="8dp"
         android:textSize="20sp"

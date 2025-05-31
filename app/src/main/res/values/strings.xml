@@ -64,6 +64,7 @@
     <string name="hint_open_help">Открытие информации о системе</string>
     <string name="hint_changed_name">Имя пользователя изменено</string>
     <string name="hint_changed_avatar">Аватар изменен</string>
+    <string name="hint_error_placement">Не удалось сгенерировать расстановку</string>
 
     <!-- Названия для данных -->
     <string name="label_player">Игрок</string>
@@ -98,4 +99,6 @@
     <string name="error_placement_name_message">Вы неправильно ввели название расстановки, попробуйте снова!</string>
     <string name="error_refresh_title">Ошибка обновления!</string>
     <string name="error_refresh_message">Чтобы обновить расстановку, необходимо выбрать стратегию!</string>
+    <string name="error_save_title">Ошибка сохранения!</string>
+    <string name="error_save_message">Чтобы сохранить расстановку, необходимо расставить все корабли!</string>
 </resources>
