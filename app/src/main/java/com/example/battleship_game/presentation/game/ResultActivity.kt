@@ -3,20 +3,28 @@ package com.example.battleship_game.presentation.game
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.addCallback
+import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
+import com.example.battleship_game.common.UserPreferences.battleDifficulty
+import com.example.battleship_game.common.UserPreferences.nickname
 import com.example.battleship_game.data.model.GameResult
 import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.databinding.ActivityResultBinding
 import com.example.battleship_game.presentation.main.MainActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class ResultActivity : BaseActivity() {
 
     private lateinit var binding: ActivityResultBinding
-    // Список расстановки кораблей игрока
-    private lateinit var ships: List<ShipPlacement>
-    // Результат матча (WIN или LOSS)
-    private lateinit var result: GameResult
+    private val viewModel: ResultActivityViewModel by viewModels()
+
+    private val ships: List<ShipPlacement> by lazy { parseShips() }
+    private val result: GameResult by lazy { parseResult() }
 
     companion object {
         const val EXTRA_PLAYER_SHIPS = "EXTRA_PLAYER_SHIPS"
@@ -33,27 +41,16 @@ class ResultActivity : BaseActivity() {
         applyEdgeInsets(binding.main)
         enterImmersiveMode()
 
-        parseIntentExtras()
         setupUI()
-
-        onBackPressedDispatcher.addCallback(this) {
-            navigateToMain()
-        }
+        saveGameRecord()
     }
 
-    /**
-     * Извлекает из intent список кораблей и результат матча.
-     * Если данные отсутствуют или некорректны, ставятся значения по умолчанию.
-     */
-    private fun parseIntentExtras() {
-        // 1) Получаем список ShipPlacement (через ParcelableArrayList)
-        ships = intent
-            .getParcelableArrayListExtra<ShipPlacement>(EXTRA_PLAYER_SHIPS)
-            .orEmpty()
+    private fun parseShips() = intent
+        .getParcelableArrayListExtra<ShipPlacement>(EXTRA_PLAYER_SHIPS)
+        .orEmpty()
 
-        // 2) Получаем GameResult (enum) через Serializable
-        val serialized = intent.getSerializableExtra(EXTRA_PLAYER_RESULT)
-        result = serialized as? GameResult ?: GameResult.LOSS
+    private fun parseResult(): GameResult {
+        return (intent.getSerializableExtra(EXTRA_PLAYER_RESULT) as? GameResult) ?: GameResult.LOSS
     }
 
     /**
@@ -79,6 +76,21 @@ class ResultActivity : BaseActivity() {
             btnPlayAgain.setOnClickListener {
                 navigateToLoadingWithShips()
             }
+        }
+
+        onBackPressedDispatcher.addCallback(this) {
+            navigateToMain()
+        }
+    }
+
+    private fun saveGameRecord() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val name = nickname
+            val level = battleDifficulty
+            val now = LocalDateTime.now()
+            val date = now.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
+
+            viewModel.saveGameHistory(name, result, level, date)
         }
     }
 

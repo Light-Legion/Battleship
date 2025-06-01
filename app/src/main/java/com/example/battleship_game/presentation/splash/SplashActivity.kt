@@ -44,23 +44,6 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun simulateLoading() {
-        // 1. Добавим 5 тестовых записей
-        lifecycleScope.launch(Dispatchers.IO) {
-            val dao = AppDatabase.getInstance(this@SplashActivity).gameHistoryDao()
-            val now = LocalDateTime.now()
-            val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
-
-            val testData = listOf(
-                GameHistory(name = "Test", result = GameResult.WIN,  level = Difficulty.EASY,   date = now.format(formatter)),
-                GameHistory(name = "Test", result = GameResult.LOSS, level = Difficulty.MEDIUM, date = now.format(formatter)),
-                GameHistory(name = "Test", result = GameResult.WIN,  level = Difficulty.HARD,   date = now.format(formatter)),
-                GameHistory(name = "Test", result = GameResult.LOSS, level = Difficulty.EASY,   date = now.format(formatter)),
-                GameHistory(name = "Test", result = GameResult.WIN,  level = Difficulty.MEDIUM, date = now.format(formatter))
-            )
-
-            testData.forEach { dao.insert(it) }
-        }
-
         val animator = ObjectAnimator.ofInt(binding.progress, "progress", 0, 100)
         animator.duration = 2000L //в миллисекундах, 1000L = 1 секунда
         animator.interpolator = LinearInterpolator() //равномерное заполнение
