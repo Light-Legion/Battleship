@@ -61,9 +61,9 @@ class ResultActivity : BaseActivity() {
         binding.apply {
             var background =
                 if (result == GameResult.WIN) {
-                    R.drawable.bg_screen_ships_at_sea
+                    R.drawable.bg_victory_screen
                 } else {
-                    R.drawable.bg_screen_gradient
+                    R.drawable.bg_defeat_screen
                 }
             main.setBackgroundResource(background)
 
