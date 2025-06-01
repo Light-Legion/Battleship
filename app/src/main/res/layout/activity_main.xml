@@ -60,17 +60,13 @@
         android:id="@+id/btnHelp"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_margin="8dp"
+        android:layout_margin="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/help"
         android:src="@drawable/ic_btn_help"
         android:tooltipText="@string/help"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.991"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.011" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textStatsBtn"
@@ -102,14 +98,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.607" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnMusic"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_margin="16dp"
-        android:text="@string/music_on"
-        android:textColor="@android:color/white"
-        android:background="@drawable/btn_secondary_transparent"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/music"
+        android:src="@drawable/ic_btn_music_off"
+        android:tooltipText="@string/music"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

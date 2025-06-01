@@ -72,30 +72,4 @@ abstract class BaseActivity : ComponentActivity()  {
         if (hasFocus) enterImmersiveMode()
     }
 
-    override fun onResume() {
-        super.onResume()
-        resumeMusic()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        pauseMusic()
-    }
-
-    private fun resumeMusic() {
-        if (isMusicEnabled) {
-            startService(Intent(this, MusicService::class.java).apply {
-                action = MusicService.ACTION_PLAY
-            })
-        }
-    }
-
-    private fun pauseMusic() {
-        if (isMusicEnabled) {
-            startService(Intent(this, MusicService::class.java).apply {
-                action = MusicService.ACTION_PAUSE
-            })
-        }
-    }
-
 }

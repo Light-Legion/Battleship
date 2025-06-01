@@ -20,8 +20,7 @@
     <string name="ship_templates">Шаблоны кораблей</string>
     <string name="main_menu">Главное меню</string>
     <string name="play_again">Сыграть снова</string>
-    <string name="music_on">Музыка: Вкл</string>
-    <string name="music_off">Музыка: Выкл</string>
+    <string name="music">Музыка</string>
 
     <!-- Названия для таблиц -->
     <string name="db_username">Имя пользователя</string>
@@ -69,6 +68,13 @@
     <string name="hint_changed_name">Имя пользователя изменено</string>
     <string name="hint_changed_avatar">Аватар изменен</string>
     <string name="hint_error_placement">Не удалось сгенерировать расстановку</string>
+
+    <!-- Названия для уведомлений -->
+    <string name="notification_channel_name">Music Service</string>
+    <string name="notification_channel_description">Background music playback</string>
+    <string name="notification_title">Игра \"Морской бой\"</string>
+    <string name="notification_text">Включена фоновая музыка</string>
+
 
     <!-- Названия для данных -->
     <string name="label_player">Игрок</string>

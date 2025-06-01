@@ -1,8 +1,13 @@
 package com.example.battleship_game.presentation.main
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.addCallback
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.common.UserPreferences.isMusicEnabled
@@ -18,6 +23,10 @@ class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    companion object {
+        private const val NOTIFICATION_PERMISSION_CODE = 1001
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -30,22 +39,16 @@ class MainActivity : BaseActivity() {
         // Скрываем SystemBars
         enterImmersiveMode()
 
-        initializeMusic()
         // Навешиваем слушатели на кнопки
         setupListeners()
+
+        checkNotificationPermission()
+        initializeMusic()
         updateMusicButton()
 
         // Перехват системной кнопки «Назад»
         onBackPressedDispatcher.addCallback(this) {
             showExitConfirmDialog()
-        }
-    }
-
-    private fun initializeMusic() {
-        if (isMusicEnabled) {
-            startService(Intent(this, MusicService::class.java).apply {
-                action = MusicService.ACTION_PLAY
-            })
         }
     }
 
@@ -70,26 +73,50 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    private fun initializeMusic() {
+        if (isMusicEnabled) {
+            startMusicService(MusicService.ACTION_PLAY)
+        }
+    }
+
     private fun toggleMusic() {
         isMusicEnabled = !isMusicEnabled
 
-        val musicIntent = Intent(this, MusicService::class.java).apply {
-            action = if (isMusicEnabled) {
-                MusicService.ACTION_PLAY
-            } else {
-                MusicService.ACTION_PAUSE
-            }
-        }
-        startService(musicIntent)
+        startMusicService(
+            if (isMusicEnabled) MusicService.ACTION_PLAY
+            else MusicService.ACTION_PAUSE
+        )
 
         updateMusicButton()
     }
 
+    private fun startMusicService(action: String) {
+        startForegroundService(
+            Intent(this, MusicService::class.java).apply {
+                this.action = action
+            }
+        )
+    }
+
     private fun updateMusicButton() {
-        binding.btnMusic.text = if (isMusicEnabled) {
-            getString(R.string.music_off)
-        } else {
-            getString(R.string.music_on)
+        binding.btnMusic.setImageResource(
+            if (isMusicEnabled) R.drawable.ic_btn_music_on else R.drawable.ic_btn_music_off
+        )
+    }
+
+    private fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    NOTIFICATION_PERMISSION_CODE
+                )
+            }
         }
     }
 
