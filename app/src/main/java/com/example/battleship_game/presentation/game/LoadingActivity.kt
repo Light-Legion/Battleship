@@ -41,7 +41,6 @@ class LoadingActivity : BaseActivity() {
 
     companion object {
         const val EXTRA_PLAYER_SHIPS = "EXTRA_PLAYER_SHIPS"
-        const val EXTRA_COMPUTER_SHIPS = "EXTRA_COMPUTER_SHIPS"
         const val EXTRA_DIFFICULTY = "EXTRA_DIFFICULTY"
 
         private const val COUNTDOWN_DURATION_MS = 3000L
@@ -156,9 +155,18 @@ class LoadingActivity : BaseActivity() {
      */
     private fun startGameActivity() {
         startActivity(Intent(this@LoadingActivity, GameActivity::class.java).apply {
-            putParcelableArrayListExtra(EXTRA_PLAYER_SHIPS, ArrayList(viewModel.playerShips))
-            putParcelableArrayListExtra(EXTRA_COMPUTER_SHIPS, ArrayList(viewModel.computerShips))
-            putExtra(EXTRA_DIFFICULTY, viewModel.difficulty)
+            putParcelableArrayListExtra(
+                EXTRA_PLAYER_SHIPS,
+                ArrayList(viewModel.playerShips)
+            )
+            putParcelableArrayListExtra(
+                GameActivity.EXTRA_COMPUTER_SHIPS,
+                ArrayList(viewModel.computerShips)
+            )
+            putExtra(
+                EXTRA_DIFFICULTY,
+                viewModel.difficulty
+            )
         })
         finish()
     }

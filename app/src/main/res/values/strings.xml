@@ -67,8 +67,9 @@
     <string name="label_opponent">Летучий Голландец</string>
     <string name="avatar_opponent">Аватар компьютера</string>
     <string name="label_role_capitan">Капитан</string>
-    <string name="txt_turn_message">Ваш ход!</string>
-    <string name="txt_remains">О\nс\nт\nа\nл\nо\nс\nь</string>
+    <string name="txt_turn_player">Ваш ход!</string>
+    <string name="txt_turn_computer">Ход Летучего Голландца!</string>
+    <string name="txt_remains">О\nс\nт\nа\nл\nо\nс\nь\n\nк\nо\nр\nа\nб\nл\nе\nй</string>
     <string name="txt_remains_destroy">Осталось уничтожить</string>
     <string name="txt_ship_battleship">Линкор</string>
     <string name="txt_count_battleship">1</string>
