@@ -3,6 +3,7 @@ package com.example.battleship_game.presentation.game
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.addCallback
+import androidx.activity.viewModels
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.common.UserPreferences.avatarRes
@@ -11,13 +12,13 @@ import com.example.battleship_game.data.model.GameResult
 import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.databinding.ActivityGameBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
+import com.example.battleship_game.presentation.placement.auto.AutoPlacementViewModel
+import kotlin.getValue
 
 class GameActivity : BaseActivity() {
 
     private lateinit var binding: ActivityGameBinding
-
-    private lateinit var playerShips: List<ShipPlacement>
-    private lateinit var computerShips: List<ShipPlacement>
+    private val viewModel: GameActivityViewModel by viewModels()
 
     companion object {
         const val EXTRA_PLAYER_SHIPS = "EXTRA_PLAYER_SHIPS"
@@ -43,11 +44,11 @@ class GameActivity : BaseActivity() {
      * Если данные отсутствуют или некорректны, ставятся значения по умолчанию.
      */
     private fun parseIntentExtras() {
-        playerShips = intent
+        viewModel.playerShips = intent
             .getParcelableArrayListExtra<ShipPlacement>(EXTRA_PLAYER_SHIPS)
             .orEmpty()
 
-        computerShips = intent
+        viewModel.computerShips = intent
             .getParcelableArrayListExtra<ShipPlacement>(EXTRA_COMPUTER_SHIPS)
             .orEmpty()
     }
@@ -57,6 +58,9 @@ class GameActivity : BaseActivity() {
             btnGiveUp.setOnClickListener {
                 showExitConfirmDialog()
             }
+
+            bfvPlayer.setPlacements(viewModel.playerShips)
+            bfvComputer.setPlacements(viewModel.computerShips)
 
             ivAvatarPlayer.setImageResource(avatarRes)
             tvPlayer.text = nickname
@@ -72,7 +76,7 @@ class GameActivity : BaseActivity() {
             Intent(this@GameActivity, ResultActivity::class.java)
                 .putParcelableArrayListExtra(
                     ResultActivity.EXTRA_PLAYER_SHIPS,
-                    ArrayList(playerShips)
+                    ArrayList(viewModel.playerShips)
                 )
                 .putExtra(
                     ResultActivity.EXTRA_PLAYER_RESULT,
