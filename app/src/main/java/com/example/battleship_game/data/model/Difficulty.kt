@@ -6,30 +6,25 @@ import com.example.battleship_game.R
 /**
  * Уровень сложности: ЛЕГКИЙ, СРЕДНИЙ, СЛОЖНЫЙ.
  */
-enum class Difficulty {
-    EASY, MEDIUM, HARD;
+enum class Difficulty(val displayNameRes: Int) {
+    EASY(R.string.difficulty_easy),
+    MEDIUM(R.string.difficulty_medium),
+    HARD(R.string.difficulty_hard);
 
-    /** Отображаемое русское название */
-    fun toDisplayString(): String =
-        when(this) {
-            EASY   -> "Легкий"
-            MEDIUM -> "Средний"
-            HARD   -> "Сложный"
-        }
+    /** Возвращает локализованную строку по ресурсу */
+    fun toDisplayString(context: Context): String {
+        return context.getString(displayNameRes)
+    }
 
     companion object {
-        /**
-         * Конвертирует строку (например, "Легкий", "Средний", "Сложный")
-         * в соответствующий enum-элемент [Difficulty].
-         * Если ни один из вариантов не подходит, возвращает MEDIUM по умолчанию.
-         */
-        fun fromString(context: Context, str: String): Difficulty {
-            return when (str) {
-                context.getString(R.string.difficulty_easy) -> EASY
-                context.getString(R.string.difficulty_medium) -> MEDIUM
-                context.getString(R.string.difficulty_hard) -> HARD
-                else -> MEDIUM
-            }
+        /** Возвращает enum по локализованной строке */
+        fun fromDisplayName(context: Context, str: String): Difficulty {
+            return entries.firstOrNull { context.getString(it.displayNameRes) == str } ?: MEDIUM
+        }
+
+        /** Возвращает список всех локализованных названий */
+        fun getDisplayNames(context: Context): List<String> {
+            return entries.map { context.getString(it.displayNameRes) }
         }
     }
 }

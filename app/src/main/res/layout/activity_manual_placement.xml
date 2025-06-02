@@ -50,7 +50,7 @@
         app:layout_constraintVertical_bias="0.178" />
 
     <!-- 4) Игровое поле -->
-    <com.example.battleship_game.ui.BattleFieldView
+    <com.example.battleship_game.ui.ManualPlacementFieldView
         android:id="@+id/bfv"
         android:layout_width="335dp"
         android:layout_height="320dp"

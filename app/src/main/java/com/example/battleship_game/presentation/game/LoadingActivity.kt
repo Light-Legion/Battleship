@@ -13,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
-import com.example.battleship_game.common.UserPreferences.battleDifficulty
+import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.databinding.ActivityLoadingBinding
 import com.google.android.material.snackbar.Snackbar
@@ -42,6 +42,7 @@ class LoadingActivity : BaseActivity() {
     companion object {
         const val EXTRA_PLAYER_SHIPS = "EXTRA_PLAYER_SHIPS"
         const val EXTRA_COMPUTER_SHIPS = "EXTRA_COMPUTER_SHIPS"
+        const val EXTRA_DIFFICULTY = "EXTRA_DIFFICULTY"
 
         private const val COUNTDOWN_DURATION_MS = 3000L
     }
@@ -61,8 +62,6 @@ class LoadingActivity : BaseActivity() {
             insets
         }
 
-        parseData()
-
         // Параллельно запускаем генерацию и анимацию
         startComputerShipGeneration()
         startCountdownAnimation()
@@ -76,14 +75,15 @@ class LoadingActivity : BaseActivity() {
      * Извлекает из intent список кораблей и уровень сложности.
      * Записывает их в viewModel.
      */
-    private fun parseData() {
+    private fun parseIntentExtras() {
         // Получаем данные из интента и сохраняем в viewModel
         viewModel.playerShips = intent
             .getParcelableArrayListExtra<ShipPlacement>(EXTRA_PLAYER_SHIPS)
             .orEmpty()
 
         // Получаем сложность из настроек и сохраняем в viewModel
-        viewModel.difficulty = battleDifficulty
+        viewModel.difficulty = intent
+            .getSerializableExtra(EXTRA_DIFFICULTY) as? Difficulty ?: Difficulty.MEDIUM
     }
 
     /**
@@ -91,6 +91,7 @@ class LoadingActivity : BaseActivity() {
      */
     private fun startComputerShipGeneration() {
         lifecycleScope.launch(Dispatchers.IO) {
+            parseIntentExtras()
             viewModel.computerShips = viewModel.generateComputerShips(viewModel.difficulty)
             generationComplete = true
 
@@ -154,11 +155,10 @@ class LoadingActivity : BaseActivity() {
      * Переход на экран игры
      */
     private fun startGameActivity() {
-        val playerShips = intent.getParcelableArrayListExtra<ShipPlacement>(EXTRA_PLAYER_SHIPS) ?: arrayListOf()
-
         startActivity(Intent(this@LoadingActivity, GameActivity::class.java).apply {
             putParcelableArrayListExtra(EXTRA_PLAYER_SHIPS, ArrayList(viewModel.playerShips))
             putParcelableArrayListExtra(EXTRA_COMPUTER_SHIPS, ArrayList(viewModel.computerShips))
+            putExtra(EXTRA_DIFFICULTY, viewModel.difficulty)
         })
         finish()
     }

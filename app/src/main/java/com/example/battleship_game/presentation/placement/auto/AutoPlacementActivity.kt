@@ -8,11 +8,11 @@ import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
+import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.databinding.ActivityAutoPlacementBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
 import com.example.battleship_game.presentation.game.LoadingActivity
 import com.example.battleship_game.presentation.placement.PlacementStrategyType
-import com.example.battleship_game.presentation.placement.auto.AutoPlacementViewModel
 import com.example.battleship_game.presentation.placement.save.SavePlacementActivity
 import com.google.android.material.snackbar.Snackbar
 
@@ -24,7 +24,11 @@ import com.google.android.material.snackbar.Snackbar
 class AutoPlacementActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAutoPlacementBinding
-    private val vm: AutoPlacementViewModel by viewModels()
+    private val viewModel: AutoPlacementViewModel by viewModels()
+
+    companion object {
+        const val EXTRA_DIFFICULTY = "EXTRA_DIFFICULTY"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +39,7 @@ class AutoPlacementActivity : BaseActivity() {
         applyEdgeInsets(binding.main)
         enterImmersiveMode()
 
+        parseIntentExtras()
         setupDropdown()
         setupListeners()
         observeViewModel()
@@ -42,6 +47,12 @@ class AutoPlacementActivity : BaseActivity() {
         onBackPressedDispatcher.addCallback(this) {
             finish()
         }
+    }
+
+    private fun parseIntentExtras() {
+        // Получаем сложность из настроек и сохраняем в viewModel
+        viewModel.difficulty = intent
+            .getSerializableExtra(EXTRA_DIFFICULTY) as? Difficulty ?: Difficulty.MEDIUM
     }
 
     /** Заполняем выпадающий список стратегий. */
@@ -71,9 +82,9 @@ class AutoPlacementActivity : BaseActivity() {
 
                 // Генерируем новую расстановку
                 val type = PlacementStrategyType.fromString(this@AutoPlacementActivity, sel)
-                vm.generate(type)
+                viewModel.generate(type)
 
-                val ships = vm.placement.value
+                val ships = viewModel.placement.value
                 if (ships.isNullOrEmpty()) {
                     Snackbar.make(binding.root, R.string.hint_error_placement, Snackbar.LENGTH_LONG).show()
                 } else {
@@ -83,7 +94,7 @@ class AutoPlacementActivity : BaseActivity() {
 
             // Кнопка "Сохранить расстановку"
             btnSave.setOnClickListener {
-                val ships = vm.placement.value ?: emptyList()
+                val ships = viewModel.placement.value ?: emptyList()
 
                 if (ships.isEmpty()) {
                     showExitConfirmDialog(R.string.error_save_title, R.string.error_save_message)
@@ -93,7 +104,7 @@ class AutoPlacementActivity : BaseActivity() {
                 startActivity(
                     Intent(this@AutoPlacementActivity, SavePlacementActivity::class.java)
                         .putParcelableArrayListExtra(
-                            SavePlacementActivity.Companion.EXTRA_SHIPS,
+                            SavePlacementActivity.EXTRA_SHIPS,
                             ArrayList(ships)
                         )
                 )
@@ -101,15 +112,19 @@ class AutoPlacementActivity : BaseActivity() {
 
             // Кнопка "В бой!"
             btnToBattle.setOnClickListener {
-                val ships = vm.placement.value!!
+                val ships = viewModel.placement.value!!
 
                 startActivity(
-                    Intent(this@AutoPlacementActivity, LoadingActivity::class.java)
-                        .putParcelableArrayListExtra(
+                    Intent(this@AutoPlacementActivity, LoadingActivity::class.java).apply {
+                        putParcelableArrayListExtra(
                             LoadingActivity.EXTRA_PLAYER_SHIPS,
                             ArrayList(ships)
                         )
-                )
+                        putExtra(
+                            EXTRA_DIFFICULTY,
+                            viewModel.difficulty
+                        )
+                    })
                 finish()
             }
         }
@@ -117,7 +132,7 @@ class AutoPlacementActivity : BaseActivity() {
 
     /** Подписываемся на изменения ViewModel, чтобы обновлять доступность кнопок. */
     private fun observeViewModel() {
-        vm.hasPlacementLive.observe(this) { has ->
+        viewModel.hasPlacementLive.observe(this) { has ->
             binding.btnToBattle.isEnabled = has
         }
     }

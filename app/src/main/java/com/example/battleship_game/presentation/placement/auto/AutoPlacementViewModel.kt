@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.presentation.placement.PlacementStrategyType
 import kotlin.random.Random
@@ -19,6 +20,8 @@ class AutoPlacementViewModel : ViewModel() {
 
     // Флаг «наличия» расстановки
     val hasPlacementLive: LiveData<Boolean> = _placement.map { it.isNotEmpty() }
+
+    var difficulty: Difficulty = Difficulty.MEDIUM
 
     fun generate(type: PlacementStrategyType) {
         // опционально: запуск в background

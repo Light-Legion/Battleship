@@ -7,8 +7,8 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
-import com.example.battleship_game.common.UserPreferences.battleDifficulty
 import com.example.battleship_game.common.UserPreferences.nickname
+import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.data.model.GameResult
 import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.databinding.ActivityResultBinding
@@ -23,12 +23,10 @@ class ResultActivity : BaseActivity() {
     private lateinit var binding: ActivityResultBinding
     private val viewModel: ResultActivityViewModel by viewModels()
 
-    private val ships: List<ShipPlacement> by lazy { parseShips() }
-    private val result: GameResult by lazy { parseResult() }
-
     companion object {
         const val EXTRA_PLAYER_SHIPS = "EXTRA_PLAYER_SHIPS"
         const val EXTRA_PLAYER_RESULT = "EXTRA_PLAYER_RESULT"
+        const val EXTRA_DIFFICULTY = "EXTRA_DIFFICULTY"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,16 +39,19 @@ class ResultActivity : BaseActivity() {
         applyEdgeInsets(binding.main)
         enterImmersiveMode()
 
+        parseIntentExtras()
         setupUI()
         saveGameRecord()
     }
 
-    private fun parseShips() = intent
-        .getParcelableArrayListExtra<ShipPlacement>(EXTRA_PLAYER_SHIPS)
-        .orEmpty()
+    private fun parseIntentExtras() {
+        viewModel.ships = intent
+            .getParcelableArrayListExtra<ShipPlacement>(EXTRA_PLAYER_SHIPS)
+            .orEmpty()
 
-    private fun parseResult(): GameResult {
-        return (intent.getSerializableExtra(EXTRA_PLAYER_RESULT) as? GameResult) ?: GameResult.LOSS
+        viewModel.result = intent.getSerializableExtra(EXTRA_PLAYER_RESULT) as? GameResult ?: GameResult.LOSS
+
+        viewModel.level = intent.getSerializableExtra(EXTRA_DIFFICULTY) as? Difficulty ?: Difficulty.MEDIUM
     }
 
     /**
@@ -60,14 +61,14 @@ class ResultActivity : BaseActivity() {
     private fun setupUI() {
         binding.apply {
             var background =
-                if (result == GameResult.WIN) {
+                if (viewModel.result == GameResult.WIN) {
                     R.drawable.bg_victory_screen
                 } else {
                     R.drawable.bg_defeat_screen
                 }
             main.setBackgroundResource(background)
 
-            tvResult.text = result.toDisplayString()
+            tvResult.text = getString(viewModel.result.displayNameRes)
 
             btnMainMenu.setOnClickListener {
                 navigateToMain()
@@ -86,11 +87,10 @@ class ResultActivity : BaseActivity() {
     private fun saveGameRecord() {
         lifecycleScope.launch(Dispatchers.IO) {
             val name = nickname
-            val level = battleDifficulty
             val now = LocalDateTime.now()
             val date = now.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
 
-            viewModel.saveGameHistory(name, result, level, date)
+            viewModel.saveGameHistory(name, viewModel.result, viewModel.level, date)
         }
     }
 
@@ -106,11 +106,16 @@ class ResultActivity : BaseActivity() {
      * Запускает LoadingActivity, передавая туда список ships.
      */
     private fun navigateToLoadingWithShips() {
-        val intent = Intent(this@ResultActivity, LoadingActivity::class.java)
-            .putParcelableArrayListExtra(
+        val intent = Intent(this@ResultActivity, LoadingActivity::class.java).apply {
+            putParcelableArrayListExtra(
                 LoadingActivity.EXTRA_PLAYER_SHIPS,
-                ArrayList(ships)
+                ArrayList(viewModel.ships)
             )
+            putExtra(
+                LoadingActivity.EXTRA_DIFFICULTY,
+                viewModel.level
+            )
+        }
         startActivity(intent)
         finish()
     }

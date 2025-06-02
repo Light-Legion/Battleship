@@ -18,9 +18,10 @@ class GameHistoryAdapter(
         : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: GameHistory) {
             binding.apply {
+                val context = root.context
                 tvName.text = item.name
-                tvResult.text = item.result.toDisplayString()
-                tvLevel.text = item.level.toDisplayString()
+                tvResult.text = context.getString(item.result.displayNameRes)
+                tvLevel.text = context.getString(item.level.displayNameRes)
                 tvDate.text = item.date
             }
         }

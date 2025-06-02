@@ -6,27 +6,32 @@ import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.battleship_game.common.BaseActivity
+import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.databinding.ActivityManualPlacementBinding
-import com.example.battleship_game.presentation.placement.manual.ManualPlacementViewModel
+import com.example.battleship_game.presentation.game.LoadingActivity
 import com.example.battleship_game.presentation.placement.save.SavePlacementActivity
-import com.example.battleship_game.presentation.placement.manual.ShipTemplateAdapter
-import com.example.battleship_game.ui.BattleFieldView
+import com.example.battleship_game.ui.ManualPlacementFieldView
 
 /**
  * Activity для ручной расстановки кораблей.
  *
  * Показывает:
- *  - [com.example.battleship_game.ui.BattleFieldView] слева,
+ *  - [com.example.battleship_game.ui.ManualPlacementFieldView] слева,
  *  - шаблоны кораблей справа (1–2–3–4 в строках),
  *  - кнопки «Назад», «Сохранить», «Очистить», «В бой!».
  */
 class ManualPlacementActivity : BaseActivity(),
-    BattleFieldView.Listener // имплементируем коллбэки поля
+    ManualPlacementFieldView.Listener // имплементируем коллбэки поля
 {
 
     private lateinit var binding: ActivityManualPlacementBinding
-    private val vm: ManualPlacementViewModel by viewModels()
+    private val viewModel: ManualPlacementViewModel by viewModels()
+
+    companion object {
+        const val EXTRA_FIELD_ID = "EXTRA_FIELD_ID"
+        const val EXTRA_DIFFICULTY = "EXTRA_DIFFICULTY"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,11 +42,21 @@ class ManualPlacementActivity : BaseActivity(),
         applyEdgeInsets(binding.main)
         enterImmersiveMode()
 
+        parseIntentExtras()
         setupUI()
 
         onBackPressedDispatcher.addCallback(this) {
             finish()
         }
+    }
+
+    private fun parseIntentExtras() {
+        viewModel.field_id = intent
+            .getLongExtra(EXTRA_FIELD_ID, 0)
+
+        // Получаем сложность из настроек и сохраняем в viewModel
+        viewModel.difficulty = intent
+            .getSerializableExtra(EXTRA_DIFFICULTY) as? Difficulty ?: Difficulty.MEDIUM
     }
 
     private fun setupUI() {
@@ -54,7 +69,7 @@ class ManualPlacementActivity : BaseActivity(),
             bfv.listener = this@ManualPlacementActivity
 
             // Настраиваем RecyclerView шаблонов в GridLayoutManager(4) + SpanSizeLookup
-            vm.templates.observe(this@ManualPlacementActivity) { templates ->
+            viewModel.templates.observe(this@ManualPlacementActivity) { templates ->
                 val glm = GridLayoutManager(this@ManualPlacementActivity, 4)
                 glm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                     override fun getSpanSize(position: Int): Int {
@@ -81,17 +96,19 @@ class ManualPlacementActivity : BaseActivity(),
             btnFight.setOnClickListener {
                 val placed = bfv.getPlacedShips()
                 // Передаём список в следующую Activity, например, в GameActivity
-                /*startActivity(
-                    Intent(this@ManualPlacementActivity, GameActivity::class.java)
-                        .putParcelableArrayListExtra("EXTRA_SHIPS", ArrayList(placed))
-                )*/
+                startActivity(
+                    Intent(this@ManualPlacementActivity, LoadingActivity::class.java).apply {
+                        putParcelableArrayListExtra(LoadingActivity.EXTRA_PLAYER_SHIPS, ArrayList(placed))
+                        putExtra(EXTRA_DIFFICULTY, viewModel.difficulty)
+                    })
             }
 
+            // Кнопка "Сохранить"
             btnSave.setOnClickListener {
                 val placed = bfv.getPlacedShips()
                 startActivity(
                     Intent(this@ManualPlacementActivity, SavePlacementActivity::class.java)
-                        .putParcelableArrayListExtra("EXTRA_SHIPS", ArrayList(placed))
+                        .putParcelableArrayListExtra(SavePlacementActivity.EXTRA_SHIPS, ArrayList(placed))
                 )
             }
         }

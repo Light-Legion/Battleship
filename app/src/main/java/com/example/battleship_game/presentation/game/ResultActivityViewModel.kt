@@ -7,12 +7,17 @@ import com.example.battleship_game.data.db.AppDatabase
 import com.example.battleship_game.data.entity.GameHistory
 import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.data.model.GameResult
+import com.example.battleship_game.data.model.ShipPlacement
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ResultActivityViewModel(app: Application) : AndroidViewModel(app) {
 
     private val dao = AppDatabase.getInstance(app).gameHistoryDao()
+
+    var ships: List<ShipPlacement> = emptyList()
+    var result: GameResult = GameResult.LOSS
+    var level: Difficulty = Difficulty.MEDIUM
 
     // extension: можно использовать viewModelScope
     fun saveGameHistory(
