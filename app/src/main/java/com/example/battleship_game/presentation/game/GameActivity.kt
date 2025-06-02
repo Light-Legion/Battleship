@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.activity.addCallback
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
+import com.example.battleship_game.common.UserPreferences.avatarRes
+import com.example.battleship_game.common.UserPreferences.nickname
 import com.example.battleship_game.data.model.GameResult
 import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.databinding.ActivityGameBinding
@@ -19,7 +21,7 @@ class GameActivity : BaseActivity() {
 
     companion object {
         const val EXTRA_PLAYER_SHIPS = "EXTRA_PLAYER_SHIPS"
-        const val EXTRA_PLAYER_RESULT = "EXTRA_PLAYER_RESULT"
+        const val EXTRA_COMPUTER_SHIPS = "EXTRA_COMPUTER_SHIPS"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,10 +36,6 @@ class GameActivity : BaseActivity() {
 
         parseIntentExtras()
         setupUI()
-
-        onBackPressedDispatcher.addCallback(this) {
-            showExitConfirmDialog()
-        }
     }
 
     /**
@@ -46,46 +44,42 @@ class GameActivity : BaseActivity() {
      */
     private fun parseIntentExtras() {
         playerShips = intent
-            .getParcelableArrayListExtra<ShipPlacement>(ResultActivity.Companion.EXTRA_PLAYER_SHIPS)
+            .getParcelableArrayListExtra<ShipPlacement>(EXTRA_PLAYER_SHIPS)
             .orEmpty()
 
         computerShips = intent
-            .getParcelableArrayListExtra<ShipPlacement>(ResultActivity.Companion.EXTRA_PLAYER_SHIPS)
+            .getParcelableArrayListExtra<ShipPlacement>(EXTRA_COMPUTER_SHIPS)
             .orEmpty()
     }
 
     private fun setupUI() {
         binding.apply {
-            btnWin.setOnClickListener {
-                startActivity(
-                    Intent(this@GameActivity, ResultActivity::class.java)
-                        .putParcelableArrayListExtra(
-                            ResultActivity.EXTRA_PLAYER_SHIPS,
-                            ArrayList(playerShips)
-                        )
-                        .putExtra(
-                            ResultActivity.EXTRA_PLAYER_RESULT,
-                            GameResult.WIN
-                        )
-                )
-                finish()
+            btnGiveUp.setOnClickListener {
+                showExitConfirmDialog()
             }
 
-            btnLoss.setOnClickListener {
-                startActivity(
-                    Intent(this@GameActivity, ResultActivity::class.java)
-                        .putParcelableArrayListExtra(
-                            ResultActivity.EXTRA_PLAYER_SHIPS,
-                            ArrayList(playerShips)
-                        )
-                        .putExtra(
-                            ResultActivity.EXTRA_PLAYER_RESULT,
-                            GameResult.LOSS
-                        )
-                )
-                finish()
-            }
+            ivAvatarPlayer.setImageResource(avatarRes)
+            tvPlayer.text = nickname
         }
+
+        onBackPressedDispatcher.addCallback(this) {
+            showExitConfirmDialog()
+        }
+    }
+
+    private fun openResult(result: GameResult) {
+        startActivity(
+            Intent(this@GameActivity, ResultActivity::class.java)
+                .putParcelableArrayListExtra(
+                    ResultActivity.EXTRA_PLAYER_SHIPS,
+                    ArrayList(playerShips)
+                )
+                .putExtra(
+                    ResultActivity.EXTRA_PLAYER_RESULT,
+                    result
+                )
+        )
+        finish()
     }
 
     private fun showExitConfirmDialog() {
@@ -96,18 +90,7 @@ class GameActivity : BaseActivity() {
             .setPositiveButtonText(R.string.action_yes)
             .setNegativeButtonText(R.string.action_cancel)
             .setOnPositiveClickListener {
-                startActivity(
-                    Intent(this@GameActivity, ResultActivity::class.java)
-                        .putParcelableArrayListExtra(
-                            ResultActivity.EXTRA_PLAYER_SHIPS,
-                            ArrayList(playerShips)
-                        )
-                        .putExtra(
-                            ResultActivity.EXTRA_PLAYER_RESULT,
-                            GameResult.LOSS
-                        )
-                )
-                finish()
+                openResult(GameResult.LOSS)
             }
             .show()
     }

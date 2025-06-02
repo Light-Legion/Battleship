@@ -21,6 +21,10 @@
     <string name="main_menu">Главное меню</string>
     <string name="play_again">Сыграть снова</string>
     <string name="music">Музыка</string>
+    <string name="initial_countdown_value">3</string>
+    <string name="give_up">С\nД\nА\nТ\nЬ\nС\nЯ</string>
+
+
 
     <!-- Названия для таблиц -->
     <string name="db_username">Имя пользователя</string>
@@ -58,6 +62,23 @@
     <string name="txt_auto_setup">Автоматическая расстановка</string>
     <string name="txt_select_placement_strategy">Выберите стратегию расстановки</string>
     <string name="txt_update_placement">Обновить расстановку</string>
+    <string name="label_player">Игрок</string>
+    <string name="avatar_player">Аватар игрока</string>
+    <string name="label_opponent">Летучий Голландец</string>
+    <string name="avatar_opponent">Аватар компьютера</string>
+    <string name="label_role_capitan">Капитан</string>
+    <string name="txt_turn_message">Ваш ход!</string>
+    <string name="txt_remains">О\nс\nт\nа\nл\nо\nс\nь</string>
+    <string name="txt_remains_destroy">Осталось уничтожить</string>
+    <string name="txt_ship_battleship">Линкор</string>
+    <string name="txt_count_battleship">1</string>
+    <string name="txt_ship_cruiser">Крейсер</string>
+    <string name="txt_count_cruiser">2</string>
+    <string name="txt_ship_destroyer">Эсминец</string>
+    <string name="txt_count_destroyer">3</string>
+    <string name="txt_ship_speedboat">Катер</string>
+    <string name="txt_count_speedboat">4</string>
+    <string name="txt_give_up">Сдаться</string>
 
     <!-- Названия для подсказок пользователю -->
     <string name="hint_username">Имя может содержать только буквы и пробелы между словами!</string>
@@ -77,10 +98,6 @@
 
 
     <!-- Названия для данных -->
-    <string name="label_player">Игрок</string>
-    <string name="label_opponent">Летучий Голландец</string>
-    <string name="label_role_capitan">Капитан</string>
-
     <string name="difficulty_easy">Легкий</string>
     <string name="difficulty_medium">Средний</string>
     <string name="difficulty_hard">Сложный</string>
@@ -99,8 +116,6 @@
     <string name="strategy_shooters_random">Случайная с добиванием</string>
     <string name="strategy_shooters_diagonal">Диагональная</string>
     <string name="strategy_shooters_density_analysis">Анализ плотности</string>
-
-    <string name="initial_countdown_value">3</string>
 
     <!-- Названия для модальных окон (диалогов) -->
     <string name="exit_title">Выход из приложения</string>

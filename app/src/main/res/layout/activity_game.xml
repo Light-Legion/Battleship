@@ -5,25 +5,291 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_screen_gradient"
     tools:context=".presentation.game.GameActivity">
 
-    <Button
-        android:id="@+id/btnWin"
-        android:layout_width="150dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutPlayer"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="160dp"
-        android:layout_marginBottom="80dp"
-        android:text="@string/result_win"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivAvatarPlayer"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:contentDescription="@string/avatar_player"
+            android:src="@drawable/avatar_female_1"
+            android:tooltipText="@string/avatar_player"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvCapitanPlayer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/label_role_capitan"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/ivAvatarPlayer"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvPlayer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/label_player"
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toEndOf="@+id/ivAvatarPlayer"
+            app:layout_constraintTop_toBottomOf="@+id/tvCapitanPlayer" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutComputer"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivAvatarComputer"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:contentDescription="@string/avatar_opponent"
+            android:src="@drawable/avatar_ai"
+            android:tooltipText="@string/avatar_opponent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvCapitanComputer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/label_role_capitan"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/ivAvatarComputer"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvComputer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/label_opponent"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toStartOf="@+id/ivAvatarComputer"
+            app:layout_constraintTop_toBottomOf="@+id/tvCapitanComputer" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/layoutTurn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:tooltipText="@string/txt_turn_message"
+        app:layout_constraintEnd_toStartOf="@+id/layoutComputer"
+        app:layout_constraintStart_toEndOf="@+id/layoutPlayer"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvTurnMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="8dp"
+            android:padding="12dp"
+            android:text="@string/txt_turn_message"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutShips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:tooltipText="@string/txt_remains_destroy"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/btnGiveUp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutPlayer"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/tvRemainsDestroy"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/txt_remains"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ivShipBattleship"
+            android:layout_width="16dp"
+            android:layout_height="64dp"
+            android:layout_marginStart="8dp"
+            android:contentDescription="@string/txt_ship_battleship"
+            android:src="@drawable/ship_vertical_4"
+            app:layout_constraintStart_toEndOf="@+id/tvRemainsDestroy"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvCountBattleship"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/txt_count_battleship"
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toEndOf="@+id/tvRemainsDestroy"
+            app:layout_constraintTop_toBottomOf="@+id/ivShipBattleship" />
+
+        <ImageView
+            android:id="@+id/ivShipCruiser"
+            android:layout_width="16dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/txt_ship_cruiser"
+            android:src="@drawable/ship_vertical_3"
+            app:layout_constraintStart_toEndOf="@+id/tvRemainsDestroy"
+            app:layout_constraintTop_toBottomOf="@+id/tvCountBattleship" />
+
+        <TextView
+            android:id="@+id/tvCountCruiser"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/txt_count_cruiser"
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toEndOf="@+id/tvRemainsDestroy"
+            app:layout_constraintTop_toBottomOf="@+id/ivShipCruiser" />
+
+        <ImageView
+            android:id="@+id/ivShipDestroyer"
+            android:layout_width="16dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/txt_ship_destroyer"
+            android:src="@drawable/ship_vertical_2"
+            app:layout_constraintStart_toEndOf="@+id/tvRemainsDestroy"
+            app:layout_constraintTop_toBottomOf="@+id/tvCountCruiser" />
+
+        <TextView
+            android:id="@+id/tvCountDestroyer"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/txt_count_destroyer"
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toEndOf="@+id/tvRemainsDestroy"
+            app:layout_constraintTop_toBottomOf="@+id/ivShipDestroyer" />
+
+        <ImageView
+            android:id="@+id/ivShipSpeedBoat"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/txt_ship_speedboat"
+            android:src="@drawable/ship_vertical_1"
+            app:layout_constraintStart_toEndOf="@+id/tvRemainsDestroy"
+            app:layout_constraintTop_toBottomOf="@+id/tvCountDestroyer" />
+
+        <TextView
+            android:id="@+id/tvCountSpeedBoat"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/txt_count_speedboat"
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toEndOf="@+id/tvRemainsDestroy"
+            app:layout_constraintTop_toBottomOf="@+id/ivShipSpeedBoat" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
-        android:id="@+id/btnLoss"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="160dp"
-        android:layout_marginBottom="80dp"
-        android:text="@string/result_loss"
+        android:id="@+id/btnGiveUp"
+        android:layout_width="48dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/btn_secondary_transparent"
+        android:gravity="center"
+        android:text="@string/give_up"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:tooltipText="@string/txt_give_up"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutComputer"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutBattle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnGiveUp"
+        app:layout_constraintStart_toEndOf="@+id/layoutShips"
+        app:layout_constraintTop_toBottomOf="@+id/layoutTurn">
+
+        <com.example.battleship_game.ui.BattleFieldView
+            android:id="@+id/bfvPlayer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:tooltipText="@string/game_field"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bfvComputer"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.example.battleship_game.ui.BattleFieldView
+            android:id="@+id/bfvComputer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:tooltipText="@string/game_field"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/bfvPlayer"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
