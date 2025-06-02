@@ -12,8 +12,6 @@ import com.example.battleship_game.data.model.GameResult
 import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.databinding.ActivityGameBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
-import com.example.battleship_game.presentation.placement.auto.AutoPlacementViewModel
-import kotlin.getValue
 
 class GameActivity : BaseActivity() {
 
@@ -37,6 +35,7 @@ class GameActivity : BaseActivity() {
 
         parseIntentExtras()
         setupUI()
+        //setupGame()
     }
 
     /**

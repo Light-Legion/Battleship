@@ -20,4 +20,5 @@
     <color name="cyan_600">#048CA9</color>
     <color name="red">#DC2828</color>
     <color name="gray_lite">#C0C0C0</color>
+    <color name="game_field">#96F0F0FF</color>
 </resources>

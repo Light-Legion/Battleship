@@ -47,6 +47,11 @@ class AutoPlacementFieldView @JvmOverloads constructor(
         textAlign = Paint.Align.CENTER
     }
 
+    private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = context.getColor(R.color.game_field) // слегка голубоватый полупрозрачный фон
+        style = Paint.Style.FILL
+    }
+
     //  — ресурсные ID для кораблей (“{size}_{h|v}” → drawable)
     private val shipResources = mapOf(
         "1_h" to R.drawable.ship_horizontal_1,
@@ -66,6 +71,8 @@ class AutoPlacementFieldView @JvmOverloads constructor(
     private var cellSize = 0f    // Размер одной клетки в пикселях
     private var offsetX = 0f     // Смещение по X для начала игрового поля
     private var offsetY = 0f     // Смещение по Y для начала игрового поля
+    private var gridWidth = 0f          // Ширина всей сетки (10 * cellSize)
+    private var gridHeight = 0f         // Высота всей сетки (10 * cellSize)
 
     // Текущая расстановка кораблей на поле
     private var placements: List<ShipPlacement> = emptyList()
@@ -166,6 +173,8 @@ class AutoPlacementFieldView @JvmOverloads constructor(
 
         // Размер клетки = мин. значение из (ширина/11, высота/11)
         cellSize = min(availW / 11f, availH / 11f)
+        gridWidth = cellSize * 10f
+        gridHeight = cellSize * 10f
 
         // Смещение для меток (левая и верхняя полоса)
         offsetX = paddingLeft + cellSize
@@ -174,9 +183,19 @@ class AutoPlacementFieldView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        drawBackground(canvas)
         drawGrid(canvas)
         drawLabels(canvas)
         drawShips(canvas)
+    }
+
+    /** Рисует полупрозрачный фон под сеткой */
+    private fun drawBackground(canvas: Canvas) {
+        canvas.drawRect(
+            offsetX, offsetY,
+            offsetX + gridWidth, offsetY + gridHeight,
+            backgroundPaint
+        )
     }
 
     /** Рисует линии сетки 10×10. */

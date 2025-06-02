@@ -104,7 +104,7 @@ class BattleFieldView @JvmOverloads constructor(
     }
 
     private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.argb(150, 240, 240, 255) // слегка голубоватый полупрозрачный фон
+        color = context.getColor(R.color.game_field) // слегка голубоватый полупрозрачный фон
         style = Paint.Style.FILL
     }
 
