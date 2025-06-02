@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import androidx.activity.addCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import com.example.battleship_game.R
@@ -28,6 +29,15 @@ class AutoPlacementActivity : BaseActivity() {
 
     companion object {
         const val EXTRA_DIFFICULTY = "EXTRA_DIFFICULTY"
+    }
+
+    private val savePlacementLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            // Показываем сообщение, только если расстановка была сохранена
+            Snackbar.make(binding.main, R.string.hint_save_placement, Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,12 +111,11 @@ class AutoPlacementActivity : BaseActivity() {
                     return@setOnClickListener
                 }
 
-                startActivity(
-                    Intent(this@AutoPlacementActivity, SavePlacementActivity::class.java)
-                        .putParcelableArrayListExtra(
-                            SavePlacementActivity.EXTRA_SHIPS,
-                            ArrayList(ships)
-                        )
+                savePlacementLauncher.launch(Intent(this@AutoPlacementActivity, SavePlacementActivity::class.java)
+                    .putParcelableArrayListExtra(
+                        SavePlacementActivity.EXTRA_SHIPS,
+                        ArrayList(ships)
+                    )
                 )
             }
 

@@ -89,6 +89,7 @@
     <string name="hint_changed_name">Имя пользователя изменено</string>
     <string name="hint_changed_avatar">Аватар изменен</string>
     <string name="hint_error_placement">Не удалось сгенерировать расстановку</string>
+    <string name="hint_save_placement">Расстановка сохранена</string>
 
     <!-- Названия для уведомлений -->
     <string name="notification_channel_name">Music Service</string>
