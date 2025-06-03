@@ -1,3 +1,10 @@
 package com.example.battleship_game.strategies.shooting
 
-enum class CellState { UNKNOWN, MISS, HIT, SUNK, BUFFER }
+/** Состояние одной клеточки поля */
+enum class CellState {
+    EMPTY,    // Пустая (ещё не стреляли, нет корабля или скрыт)
+    SHIP,     // Клетка с кораблем (видно только у PLAYER-поля)
+    HIT,      // Попадание (рисуется крестик)
+    MISS,     // Промах (рисуется штриховка)
+    SUNK      // Потопленная часть корабля (рисуется корабль «под» крестиком)
+}

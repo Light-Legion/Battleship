@@ -16,6 +16,7 @@ import com.example.battleship_game.data.model.ShipPlacement
 import kotlin.collections.forEach
 import kotlin.math.min
 import androidx.core.graphics.scale
+import com.example.battleship_game.strategies.shooting.CellState
 
 /**
  * BattleFieldView — кастомный View для отображения 10×10 поля «Морской бой».
@@ -48,15 +49,6 @@ class BattleFieldView @JvmOverloads constructor(
 
     /** Тип поля: PLAYER — рисовать свои корабли; COMPUTER — скрывать чужие */
     enum class FieldType { PLAYER, COMPUTER }
-
-    /** Состояние одной клеточки поля */
-    enum class CellState {
-        EMPTY,    // Пустая (ещё не стреляли, нет корабля или скрыт)
-        SHIP,     // Клетка с кораблем (видно только у PLAYER-поля)
-        HIT,      // Попадание (рисуется крестик)
-        MISS,     // Промах (рисуется штриховка)
-        SUNK      // Потопленная часть корабля (рисуется корабль «под» крестиком)
-    }
 
     // ------------------------------------------------------------
     // 2. Публичные свойства
