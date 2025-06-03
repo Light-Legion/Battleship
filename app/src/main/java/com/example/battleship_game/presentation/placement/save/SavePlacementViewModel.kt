@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.battleship_game.data.db.AppDatabase
 import com.example.battleship_game.data.entity.GamePlacement
 import com.example.battleship_game.data.model.ShipPlacement
+import com.example.battleship_game.data.repository.PlacementRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -18,9 +19,15 @@ import java.util.Locale
  */
 class SavePlacementViewModel(app: Application) : AndroidViewModel(app) {
 
-    private val dao = AppDatabase.Companion.getInstance(app).gamePlacementDao()
-    private val gson = Gson()
+    // Получаем DAO, создаём репозиторий
+    private val repository: PlacementRepository
+
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+
+    init {
+        val dao = AppDatabase.getInstance(app).gamePlacementDao()
+        repository = PlacementRepository(dao)
+    }
 
     /**
      * Сохранить расстановку.
@@ -31,14 +38,13 @@ class SavePlacementViewModel(app: Application) : AndroidViewModel(app) {
     fun save(name: String, ships: List<ShipPlacement>) {
         viewModelScope.launch {
             val now = dateFormat.format(Date())
-            // Превращаем список кораблей в JSON
-            val json = gson.toJson(ships)
             val entity = GamePlacement(
                 name = name,
-                placementJson = json,
+                placement = ships,
                 date = now
             )
-            dao.insert(entity)
+            // Вместо dao.insert(...) вызываем репозиторий
+            repository.insertPlacement(entity)
         }
     }
 }
