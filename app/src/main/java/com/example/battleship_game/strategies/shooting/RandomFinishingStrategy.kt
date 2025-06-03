@@ -3,39 +3,21 @@ package com.example.battleship_game.strategies.shooting
 import kotlin.random.Random
 
 /**
- * «Случайная с добиванием» стратегия:
+ * Стратегия «Случайная с добиванием».
  *
- * 1) Хранит mutableSet availableCells со всеми «еще не обстрелянными» клетками.
- * 2) computeNextShot():
- *    • Если в targetQueue (очередь добивания) есть координаты – берём первую доступную.
- *    • Иначе – выбираем случайную точку из availableCells.
- *    После выбора сразу удаляем её из availableCells, чтобы больше не возвращать.
- * 3) onShotResult(lastShot, hit, sunk):
- *    • Всегда удаляем lastShot из availableCells (он уже удалён в computeNextShot).
- *    • Если hit && sunk (потопили):
- *         – добавляем (r,c) в hitCells, если его там ещё нет
- *         – вычисляем «буфер» (вокруг всех hitCells)
- *         – удаляем из availableCells все hitCells и их буфер
- *         – сбрасываем режим добивания (hitCells.clear(), targetQueue.clear(), firstHit/secondHit = null)
- *    • Если hit (но не sunk):
- *         – добавляем (r,c) в hitCells
- *         – пересоздаём очередь добивания, опираясь на актуальный список hitCells
- *    • Если miss – больше ничего не делаем (точка уже удалена из availableCells).
+ * 1) Пока нет попаданий → выбираем любую случайную клетку из availableCells.
+ * 2) Если есть попадание, мы записываем его в huntHits (список попаданий текущего корабля)
+ *    и пересоздаём очередь добивания (huntQueue) через enqueueBasedOnHits().
+ * 3) При потоплении вычисляем буфер вокруг всех hitCells (с помощью computeBuffer()),
+ *    удаляем из availableCells сам корабль (hitCells) и весь буфер, а затем сбрасываем режим добивания.
+ *
+ * В любой момент стратегия НЕ вернёт клетку, которой нет в availableCells.
  */
 class RandomFinishingStrategy : BaseShootingStrategy() {
 
     private val random = Random.Default
 
-    /** Очередь координат «добивания». */
-    private val targetQueue = ArrayDeque<Pair<Int, Int>>()
-
-    /** Список всех подряд попавших точек текущего (ещё не потопленного) корабля. */
-    private val hitCells = mutableListOf<Pair<Int, Int>>()
-
-    /**
-     * Множество всех точек, которые ещё не стрелялись.
-     * Стратегия никогда не выберет точку, которой нет в этом множестве.
-     */
+    /** Множество всех ещё не обстрелянных клеток. */
     private val availableCells = mutableSetOf<Pair<Int, Int>>().apply {
         for (r in 0 until 10) {
             for (c in 0 until 10) {
@@ -45,24 +27,24 @@ class RandomFinishingStrategy : BaseShootingStrategy() {
     }
 
     override fun computeNextShot(): Pair<Int, Int> {
-        // 1) Если есть очередь добивания, пытаемся взять первую доступную точку
-        while (targetQueue.isNotEmpty()) {
-            val cell = targetQueue.removeFirst()
+        // 1) Если очередь добивания непуста, пытаемся взять оттуда первую доступную клетку
+        while (huntQueue.isNotEmpty()) {
+            val cell = huntQueue.removeFirst()
             if (cell in availableCells) {
                 availableCells.remove(cell)
                 return cell
             }
         }
 
-        // 2) Иначе – случайная точка из доступных
+        // 2) Иначе выбираем случайную клетку из availableCells
         if (availableCells.isNotEmpty()) {
-            val randomIndex = random.nextInt(availableCells.size)
-            val cell = availableCells.elementAt(randomIndex)
+            val idx = random.nextInt(availableCells.size)
+            val cell = availableCells.elementAt(idx)
             availableCells.remove(cell)
             return cell
         }
 
-        // 3) Чисто на всякий случай – берем первую «не tried» (теоретически недостижимо)
+        // 3) На всякий случай (теоретически недостижимо) – возвращаем первую не tried клетку
         for (r in 0 until 10) {
             for (c in 0 until 10) {
                 if (!hasTried(r, c)) {
@@ -73,129 +55,48 @@ class RandomFinishingStrategy : BaseShootingStrategy() {
         throw IllegalStateException("No available cells to shoot")
     }
 
-    override fun onShotResult(
-        lastShot: Pair<Int, Int>?,
-        hit: Boolean,
-        sunk: Boolean
-    ) {
+    override fun onShotResult(lastShot: Pair<Int, Int>?, hit: Boolean, sunk: Boolean) {
         if (lastShot == null) return
         val (r, c) = lastShot
 
         when {
-            // ─── Корабль потоплен ───
+            // ——— Потопили корабль ———
             hit && sunk -> {
-                // 1) Добавляем последнюю точку в hitCells (если там ещё нет)
-                if ((r to c) !in hitCells) {
-                    hitCells.add(r to c)
+                // 1) Добавляем эту клетку в huntHits, если ещё не было
+                if ((r to c) !in huntHits) {
+                    huntHits.add(r to c)
                 }
-                // 2) Вычисляем буфер вокруг всех hitCells
-                val buffer = computeBuffer(hitCells)
-                // 3) Удаляем из доступных сам корабль (hitCells) и весь буфер
-                availableCells.removeAll(hitCells)
+                // 2) Считаем буфер вокруг всех палаток потопленного корабля
+                val buffer = computeBuffer(huntHits)
+                // 3) Удаляем из availableCells и сам корабль (huntHits), и весь буфер
+                availableCells.removeAll(huntHits)
                 availableCells.removeAll(buffer)
-                // 4) Сброс режима «добивания»
+                // 4) Полный сброс добивания
                 resetHuntMode()
             }
 
-            // ─── Просто попадание, но корабль ещё не потоплен ───
+            // ——— Просто попадание (еще не потопили) ———
             hit -> {
-                // 1) Добавляем точку в hitCells
-                hitCells.add(r to c)
-                // 2) Пересоздаём очередь добивания по новой логике
+                // 1) Сохраняем попадание
+                huntHits.add(r to c)
+                // 2) Перестраиваем очередь добивания
                 enqueueBasedOnHits()
             }
 
-            // ─── Промах ───
+            // ——— Промах ———
             else -> {
-                // Ничего не надо: lastShot уже удалён из availableCells в computeNextShot
+                // Ничего: точка уже удалена из availableCells на этапе computeNextShot.
             }
         }
     }
 
     /**
-     * Построение очереди добивания после очередного попадания.
-     * Если в hitCells только одна точка → enqueue 4 ортогональных соседей.
-     * Если >=2 точек и они выстроены в одну строку → enqueue ровно 2 клетки: слева от min_col и справа от max_col.
-     * Если >=2 точек и они выстроены в один столбец → enqueue ровно 2 клетки: сверху от min_row и снизу от max_row.
-     * Если пока нет «едиой прямой» (например, попали в (2,3) и в (5,7) – не по одной линии) → enqueue ортососеди для последнего попадания.
-     */
-    private fun enqueueBasedOnHits() {
-        // Сначала очистим предыдущие кандидаты
-        targetQueue.clear()
-
-        if (hitCells.size == 1) {
-            // Только одна точка – просто ставим в очередь её 4 ортогональных соседа
-            val (r, c) = hitCells.first()
-            enqueueOrthogonal(r, c)
-            return
-        }
-
-        // Проверим: все ли точки лежат в одной строке?
-        val sameRow = hitCells.map { it.first }.distinct().size == 1
-        // Проверим: все ли точки лежат в одном столбце?
-        val sameCol = hitCells.map { it.second }.distinct().size == 1
-
-        if (sameRow) {
-            // Горизонтальный корабль
-            val row = hitCells.first().first
-            val sortedCols = hitCells.map { it.second }.sorted()
-            val leftC = sortedCols.first()
-            val rightC = sortedCols.last()
-
-            // Сосед слева:
-            val leftCell = row to (leftC - 1)
-            if (leftCell in availableCells) {
-                targetQueue.addLast(leftCell)
-            }
-            // Сосед справа:
-            val rightCell = row to (rightC + 1)
-            if (rightCell in availableCells) {
-                targetQueue.addLast(rightCell)
-            }
-        } else {
-            // Вертикальный корабль
-            val col = hitCells.first().second
-            val sortedRows = hitCells.map { it.first }.sorted()
-            val topR = sortedRows.first()
-            val bottomR = sortedRows.last()
-
-            // Сосед сверху:
-            val upCell = (topR - 1) to col
-            if (upCell in availableCells) {
-                targetQueue.addLast(upCell)
-            }
-            // Сосед снизу:
-            val downCell = (bottomR + 1) to col
-            if (downCell in availableCells) {
-                targetQueue.addLast(downCell)
-            }
-        }
-    }
-
-    /**
-     * Добавляет в очередь добивания все 4 ортогональных соседа (r,c),
-     * которых ещё нет в targetQueue и которые есть в availableCells.
-     */
-    private fun enqueueOrthogonal(r: Int, c: Int) {
-        listOf(
-            r to (c + 1),
-            r to (c - 1),
-            (r + 1) to c,
-            (r - 1) to c
-        ).forEach { cell ->
-            if (cell in availableCells && cell !in targetQueue) {
-                targetQueue.addLast(cell)
-            }
-        }
-    }
-
-    /**
-     * Строит «буфер» (вокруг каждой точки shipCells) – все 8 соседних клеток,
-     * исключая сами shipCells. Возвращает Set<Pair<row,col>>.
+     * Строит «буфер» вокруг каждой клетки shipCells (8 соседей),
+     * исключая сами shipCells.
      */
     private fun computeBuffer(shipCells: List<Pair<Int, Int>>): Set<Pair<Int, Int>> {
         val buffer = mutableSetOf<Pair<Int, Int>>()
-        shipCells.forEach { (r, c) ->
+        for ((r, c) in shipCells) {
             for (dr in -1..1) {
                 for (dc in -1..1) {
                     if (dr == 0 && dc == 0) continue
@@ -209,11 +110,5 @@ class RandomFinishingStrategy : BaseShootingStrategy() {
         }
         buffer.removeAll(shipCells)
         return buffer
-    }
-
-    /** Полный сброс всего внутреннего режима «добивания» */
-    private fun resetHuntMode() {
-        targetQueue.clear()
-        hitCells.clear()
     }
 }
