@@ -19,58 +19,45 @@ import kotlinx.coroutines.delay
  */
 class GameActivityViewModel : ViewModel() {
 
-    // ────────────────────────────────────────────────────────────────
-    // 1. Входные данные (инициализируются извне перед initBattle)
-    // ────────────────────────────────────────────────────────────────
+    // ──────────────── 1. Входные данные (инициализируются извне) ────────────────
 
     lateinit var playerShips: List<ShipPlacement>
     lateinit var computerShips: List<ShipPlacement>
     lateinit var difficulty: Difficulty
     lateinit var shootingStrategy: ShootingStrategy
 
-    // ────────────────────────────────────────────────────────────────
-    // 2. Внутренние «сетки» 10×10:
-    //    >0 = shipId, <0 && != CELL_MISS → повреждённая палуба, CELL_MISS = промах
-    // ────────────────────────────────────────────────────────────────
+    // ──────────────── 2. Внутренние “сетки” 10×10 ────────────────
+    // > 0 = shipId, < 0 && != CELL_MISS → повреждённая палуба, CELL_MISS = −99 (промах)
+    private val playerGrid = Array(10) { IntArray(10) { 0 } }
+    private val computerGrid = Array(10) { IntArray(10) { 0 } }
 
-    private val playerGrid = Array(10) { IntArray(10) }
-    private val computerGrid = Array(10) { IntArray(10) }
-
-    // ────────────────────────────────────────────────────────────────
-    // 3. Счётчики «сколько палуб осталось» (key = shipId)
-    // ────────────────────────────────────────────────────────────────
-
-    private val playerRemainingDecks = mutableMapOf<Int, Int>()
+    // ──────────────── 3. “Остаточные палубы” (по shipId) ────────────────
+    private val playerRemainingDecks   = mutableMapOf<Int, Int>()
     private val computerRemainingDecks = mutableMapOf<Int, Int>()
 
-    // ────────────────────────────────────────────────────────────────
-    // 4. Публичные флаги (для Activity)
-    // ────────────────────────────────────────────────────────────────
-
-    /** true = сейчас ход игрока; false = ход компьютера */
+    // ──────────────── 4. Публичные флаги для Activity ────────────────
+    /** true = ход игрока; false = ход компьютера */
     var isPlayerTurn: Boolean = true
 
-    /** true = все корабли одной из сторон потоплены */
+    /** true = все корабли одной из сторон уже потоплены */
     var isBattleOver: Boolean = false
 
-    // ────────────────────────────────────────────────────────────────
-    // 5. Константа вместо «магического» –99
-    // ────────────────────────────────────────────────────────────────
-
+    // ──────────────── 5. Константа “промах” ────────────────
     private companion object {
-        /** Специальное значение в grid, означающее «здесь был промах» */
         const val CELL_MISS = -99
     }
 
-    // ────────────────────────────────────────────────────────────────
-    // 6. Инициализация перед началом боя
-    // ────────────────────────────────────────────────────────────────
+    // ──────────────── 6. Инициализация “битва готова” ────────────────
 
+    /**
+     * Заполняем playerGrid и computerGrid по спискам playerShips / computerShips,
+     * проставляем remainingDecks, сбрасываем флаги.
+     */
     fun initBattle() {
-        // 6.1) Расставляем корабли игрока на playerGrid
+        // 6.1) Игрок
         playerShips.forEach { ship ->
             playerRemainingDecks[ship.shipId] = ship.length
-            for (i in 0 until ship.length) {
+            repeat(ship.length) { i ->
                 val r = ship.startRow + if (ship.isVertical) i else 0
                 val c = ship.startCol + if (ship.isVertical) 0 else i
                 if (r in 0..9 && c in 0..9) {
@@ -78,10 +65,10 @@ class GameActivityViewModel : ViewModel() {
                 }
             }
         }
-        // 6.2) Расставляем корабли компьютера на computerGrid
+        // 6.2) Компьютер
         computerShips.forEach { ship ->
             computerRemainingDecks[ship.shipId] = ship.length
-            for (i in 0 until ship.length) {
+            repeat(ship.length) { i ->
                 val r = ship.startRow + if (ship.isVertical) i else 0
                 val c = ship.startCol + if (ship.isVertical) 0 else i
                 if (r in 0..9 && c in 0..9) {
@@ -89,80 +76,84 @@ class GameActivityViewModel : ViewModel() {
                 }
             }
         }
-        // 6.3) Сбрасываем флаги
+        // 6.3) Сброс флагов
         isPlayerTurn = true
-        isBattleOver = false
+        isBattleOver  = false
     }
 
-    // ────────────────────────────────────────────────────────────────
-    // 7. Обработка выстрела игрока по полю компьютера
-    // ────────────────────────────────────────────────────────────────
+    // ───────────────────────────────────────────────────────────────────
+    // 7. public fun playerShot(row, col): ShotResult
+    // ───────────────────────────────────────────────────────────────────
 
     /**
-     * Игрок стреляет в клетку (row, col) на поле компьютера.
-     * Возвращает результат (попал/промах, потопил ли корабль, буферные клетки).
+     * Игрок стреляет (row, col) в поле компьютера.
+     * @return ShotResult(hit=…, sunk=…, sunkShip?, bufferCells?).
      */
     fun playerShot(row: Int, col: Int): ShotResult {
         if (isBattleOver) {
+            // бой уже завершён — просто возвращаем “ничего не делаем”
             return ShotResult(row, col, hit = false, sunk = false)
         }
+
         val cellValue = computerGrid[row][col]
         return if (cellValue > 0) {
-            // Попал в живую палубу
+            // 1) Попал в невредимую палубу
             processHit(
-                row = row,
-                col = col,
+                row = row, col = col,
                 grid = computerGrid,
                 remainingDecks = computerRemainingDecks,
                 ships = computerShips,
                 onSunk = { sunkShip ->
-                    // Если весь флот компьютера потоплен
+                    // Если при этом был потоплен последний корабль компьютера
                     if (computerRemainingDecks.values.all { it == 0 }) {
                         isBattleOver = true
                     }
-                }
+                },
+                informStrategy = false
             )
         } else {
-            // Промах или уже стреляли
+            // 2) Промах (или корабль уже был поражён здесь)
             processMiss(
-                row = row,
-                col = col,
-                grid = computerGrid
+                row = row, col = col,
+                grid = computerGrid,
+                informStrategy = false
             ).also {
-                // Передаём ход компьютеру
+                // ход перешёл компьютеру
                 isPlayerTurn = false
             }
         }
     }
 
-    // ────────────────────────────────────────────────────────────────
-    // 8. Асинхронная обработка хода компьютера (задержка 3 секунды)
-    // ────────────────────────────────────────────────────────────────
+    // ───────────────────────────────────────────────────────────────────
+    // 8. suspend fun computerShot(): ShotResult
+    // ───────────────────────────────────────────────────────────────────
 
     /**
-     * Компьютер «думает» 3 секунды, затем стреляет в поле игрока.
-     * Возвращает ShotResult (row, col, hit, sunk, sunkShip, bufferCells).
+     * Компьютер «думает» 3 секунды, потом стреляет (row,col) по полю игрока,
+     * используя shootingStrategy.getNextShot(). Возвращает ShotResult.
      */
     suspend fun computerShot(): ShotResult {
         if (isBattleOver) {
             return ShotResult(0, 0, hit = false, sunk = false)
         }
-        delay(3000) // симуляция «обдумывания»
 
-        // Получаем следующую клетку из стратегии
-        val (col, row) = shootingStrategy.getNextShot()
+        // 8.1) Подождать 3 секунды
+        delay(3000L)
 
+        // 8.2) Получить (row, col) из стратегии (строго в формате (row, col))
+        val (row, col) = shootingStrategy.getNextShot()
+
+        // 8.3) Выполнить «выстрел» по playerGrid
         val cellValue = playerGrid[row][col]
         return if (cellValue > 0) {
-            // Компьютер попал в живую палубу игрока
+            // Компьютер попал в палубу игрока
             processHit(
-                row = row,
-                col = col,
+                row = row, col = col,
                 grid = playerGrid,
                 remainingDecks = playerRemainingDecks,
                 ships = playerShips,
                 onSunk = { sunkShip ->
-                    // Если весь флот игрока потоплен
+                    // Если это был последний корабль игрока
                     if (playerRemainingDecks.values.all { it == 0 }) {
                         isBattleOver = true
                     }
@@ -170,10 +161,9 @@ class GameActivityViewModel : ViewModel() {
                 informStrategy = true
             )
         } else {
-            // Компьютер промах или уже стрелял
+            // Компьютер промахнулся или уже там стрелял
             processMiss(
-                row = row,
-                col = col,
+                row = row, col = col,
                 grid = playerGrid,
                 informStrategy = true
             ).also {
@@ -183,14 +173,20 @@ class GameActivityViewModel : ViewModel() {
         }
     }
 
-    // ────────────────────────────────────────────────────────────────
-    // 9. Приватная утилита: обработка попадания
-    // ────────────────────────────────────────────────────────────────
+    // ───────────────────────────────────────────────────────────────────
+    // 9. processHit(...) + processMiss(...) (единожды подтверждают стратегию)
+    // ───────────────────────────────────────────────────────────────────
 
     /**
-     * Ставит в grid[row][col] = –shipId, уменьшает remainingDecks[shipId].
-     * Если потоплен весь корабль, вычисляет bufferCells и вызывает onSunk.
-     * Если informStrategy=true, то сообщает стратегии результат (hit=true, sunk=?).
+     * Обработка «попал» в grid[row][col] (корабль ещё не разрушен) + возможное «упало до 0» (potopil):
+     *  - Помечает grid[row][col] = −shipId
+     *  - Уменьшает remainingDecks[shipId]
+     *  - Если informStrategy == true, то сообщает стратегии ровно один вызов:
+     *      * если потопил = true → setShotResult(hit=true, sunk=true)
+     *      * иначе                  → setShotResult(hit=true, sunk=false)
+     *  - Если потоплен корабль целиком → вычисляет bufferCells и помечает все buffer (–99)
+     *      * вызывает onSunk(sunkShip)  (например, установить флаг isBattleOver)
+     *  - Возвращает соответствующий ShotResult
      */
     private fun processHit(
         row: Int,
@@ -199,49 +195,67 @@ class GameActivityViewModel : ViewModel() {
         remainingDecks: MutableMap<Int, Int>,
         ships: List<ShipPlacement>,
         onSunk: (ShipPlacement) -> Unit,
-        informStrategy: Boolean = false
+        informStrategy: Boolean
     ): ShotResult {
+        // 1) Берём shipId, помечаем cell = −shipId:
         val shipId = grid[row][col]
-        grid[row][col] = -shipId // помечаем палубу как повреждённую
+        grid[row][col] = -shipId
+
+        // 2) Уменьшаем “палубы” для этого корабля:
         remainingDecks[shipId] = remainingDecks[shipId]!! - 1
 
+        val justSunk = (remainingDecks[shipId] == 0)
+
+        // 3) Сообщаем стратегии **ровно один раз**:
         if (informStrategy) {
-            shootingStrategy.setShotResult(hit = true, sunk = false)
+            if (justSunk) {
+                shootingStrategy.setShotResult(hit = true, sunk = true)
+            } else {
+                shootingStrategy.setShotResult(hit = true, sunk = false)
+            }
         }
 
-        return if (remainingDecks[shipId] == 0) {
-            // Корабль полностью потонул
+        return if (justSunk) {
+            // 4) Найдём сам ShipPlacement, чтобы построить буфер:
             val sunkShip = ships.first { it.shipId == shipId }
+
+            // 5) Вычисляем «буферные клетки»:
             val buffer = computeBufferCells(sunkShip)
+
+            // 6) Помечаем буфер как CELL_MISS (если там ещё была “0”):
             buffer.forEach { (r, c) ->
                 if (grid[r][c] >= 0) {
                     grid[r][c] = CELL_MISS
                 }
             }
-            if (informStrategy) {
-                shootingStrategy.setShotResult(hit = true, sunk = true)
-            }
+
+            // 7) Уведомляем, что именно этот ShipPlacement был потоплен:
             onSunk(sunkShip)
-            ShotResult(row = row, col = col, hit = true, sunk = true, sunkShip = sunkShip, bufferCells = buffer)
+
+            // 8) Возвращаем полный результат:
+            ShotResult(
+                row = row,
+                col = col,
+                hit = true,
+                sunk = true,
+                sunkShip = sunkShip,
+                bufferCells = buffer
+            )
         } else {
-            // Попал, но не потопил
+            // 4) Просто попал, но корабль ещё жив
             ShotResult(row = row, col = col, hit = true, sunk = false)
         }
     }
 
-    // ────────────────────────────────────────────────────────────────
-    // 10. Приватная утилита: обработка промаха
-    // ────────────────────────────────────────────────────────────────
-
     /**
-     * Помечает grid[row][col] = CELL_MISS (если там 0), информирует стратегию (если нужно),
-     * возвращает ShotResult(hit=false).
+     * Обработка «промаха» grid[row][col] (если там “0” → ставим −99), и если informStrategy=true,
+     * то вызываем shootingStrategy.setShotResult(hit = false, sunk = false).
      */
     private fun processMiss(
         row: Int,
         col: Int,
         grid: Array<IntArray>,
-        informStrategy: Boolean = false
+        informStrategy: Boolean
     ): ShotResult {
         if (grid[row][col] == 0) {
             grid[row][col] = CELL_MISS
@@ -252,13 +266,13 @@ class GameActivityViewModel : ViewModel() {
         return ShotResult(row = row, col = col, hit = false, sunk = false)
     }
 
-    // ────────────────────────────────────────────────────────────────
-    // 11. Приватная утилита: вычисление «буферных» клеток
-    // ────────────────────────────────────────────────────────────────
+    // ───────────────────────────────────────────────────────────────────
+    // 10. computeBufferCells(...) как было (никаких изменений) ────────────────
+    // ───────────────────────────────────────────────────────────────────
 
     /**
      * Возвращает список координат (r,c) вокруг ship (одна клетка во все стороны),
-     * которые не входят в сам корабль (это «буфер»).
+     * которые НЕ входят в сам корабль (его палубы). Эти клетки станут “промахами” (buffer).
      */
     fun computeBufferCells(ship: ShipPlacement): List<Pair<Int, Int>> {
         val buffer = mutableListOf<Pair<Int, Int>>()

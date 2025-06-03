@@ -1,10 +1,20 @@
 package com.example.battleship_game.presentation.game
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
+import android.animation.ValueAnimator
 import android.content.Intent
-import android.health.connect.datatypes.units.Length
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.view.View
+import android.view.ViewTreeObserver
+import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.activity.addCallback
 import androidx.activity.viewModels
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
@@ -70,6 +80,15 @@ class GameActivity : BaseActivity() {
 
     private fun setupUI() {
         binding.apply {
+            tvTurnMessage.viewTreeObserver.addOnGlobalLayoutListener(
+                object : ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        binding.tvTurnMessage.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        startPulseAnimation(isPlayer = true)
+                    }
+                }
+            )
+
             btnGiveUp.setOnClickListener {
                 showExitConfirmDialog()
             }
@@ -100,63 +119,72 @@ class GameActivity : BaseActivity() {
 
     // Пользователь кликает по полю компьютера
     private fun onPlayerCellClicked(row: Int, col: Int) {
-        if (viewModel.isBattleOver || !viewModel.isPlayerTurn) {
-            // бой уже кончён или сейчас ход компьютера — игнорируем
-            return
-        }
+        // Если бой уже закончился или это не ход игрока — игнорируем
+        if (viewModel.isBattleOver || !viewModel.isPlayerTurn) return
+
         // 1) Обрабатываем выстрел игрока
         val result = viewModel.playerShot(row, col)
 
         // 2) Если попал:
         if (result.hit) {
-            // 1) Ставим крестик
+            // 2.1) Сначала нарисовать крестик:
             binding.bfvComputer.markHit(row, col)
-            // 2) Если затопили корабль
+
+            // 2.2) Если этим ходом корабль потоплен:
             if (result.sunk && result.sunkShip != null) {
                 binding.bfvComputer.markSunkShip(result.sunkShip, result.bufferCells)
                 updateRemainingCounters(result.sunkShip.length)
             }
-            // 3) Если бой закончился (победа игрока)
+
+            // 2.3) Проверяем: не закончилась ли битва?
             if (viewModel.isBattleOver) {
                 lockFields()
                 navigateToResult(GameResult.WIN)
+                return
             }
-            // Попал, но не все потоплены → игрок стреляет дальше
+            // 2.4) Иначе — игрок стреляет ещё раз (ход не меняется)
             return
         }
 
         // Промах
         binding.bfvComputer.markMiss(row, col)
         viewModel.isPlayerTurn = false
-        switchToComputerTurn()
+        switchToComputerTurn(startedFromMiss = false)
     }
 
     // Переключаем фокус на компьютер и ждём его ход
-    private fun switchToComputerTurn() {
-        // 1) Меняем текст «Ваш ход» → «Ход компьютера»
-        binding.tvTurnMessage.setText(R.string.txt_turn_computer)
-        // 2) Блокируем нажатия по полю компьютера (viewModel.isPlayerTurn уже false)
-        binding.bfvComputer.isEnabled = false
+    private fun switchToComputerTurn(startedFromMiss: Boolean) {
+        if (!startedFromMiss) {
+            // (Можно повторно анимировать “ход компьютера”)
+            startPulseAnimation(isPlayer = false)
+            binding.tvTurnMessage.setText(R.string.txt_turn_computer)
+            binding.bfvComputer.isEnabled = false
+        }
 
         // 3) Запускаем coroutine для «хода компьютера» через 3 сек
         lifecycleScope.launch {
             val result = viewModel.computerShot()
 
-            // 4) Отмечаем результат на поле игрока
             if (result.hit) {
+                // 1) Ставим крестик
                 binding.bfvPlayer.markHit(result.row, result.col)
+
+                // 2) Если затопил корабль:
                 if (result.sunk && result.sunkShip != null) {
                     binding.bfvPlayer.markSunkShip(result.sunkShip, result.bufferCells)
                 }
-                // Если этим ходом был потоплен последний корабль игрока:
+
+                // 3) Если сейчас бой закончен — сразу уходим
                 if (viewModel.isBattleOver) {
+                    lockFields()
                     navigateToResult(GameResult.LOSS)
                     return@launch
                 }
-                // Попал — снова ход компьютера (повторяем всю функцию)
-                switchToComputerTurn()
+
+                // 4) Компьютер попал, значит он стреляет ещё раз:
+                switchToComputerTurn(startedFromMiss = true)
             } else {
-                // Промах → ход возвращается игроку
+                // 5) Компьютер промахнулся:
                 binding.bfvPlayer.markMiss(result.row, result.col)
                 switchToPlayerTurn()
             }
@@ -170,6 +198,7 @@ class GameActivity : BaseActivity() {
         binding.tvTurnMessage.text = getString(R.string.txt_turn_player)
         viewModel.isPlayerTurn = true
         binding.bfvComputer.isEnabled = true
+        startPulseAnimation(isPlayer = true)
     }
 
     /**
@@ -202,6 +231,56 @@ class GameActivity : BaseActivity() {
                 binding.tvCountSpeedBoat.text = (cur - 1).coerceAtLeast(0).toString()
             }
         }
+    }
+
+    private fun startPulseAnimation(isPlayer : Boolean) {
+        binding.tvTurnMessage.clearAnimation()
+
+        setTurnIndicatorStyle(
+            if (isPlayer) R.color.player_turn_background
+            else R.color.computer_turn_background,
+            if (isPlayer) R.color.player_turn_text
+            else R.color.computer_turn_text
+        )
+
+        val animator = ObjectAnimator.ofPropertyValuesHolder(
+            binding.tvTurnMessage,
+            PropertyValuesHolder.ofFloat(View.SCALE_X, 0.9f, 1.1f),
+            PropertyValuesHolder.ofFloat(View.SCALE_Y, 0.9f, 1.1f)
+        ).apply {
+            duration = 300
+            repeatCount = 4 // 3 пульсации = 6 полуциклов, но 5 повторений даст 3 полных
+            repeatMode = ValueAnimator.REVERSE
+            interpolator = AccelerateDecelerateInterpolator()
+
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    binding.tvTurnMessage.scaleX = 1.0f
+                    binding.tvTurnMessage.scaleY = 1.0f
+                }
+            })
+        }
+
+        animator.start()
+    }
+
+    private fun setTurnIndicatorStyle(
+        @ColorRes backgroundColor: Int,
+        @ColorRes textColor: Int
+    ) {
+        val context = binding.tvTurnMessage.context
+        val bgColor = ContextCompat.getColor(context, backgroundColor)
+        val txtColor = ContextCompat.getColor(context, textColor)
+
+        // Обновляем фон
+        val drawable = binding.tvTurnMessage.background.mutate()
+        if (drawable is GradientDrawable) {
+            drawable.setColor(bgColor)
+            binding.tvTurnMessage.background = drawable
+        }
+
+        // Обновляем цвет текста
+        binding.tvTurnMessage.setTextColor(txtColor)
     }
 
     // Подтверждение «Сдаться»
