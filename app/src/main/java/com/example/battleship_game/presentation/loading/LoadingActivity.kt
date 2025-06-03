@@ -1,4 +1,4 @@
-package com.example.battleship_game.presentation.game
+package com.example.battleship_game.presentation.loading
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
@@ -16,6 +16,7 @@ import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.databinding.ActivityLoadingBinding
+import com.example.battleship_game.presentation.game.GameActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -160,7 +161,7 @@ class LoadingActivity : BaseActivity() {
                 ArrayList(viewModel.playerShips)
             )
             putParcelableArrayListExtra(
-                GameActivity.EXTRA_COMPUTER_SHIPS,
+                GameActivity.Companion.EXTRA_COMPUTER_SHIPS,
                 ArrayList(viewModel.computerShips)
             )
             putExtra(

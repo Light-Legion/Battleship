@@ -12,8 +12,9 @@ import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.databinding.ActivityAutoPlacementBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
-import com.example.battleship_game.presentation.game.LoadingActivity
+import com.example.battleship_game.presentation.loading.LoadingActivity
 import com.example.battleship_game.presentation.placement.PlacementStrategyType
+import com.example.battleship_game.presentation.placement.manual.ManualPlacementActivity
 import com.example.battleship_game.presentation.placement.save.SavePlacementActivity
 import com.google.android.material.snackbar.Snackbar
 

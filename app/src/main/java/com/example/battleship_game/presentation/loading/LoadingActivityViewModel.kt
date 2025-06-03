@@ -1,4 +1,4 @@
-package com.example.battleship_game.presentation.game
+package com.example.battleship_game.presentation.loading
 
 import androidx.lifecycle.ViewModel
 import com.example.battleship_game.data.model.Difficulty
@@ -22,7 +22,7 @@ class LoadingActivityViewModel : ViewModel() {
     suspend fun generateComputerShips(difficulty: Difficulty): List<ShipPlacement> {
         return withContext(Dispatchers.Default) {
             // Выбираем стратегию по уровню сложности
-            val strategyType = PlacementStrategyType.fromDifficulty(difficulty)
+            val strategyType = PlacementStrategyType.Companion.fromDifficulty(difficulty)
 
             // Создаем экземпляр стратегии
             val strategy = strategyType.factory(Random.Default)

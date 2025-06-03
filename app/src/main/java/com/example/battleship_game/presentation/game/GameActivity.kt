@@ -25,6 +25,7 @@ import com.example.battleship_game.data.model.GameResult
 import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.databinding.ActivityGameBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
+import com.example.battleship_game.presentation.result.ResultActivity
 import com.example.battleship_game.ui.BattleFieldView
 import kotlinx.coroutines.launch
 
