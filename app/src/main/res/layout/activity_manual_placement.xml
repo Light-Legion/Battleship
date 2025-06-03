@@ -1,104 +1,241 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/bg_screen_gradient"
+    tools:context=".presentation.placement.manual.ManualPlacementActivity">
 
-    <!-- 1) Кнопка "Назад" -->
     <ImageButton
         android:id="@+id/btnBack"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_margin="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/back"
-        android:src="@drawable/ic_launcher_foreground"
+        android:src="@drawable/ic_btn_back"
         android:tooltipText="@string/back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- 2) Заголовок -->
     <TextView
         android:id="@+id/tvTitle"
-        android:layout_width="312dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="@string/txt_manual_setup"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- 3) Кнопка "Сохранить" -->
+    <com.example.battleship_game.ui.ManualPlacementFieldView
+        android:id="@+id/bfv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
+        android:tooltipText="@string/game_field"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
     <ImageButton
         android:id="@+id/btnSave"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/save"
-        android:src="@drawable/ic_launcher_foreground"
+        android:src="@drawable/ic_btn_save"
         android:tooltipText="@string/save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/bfv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.178" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        app:layout_constraintVertical_bias="0.0" />
 
-    <!-- 4) Игровое поле -->
-    <com.example.battleship_game.ui.ManualPlacementFieldView
-        android:id="@+id/bfv"
-        android:layout_width="335dp"
-        android:layout_height="320dp"
-        android:tooltipText="@string/game_field"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1" />
-
-    <!-- 5) Шаблоны кораблей -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTemplates"
-        android:layout_width="250dp"
-        android:layout_height="270dp"
-        android:orientation="vertical"
-        android:tooltipText="@string/ship_templates"
-        android:clipToPadding="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.46" />
-
-    <!-- 6) Кнопка "Очистить поле" -->
     <ImageButton
         android:id="@+id/btnClear"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="32dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/clear_field"
-        android:src="@drawable/ic_launcher_foreground"
+        android:src="@drawable/ic_btn_clear"
         android:tooltipText="@string/clear_field"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/bfv"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
-    <!-- 7) Кнопка "В бой!" -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutShips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="48dp"
+        android:tooltipText="@string/txt_remains_destroy"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/tvShipTemplate4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/ship_horizontal_4"
+            android:gravity="center"
+            android:padding="8dp"
+            android:tag="4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvShipTemplate3_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/ship_horizontal_3"
+            android:gravity="center"
+            android:padding="8dp"
+            android:tag="3"
+            app:layout_constraintEnd_toStartOf="@+id/tvShipTemplate3_2"
+            app:layout_constraintTop_toBottomOf="@+id/tvShipTemplate4" />
+
+        <TextView
+            android:id="@+id/tvShipTemplate3_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/ship_horizontal_3"
+            android:gravity="center"
+            android:padding="8dp"
+            android:tag="3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvShipTemplate4" />
+
+        <TextView
+            android:id="@+id/tvShipTemplate2_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/ship_horizontal_2"
+            android:gravity="center"
+            android:padding="8dp"
+            android:tag="2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvShipTemplate3_2" />
+
+        <TextView
+            android:id="@+id/tvShipTemplate2_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/ship_horizontal_2"
+            android:gravity="center"
+            android:padding="8dp"
+            android:tag="2"
+            app:layout_constraintEnd_toStartOf="@+id/tvShipTemplate2_1"
+            app:layout_constraintTop_toBottomOf="@+id/tvShipTemplate3_2" />
+
+        <TextView
+            android:id="@+id/tvShipTemplate2_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/ship_horizontal_2"
+            android:gravity="center"
+            android:padding="8dp"
+            android:tag="2"
+            app:layout_constraintEnd_toStartOf="@+id/tvShipTemplate2_2"
+            app:layout_constraintTop_toBottomOf="@+id/tvShipTemplate3_2" />
+
+        <TextView
+            android:id="@+id/tvShipTemplate1_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/ship_horizontal_1"
+            android:gravity="center"
+            android:padding="8dp"
+            android:tag="1"
+            app:layout_constraintEnd_toStartOf="@+id/tvShipTemplate1_2"
+            app:layout_constraintTop_toBottomOf="@+id/tvShipTemplate2_1" />
+
+        <TextView
+            android:id="@+id/tvShipTemplate1_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/ship_horizontal_1"
+            android:gravity="center"
+            android:padding="8dp"
+            android:tag="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvShipTemplate2_1" />
+
+        <TextView
+            android:id="@+id/tvShipTemplate1_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/ship_horizontal_1"
+            android:gravity="center"
+            android:padding="8dp"
+            android:tag="1"
+            app:layout_constraintEnd_toStartOf="@+id/tvShipTemplate1_1"
+            app:layout_constraintTop_toBottomOf="@+id/tvShipTemplate2_1" />
+
+        <TextView
+            android:id="@+id/tvShipTemplate1_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/ship_horizontal_1"
+            android:gravity="center"
+            android:padding="8dp"
+            android:tag="1"
+            app:layout_constraintEnd_toStartOf="@+id/tvShipTemplate1_3"
+            app:layout_constraintTop_toBottomOf="@+id/tvShipTemplate2_1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <Button
-        android:id="@+id/btnFight"
-        android:layout_width="88dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="8dp"
+        android:id="@+id/btnToBattle"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:enabled="false"
         android:text="@string/to_battle"
         android:tooltipText="@string/to_battle"
+        android:background="@drawable/btn_to_battle_background"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/btnClear" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

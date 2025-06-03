@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.View
 import com.example.battleship_game.R
@@ -100,6 +101,7 @@ class BattleFieldView @JvmOverloads constructor(
     }
 
     private val shipPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        isDither = true
         isFilterBitmap = true
     }
 
@@ -138,9 +140,16 @@ class BattleFieldView @JvmOverloads constructor(
     // ------------------------------------------------------------
 
     init {
+        val options = BitmapFactory.Options().apply {
+            inScaled = true
+            inDensity = DisplayMetrics.DENSITY_DEFAULT
+            inTargetDensity = resources.displayMetrics.densityDpi
+            inPreferredConfig = Bitmap.Config.ARGB_8888
+        }
+
         // Загрузка растровых ресурсов
-        hitBitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_ship_hit)
-        missBitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_shot_miss)
+        hitBitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_ship_hit, options)
+        missBitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_shot_miss, options)
 
         // Предзагрузка «двунаправленных» битмапов для кораблей
         val shipResources = mapOf(
@@ -154,7 +163,7 @@ class BattleFieldView @JvmOverloads constructor(
             "4_v" to R.drawable.ship_vertical_4
         )
         shipResources.forEach { (key, resId) ->
-            shipBitmaps[key] = BitmapFactory.decodeResource(resources, resId)
+            shipBitmaps[key] = BitmapFactory.decodeResource(resources, resId, options)
         }
     }
 
