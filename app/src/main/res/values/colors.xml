@@ -21,4 +21,11 @@
     <color name="red">#DC2828</color>
     <color name="gray_lite">#C0C0C0</color>
     <color name="game_field">#96F0F0FF</color>
+
+    <!-- Цвета для индикации хода -->
+    <color name="player_turn_background">#E8F5E9</color> <!-- Светло-зеленый -->
+    <color name="player_turn_text">#1B5E20</color> <!-- Темно-зеленый -->
+
+    <color name="computer_turn_background">#FFEBEE</color> <!-- Светло-красный -->
+    <color name="computer_turn_text">#B71C1C</color> <!-- Темно-красный -->
 </resources>

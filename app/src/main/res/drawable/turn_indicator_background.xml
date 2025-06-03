@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- Закругленные углы (16dp) -->
+    <corners android:radius="16dp" />
+    <!-- Цвет по умолчанию (будет меняться программно) -->
+    <solid android:color="@color/player_turn_background" />
+</shape>
