@@ -17,7 +17,7 @@ import com.example.battleship_game.data.entity.GameHistory
  */
 @Database(
     entities = [GameHistory::class, GamePlacement::class],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 @TypeConverters(EnumConverters::class, PlacementConverters::class)
