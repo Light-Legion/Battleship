@@ -1,22 +1,67 @@
 package com.example.battleship_game.presentation.placement.manual
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.battleship_game.data.db.AppDatabase
 import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.data.model.ShipPlacement
+import com.example.battleship_game.data.repository.PlacementRepository
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel для экрана ручной расстановки кораблей.
  * Отвечает за генерацию и выдачу начального списка шаблонов кораблей.
  */
-class ManualPlacementViewModel : ViewModel() {
+class ManualPlacementViewModel(application: Application) : AndroidViewModel(application) {
 
     // Приватный MutableLiveData и публичный LiveData для шаблонов
     private val _templates = MutableLiveData(generateTemplates())
     val templates: LiveData<List<ShipPlacement>> = _templates
-    var field_id : Long = 0
+    var fieldID : Long = -1L
     var difficulty: Difficulty = Difficulty.MEDIUM
+
+    /**
+     * Репозиторий для работы с сохранёнными расстановками.
+     * Мы получаем DAO через AppDatabase.getInstance(application), а затем передаем DAO в репозиторий.
+     */
+    private val repository: PlacementRepository by lazy {
+        val dao = AppDatabase.getInstance(application).gamePlacementDao()
+        PlacementRepository(dao)
+    }
+
+    private val _savedPlacements = MutableLiveData<List<ShipPlacement>>(emptyList())
+    val savedPlacements: LiveData<List<ShipPlacement>> = _savedPlacements
+
+    /**
+     * Запускает одноразовое чтение списка ShipPlacement из базы.
+     * Если fieldID == -1, просто оставляем пустой список.
+     * Иначе — вызываем suspend-функцию repository.getPlacementById(id).
+     *
+     * Данный метод должен быть вызван после того, как fieldID был установлен
+     * (обычно — сразу после чтения из Intent-а в Activity).
+     */
+    fun loadSavedPlacement() {
+        if (fieldID < 0) {
+            // Нет сохранённой расстановки, оставляем пустой список
+            _savedPlacements.postValue(emptyList())
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                // Suspend-функция getPlacementById(id) вернёт List<ShipPlacement>
+                val listFromDb: List<ShipPlacement> = repository.getPlacementById(fieldID)
+                _savedPlacements.postValue(listFromDb)
+            } catch (e: Exception) {
+                // В случае ошибки (например, БД недоступна) оставляем пустой список
+                _savedPlacements.postValue(emptyList())
+            }
+        }
+    }
 
     companion object {
         /**

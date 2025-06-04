@@ -6,10 +6,13 @@ import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.battleship_game.common.BaseActivity
+import com.example.battleship_game.data.db.AppDatabase
 import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.data.model.ShipPlacement
+import com.example.battleship_game.data.repository.PlacementRepository
 import com.example.battleship_game.databinding.ActivityManualPlacementBinding
 import com.example.battleship_game.presentation.loading.LoadingActivity
 import com.example.battleship_game.presentation.placement.save.SavePlacementActivity
@@ -44,6 +47,10 @@ class ManualPlacementActivity : BaseActivity()
         enterImmersiveMode()
 
         parseIntentExtras()
+
+        viewModel.loadSavedPlacement()
+        observeSavedPlacements()
+
         setupUI()
 
         onBackPressedDispatcher.addCallback(this) {
@@ -52,12 +59,23 @@ class ManualPlacementActivity : BaseActivity()
     }
 
     private fun parseIntentExtras() {
-        viewModel.field_id = intent
+        viewModel.fieldID = intent
             .getLongExtra(EXTRA_FIELD_ID, 0)
 
         // Получаем сложность из настроек и сохраняем в viewModel
         viewModel.difficulty = intent
             .getSerializableExtra(EXTRA_DIFFICULTY) as? Difficulty ?: Difficulty.MEDIUM
+    }
+
+    /**
+     * Подписываемся на LiveData savedPlacements из ViewModel.
+     * Как только придёт список (либо пустой), очищаем поле и, если список не пуст,
+     * расставляем корабли по сохранённым координатам.
+     */
+    private fun observeSavedPlacements() {
+        viewModel.savedPlacements.observe(this, Observer { shipList ->
+            binding.bfv.setPlacements(shipList)
+        })
     }
 
     private fun setupUI() {
@@ -96,7 +114,7 @@ class ManualPlacementActivity : BaseActivity()
 
             // Кнопка «Очистить поле»
             btnClear.setOnClickListener {
-                //bfv.clearAll()
+                bfv.setPlacements(emptyList())
             }
 
             // В бой!
@@ -112,10 +130,14 @@ class ManualPlacementActivity : BaseActivity()
 
             // Кнопка "Сохранить"
             btnSave.setOnClickListener {
-                val placed = emptyList<ShipPlacement>()
+                val placedShips: List<ShipPlacement> = binding.bfv.getCurrentPlacements()
                 startActivity(
-                    Intent(this@ManualPlacementActivity, SavePlacementActivity::class.java)
-                        .putParcelableArrayListExtra(SavePlacementActivity.EXTRA_SHIPS, ArrayList(placed))
+                    Intent(this@ManualPlacementActivity, SavePlacementActivity::class.java).apply {
+                        putParcelableArrayListExtra(
+                            SavePlacementActivity.EXTRA_SHIPS,
+                            ArrayList(placedShips)
+                        )
+                    }
                 )
             }
         }

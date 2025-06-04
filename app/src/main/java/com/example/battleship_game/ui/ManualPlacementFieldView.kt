@@ -103,6 +103,11 @@ class ManualPlacementFieldView @JvmOverloads constructor(
         invalidate()
     }
 
+    /** Метод, который возвращает текущее состояние placements. */
+    fun getCurrentPlacements(): List<ShipPlacement> {
+        return placements.toList() // возвращаем копию, чтобы не изменять внутренний список из вне
+    }
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
