@@ -3,6 +3,8 @@ package com.example.battleship_game.presentation.game
 import androidx.lifecycle.ViewModel
 import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.data.model.ShipPlacement
+import com.example.battleship_game.strategies.shooting.BaseShootingStrategy.Companion.SIZE
+import com.example.battleship_game.strategies.shooting.DensityAnalysisStrategy
 import com.example.battleship_game.strategies.shooting.ShootingStrategy
 import kotlinx.coroutines.delay
 
@@ -28,8 +30,8 @@ class GameActivityViewModel : ViewModel() {
 
     // ──────────────── 2. Внутренние “сетки” 10×10 ────────────────
     // > 0 = shipId, < 0 && != CELL_MISS → повреждённая палуба, CELL_MISS = −99 (промах)
-    private val playerGrid = Array(10) { IntArray(10) { 0 } }
-    private val computerGrid = Array(10) { IntArray(10) { 0 } }
+    private val playerGrid = Array(10) { IntArray(10) }
+    private val computerGrid = Array(10) { IntArray(10) }
 
     // ──────────────── 3. “Остаточные палубы” (по shipId) ────────────────
     private val playerRemainingDecks   = mutableMapOf<Int, Int>()
@@ -54,6 +56,7 @@ class GameActivityViewModel : ViewModel() {
      * проставляем remainingDecks, сбрасываем флаги.
      */
     fun initBattle() {
+
         // 6.1) Игрок
         playerShips.forEach { ship ->
             playerRemainingDecks[ship.shipId] = ship.length
@@ -289,5 +292,26 @@ class GameActivityViewModel : ViewModel() {
             }
         }
         return buffer
+    }
+
+    /**
+     * Возвращает список координат ВСЕХ пока не потопленных палуб игрока.
+     * То есть перебираем playerShips, но для каждого shipId проверяем
+     * playerRemainingDecks[shipId] > 0.
+     */
+    fun getAllLivePlayerDecks(): List<Pair<Int, Int>> {
+        val liveDecks = mutableListOf<Pair<Int, Int>>()
+        for (ship in playerShips) {
+            val id = ship.shipId
+            // пропускаем, если уже весь корабль потоплен
+            if (playerRemainingDecks[id] == 0) continue
+            // иначе добавляем все палубы:
+            repeat(ship.length) { i ->
+                val r = ship.startRow + if (ship.isVertical) i else 0
+                val c = ship.startCol + if (ship.isVertical) 0 else i
+                liveDecks.add(r to c)
+            }
+        }
+        return liveDecks
     }
 }

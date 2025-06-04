@@ -26,6 +26,7 @@ import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.databinding.ActivityGameBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
 import com.example.battleship_game.presentation.result.ResultActivity
+import com.example.battleship_game.strategies.shooting.DensityAnalysisStrategy
 import com.example.battleship_game.ui.BattleFieldView
 import kotlinx.coroutines.launch
 
@@ -77,6 +78,14 @@ class GameActivity : BaseActivity() {
             .createForDifficulty(viewModel.difficulty)
 
         viewModel.initBattle()
+
+        // 3) Если стратегия — именно DensityAnalysisStrategy, даём ей “provider”:
+        if (viewModel.shootingStrategy is DensityAnalysisStrategy) {
+            (viewModel.shootingStrategy as DensityAnalysisStrategy).setEnemyShipProvider {
+                // Лямбда, которая вернет ВСЕ живые палубы игрока в текущий момент:
+                viewModel.getAllLivePlayerDecks()
+            }
+        }
     }
 
     private fun setupUI() {
