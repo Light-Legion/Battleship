@@ -103,6 +103,7 @@
     <string name="difficulty_easy">Легкий</string>
     <string name="difficulty_medium">Средний</string>
     <string name="difficulty_hard">Сложный</string>
+    <string name="difficulty_expert">Эксперт</string>
 
     <string name="result_win">Победа</string>
     <string name="result_loss">Поражение</string>

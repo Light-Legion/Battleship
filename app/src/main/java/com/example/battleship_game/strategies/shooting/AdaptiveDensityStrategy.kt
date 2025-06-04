@@ -3,7 +3,7 @@ package com.example.battleship_game.strategies.shooting
 import kotlin.random.Random
 
 /**
- * Стратегия «Сложный» с анализом плотности (Heatmap) и адаптивными коррекциями.
+ * Стратегия «Экспертный» с анализом плотности (Heatmap) и адаптивными коррекциями.
  *
  * Теперь включает этап «Эвристического угадывания»: после 10 подряд промахов
  * запрашивает _у ViewModel_ одну случайную палубу из ещё непотопленных кораблей игрока.
@@ -42,11 +42,14 @@ import kotlin.random.Random
  *
  * Порядок приоритетов: **hunt-режим > эвристическое угадывание > heatmap**.
  */
-class DensityAnalysisStrategy : BaseShootingStrategy() {
+class AdaptiveDensityStrategy : BaseShootingStrategy() {
 
     companion object {
         /** Порог промахов, при котором начинаем «усилять» края. */
-        private const val EDGE_BONUS_THRESHOLD = 10
+        private const val EDGE_BONUS_THRESHOLD = 6
+
+        /** Порог подряд промахов, при котором получаем координату реальной палубы. */
+        private const val MISS_BONUS_THRESHOLD = 12
     }
 
     /** Виртуальное поле (SIZE×SIZE) для учёта MISS/HIT/SUNK/EMPTY. */
@@ -57,6 +60,39 @@ class DensityAnalysisStrategy : BaseShootingStrategy() {
 
     /** Счётчик подряд промахов. */
     private var consecutiveMisses = 0
+
+    //** Провайдер, который вернёт все живые палубы противника (ViewModel). */
+    private var enemyShipProvider: (() -> List<Pair<Int, Int>>)? = null
+
+    fun setEnemyShipProvider(provider: () -> List<Pair<Int, Int>>) {
+        enemyShipProvider = provider
+    }
+
+    // ——————————————————————————————————————————————————————————
+    // Для детекции «стратегии Берега» и «Половины поля»
+    // ——————————————————————————————————————————————————————————
+
+    /** Сколько кораблей всего потоплено. */
+    private var totalSunkShips = 0
+
+    /** Сколько из потопленных лежали полностью на границе. */
+    private var borderSunkShips = 0
+
+    /** Сколько потопленных кораблей лежало строго в левой половине (c ≤ 4). */
+    private var sunkLeftCount = 0
+
+    /** Сколько потопленных кораблей лежало строго в правой половине (c ≥ 5). */
+    private var sunkRightCount = 0
+
+    /** Флаг: считаем, что противник играет «по краю». */
+    private var assumeEdgeStrategy = false
+
+    /**
+     * Флаг: если true → бьем только в левой половине,
+     * если false → бьем только в правой половине,
+     * если null → ещё не определили никакую «половину».
+     */
+    private var assumeHalfFieldLeft: Boolean? = null
 
     // ─────────────────────────────────────────────────────────────────────────────
     // 1) computeNextShot() — «сырая» логика выбора следующей клетки (без учёта tried[][]).
@@ -78,8 +114,74 @@ class DensityAnalysisStrategy : BaseShootingStrategy() {
             huntQueue.clear()
         }
 
+        // ——— 2) Эвристическое угадывание (после ≥10 подряд промахов) ———
+        if (consecutiveMisses >= MISS_BONUS_THRESHOLD) {
+            val allDecks = enemyShipProvider?.invoke().orEmpty()
+            // фильтруем те, по которым уже не стреляли:
+            val candidates = allDecks.filter { (r, c) -> !hasTried(r, c) && isValidCell(r, c) }
+            if (candidates.isNotEmpty()) {
+                // берём случайную палубу из оставшихся живых палуб
+                val chosen = candidates.random(Random.Default)
+                // после “точного хода” сбросим счётчик промахов
+                consecutiveMisses = 0
+                return chosen
+            }
+            // если вдруг кандидатов не осталось (маловероятно) — упадём в тепловую карту ниже
+        }
 
-        // 2) Heatmap-режим (+ бонус крайним клеткам, если consecutiveMisses ≥ EDGE_BONUS_THRESHOLD)
+        // 3) Если мы решили, что противник играет «по краю» и не слишком много промахов подряд
+        if (assumeEdgeStrategy) {
+            // Если подряд промахов стали ≥ EDGE_BONUS_THRESHOLD — выходим из edge‐режима
+            if (consecutiveMisses >= EDGE_BONUS_THRESHOLD) {
+                assumeEdgeStrategy = false
+            } else {
+                // Собираем все пустые «граничные» клетки:
+                val edgeCells = mutableListOf<Pair<Int, Int>>()
+                for (i in 0 until SIZE) {
+                    listOf(
+                        0 to i,
+                        (SIZE - 1) to i,
+                        i to 0,
+                        i to (SIZE - 1)
+                    ).forEach { (rr, cc) ->
+                        if (isValidCell(rr, cc) && board[rr][cc] == CellState.EMPTY && !hasTried(rr, cc)) {
+                            edgeCells.add(rr to cc)
+                        }
+                    }
+                }
+                if (edgeCells.isNotEmpty()) {
+                    return edgeCells.random(Random.Default)
+                }
+                // Если граничные клетки закончились, снимаем флаг
+                assumeEdgeStrategy = false
+            }
+        }
+
+        // 4) Если мы решили, что противник ставит корабли в одну половину поля
+        if (assumeHalfFieldLeft != null) {
+            // Если подряд промахов ≥ EDGE_BONUS_THRESHOLD — сбрасываем режим половины
+            if (consecutiveMisses >= EDGE_BONUS_THRESHOLD) {
+                assumeHalfFieldLeft = null
+            } else {
+                val candidates = mutableListOf<Pair<Int, Int>>()
+                val rangeCols = if (assumeHalfFieldLeft == true) 0..4 else 5..9
+
+                for (r in 0 until SIZE) {
+                    for (c in rangeCols) {
+                        if (isValidCell(r, c) && board[r][c] == CellState.EMPTY && !hasTried(r, c)) {
+                            candidates.add(r to c)
+                        }
+                    }
+                }
+                if (candidates.isNotEmpty()) {
+                    return candidates.random(Random.Default)
+                }
+                // Если в выбранной половине пустых клеток нет, сбрасываем флаг
+                assumeHalfFieldLeft = null
+            }
+        }
+
+        // 5) Heatmap-режим (+ бонус крайним клеткам, если consecutiveMisses ≥ EDGE_BONUS_THRESHOLD)
         return computeHeatmapShot()
     }
 
@@ -100,6 +202,41 @@ class DensityAnalysisStrategy : BaseShootingStrategy() {
                 // Определяем длину только что потопленного корабля
                 val chain = findSunkChain(huntHits, r to c) ?: listOf(r to c)
                 val justSunkLen = chain.size
+
+                //  ― Анализ «Берега» и «Половины поля» ―
+                totalSunkShips++
+
+                // Проверяем, весь ли корабль лежал на границе
+                val allOnBorder = chain.all { (rr, cc) ->
+                    rr == 0 || rr == SIZE - 1 || cc == 0 || cc == SIZE - 1
+                }
+                if (allOnBorder) {
+                    borderSunkShips++
+                }
+                // Проверяем, лежит ли корабль строго в левой половине
+                if (chain.all { (_, cc) -> cc <= 4 }) {
+                    sunkLeftCount++
+                }
+                // Проверяем, лежит ли корабль строго в правой половине
+                if (chain.all { (_, cc) -> cc >= 5 }) {
+                    sunkRightCount++
+                }
+
+                // Решаем: считать ли, что противник играет «по краю»
+                if (!assumeEdgeStrategy && totalSunkShips >= 2) {
+                    if (borderSunkShips.toDouble() / totalSunkShips.toDouble() >= 0.8) {
+                        assumeEdgeStrategy = true
+                    }
+                }
+                // Решаем: считать ли, что противник играет «одна половина»
+                if (assumeHalfFieldLeft == null && totalSunkShips >= 2) {
+                    if (sunkLeftCount == totalSunkShips) {
+                        assumeHalfFieldLeft = true
+                    } else if (sunkRightCount == totalSunkShips) {
+                        assumeHalfFieldLeft = false
+                    }
+                }
+                // ― Конец анализа стратегий игрока ―
 
                 // Помечаем цепочку как SUNK и строим буфер MISS вокруг неё
                 markBufferAround(chain)
@@ -284,5 +421,46 @@ class DensityAnalysisStrategy : BaseShootingStrategy() {
                 }
             }
         }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────
+    // 7) Переопределяем enqueueBasedOnHits(), чтобы в режиме «Берега» (assumeEdgeStrategy=true)
+    //    не рассматривать все 4 ортососеда, а только две вдоль границы.
+    // ─────────────────────────────────────────────────────────────────────────────
+    override fun enqueueBasedOnHits() {
+        // Если «игра по краю» и у нас есть ровно одна точка попадания → ориентация вдоль границы
+        if (assumeEdgeStrategy && huntHits.size == 1) {
+            huntQueue.clear()
+            val (r, c) = huntHits.first()
+
+            // Если попали на верхней или нижней границе — корабль может лежать только горизонтально
+            if (r == 0 || r == SIZE - 1) {
+                val left  = r to (c - 1)
+                val right = r to (c + 1)
+                if (isValidCell(left.first, left.second)  && !hasTried(left.first, left.second))  {
+                    huntQueue.addLast(left)
+                }
+                if (isValidCell(right.first, right.second) && !hasTried(right.first, right.second)) {
+                    huntQueue.addLast(right)
+                }
+                return
+            }
+
+            // Если попали на левой или правой границе — корабль может лежать только вертикально
+            if (c == 0 || c == SIZE - 1) {
+                val up   = (r - 1) to c
+                val down = (r + 1) to c
+                if (isValidCell(up.first, up.second)   && !hasTried(up.first, up.second))   {
+                    huntQueue.addLast(up)
+                }
+                if (isValidCell(down.first, down.second) && !hasTried(down.first, down.second)) {
+                    huntQueue.addLast(down)
+                }
+                return
+            }
+        }
+
+        // Иначе — дефолтная логика из BaseShootingStrategy
+        super.enqueueBasedOnHits()
     }
 }

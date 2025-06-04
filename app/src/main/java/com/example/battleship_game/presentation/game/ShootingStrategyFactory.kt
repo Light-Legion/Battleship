@@ -1,6 +1,7 @@
 package com.example.battleship_game.presentation.game
 
 import com.example.battleship_game.data.model.Difficulty
+import com.example.battleship_game.strategies.shooting.AdaptiveDensityStrategy
 import com.example.battleship_game.strategies.shooting.DensityAnalysisStrategy
 import com.example.battleship_game.strategies.shooting.DiagonalProbabilityStrategy
 import com.example.battleship_game.strategies.shooting.RandomFinishingStrategy
@@ -16,6 +17,7 @@ object ShootingStrategyFactory {
             Difficulty.EASY   -> RandomFinishingStrategy()
             Difficulty.MEDIUM -> DiagonalProbabilityStrategy()
             Difficulty.HARD   -> DensityAnalysisStrategy()
+            Difficulty.EXPERT   -> AdaptiveDensityStrategy()
         }
     }
 }

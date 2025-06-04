@@ -9,7 +9,8 @@ import com.example.battleship_game.R
 enum class Difficulty(val displayNameRes: Int) {
     EASY(R.string.difficulty_easy),
     MEDIUM(R.string.difficulty_medium),
-    HARD(R.string.difficulty_hard);
+    HARD(R.string.difficulty_hard),
+    EXPERT(R.string.difficulty_expert);
 
     /** Возвращает локализованную строку по ресурсу */
     fun toDisplayString(context: Context): String {

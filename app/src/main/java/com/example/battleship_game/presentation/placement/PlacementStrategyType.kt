@@ -34,6 +34,7 @@ sealed class PlacementStrategyType(
             Difficulty.EASY   -> HalfField
             Difficulty.MEDIUM -> Coasts
             Difficulty.HARD   -> Diagonal
+            Difficulty.EXPERT   -> Diagonal
         }
     }
 }
