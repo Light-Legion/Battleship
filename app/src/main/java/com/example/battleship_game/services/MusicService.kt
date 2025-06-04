@@ -12,6 +12,7 @@ import android.os.IBinder
 import androidx.annotation.RawRes
 import androidx.core.app.NotificationCompat
 import com.example.battleship_game.R
+import com.example.battleship_game.common.UserPreferences.lastTrackIndex
 import com.example.battleship_game.presentation.main.MainActivity
 
 /**
@@ -94,6 +95,8 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
         // Создаём канал уведомлений (нужно для Android 8.0+)
         createNotificationChannel()
+
+        currentTrackIndex = lastTrackIndex
 
         // Инициализируем MediaPlayer для первого трека (но ещё не запускаем)
         initializeMediaPlayer()

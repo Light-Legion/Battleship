@@ -1,17 +1,16 @@
 package com.example.battleship_game.common
 
 import android.content.Context
-import com.example.battleship_game.R
-import com.example.battleship_game.data.model.Difficulty
 import androidx.core.content.edit
+import com.example.battleship_game.R
 
 object UserPreferences {
 
     private const val PREFS_NAME = "user_prefs"
     private const val KEY_NAME = "key_name"
     private const val KEY_AVATAR = "key_avatar"
-    private const val KEY_BATTLE_DIFFICULTY = "key_battle_difficulty"
     private const val KEY_MUSIC_ENABLED = "key_music_enabled"
+    private const val KEY_LAST_TRACK_INDEX = "key_last_track_index"
 
     private fun prefs(ctx: Context) =
         ctx.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -27,5 +26,9 @@ object UserPreferences {
     var Context.isMusicEnabled: Boolean
         get() = prefs(this).getBoolean(KEY_MUSIC_ENABLED, false)
         set(value) = prefs(this).edit { putBoolean(KEY_MUSIC_ENABLED, value) }
+
+    var Context.lastTrackIndex: Int
+        get() = prefs(this).getInt(KEY_LAST_TRACK_INDEX, 0)
+        set(idx) = prefs(this).edit { putInt(KEY_LAST_TRACK_INDEX, idx) }
 
 }
