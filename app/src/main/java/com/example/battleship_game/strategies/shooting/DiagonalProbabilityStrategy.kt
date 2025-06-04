@@ -143,10 +143,10 @@ class DiagonalProbabilityStrategy : BaseShootingStrategy() {
                 if ((r to c) !in huntHits) {
                     huntHits.add(r to c)
                 }
-                // [b] Определяем длину потопленного корабля
-                val justSunkLen = remainingShips.maxOrNull() ?: 1
-                // [c] Ищем цепочку hit-точек нужной длины
-                val chain = extractSunkChain(huntHits, justSunkLen) ?: listOf(r to c)
+                // [b] Ищем цепочку hit-точек нужной длины
+                val chain = findSunkChain(huntHits, r to c) ?: listOf(r to c)
+                // [c] Определяем длину потопленного корабля
+                val justSunkLen = chain.size
                 // [d] Помечаем chain как SUNK + строим буфер MISS
                 markBufferAround(chain)
                 // [e] Удаляем потопленную длину из remainingShips
@@ -268,44 +268,30 @@ class DiagonalProbabilityStrategy : BaseShootingStrategy() {
         return null
     }
 
-    // ================================================================
-    // 5) Ищем цепочку из hit-точек длины length
-    // ================================================================
-    private fun extractSunkChain(
+    // ─────────────────────────────────────────────────────────────────────────────
+    // 5) Ищем «цепочку» hit-точек (горизонтально или вертикально)
+    // ─────────────────────────────────────────────────────────────────────────────
+    private fun findSunkChain(
         hits: List<Pair<Int, Int>>,
-        length: Int
+        start: Pair<Int, Int>
     ): List<Pair<Int, Int>>? {
-        if (hits.size < length) return null
+        val (r, c) = start
+        // Находим горизонтальную цепочку
+        var left = c
+        while (left > 0 && (r to left - 1) in hits) left--
+        var right = c
+        while (right < SIZE - 1 && (r to right + 1) in hits) right++
+        val horizontalChain = (left..right).map { r to it }
 
-        // Проверка горизонтальных цепочек
-        val byRow = hits.groupBy { it.first }
-        for ((row, pts) in byRow) {
-            if (pts.size >= length) {
-                val cols = pts.map { it.second }.sorted()
-                for (i in 0..(cols.size - length)) {
-                    val slice = cols.subList(i, i + length)
-                    if (slice.last() - slice.first() == length - 1) {
-                        return slice.map { row to it }
-                    }
-                }
-            }
-        }
+        // Находим вертикальную цепочку
+        var up = r
+        while (up > 0 && (up - 1 to c) in hits) up--
+        var down = r
+        while (down < SIZE - 1 && (down + 1 to c) in hits) down++
+        val verticalChain = (up..down).map { it to c }
 
-        // Проверка вертикальных цепочек
-        val byCol = hits.groupBy { it.second }
-        for ((col, pts) in byCol) {
-            if (pts.size >= length) {
-                val rows = pts.map { it.first }.sorted()
-                for (i in 0..(rows.size - length)) {
-                    val slice = rows.subList(i, i + length)
-                    if (slice.last() - slice.first() == length - 1) {
-                        return slice.map { it to col }
-                    }
-                }
-            }
-        }
-
-        return null
+        // Выбираем цепочку с большей длиной, если длины равны, выбираем горизонтальную
+        return if (horizontalChain.size >= verticalChain.size) horizontalChain else verticalChain
     }
 
     // ================================================================
