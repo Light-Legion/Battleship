@@ -3,6 +3,7 @@ package com.example.battleship_game.presentation.placement.manual
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.data.model.ShipPlacement
 
 /**
@@ -14,6 +15,8 @@ class ManualPlacementViewModel : ViewModel() {
     // Приватный MutableLiveData и публичный LiveData для шаблонов
     private val _templates = MutableLiveData(generateTemplates())
     val templates: LiveData<List<ShipPlacement>> = _templates
+    var field_id : Long = 0
+    var difficulty: Difficulty = Difficulty.MEDIUM
 
     companion object {
         /**

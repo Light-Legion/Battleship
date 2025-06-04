@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:background="@drawable/bg_screen_gradient"
     tools:context=".presentation.placement.auto.AutoPlacementActivity">
 
     <ImageButton
@@ -40,14 +41,14 @@
         android:id="@+id/bfv"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="148dp"
         android:layout_marginBottom="32dp"
         android:tooltipText="@string/game_field"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toStartOf="@+id/btnSave"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toStartOf="@+id/tilStrategy"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
@@ -55,14 +56,13 @@
         android:id="@+id/btnSave"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/save"
         android:src="@drawable/ic_btn_save"
         android:tooltipText="@string/save"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tilStrategy"
         app:layout_constraintStart_toEndOf="@+id/bfv"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle"
         app:layout_constraintVertical_bias="0.0" />
@@ -80,8 +80,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:id="@+id/tilStrategy"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"

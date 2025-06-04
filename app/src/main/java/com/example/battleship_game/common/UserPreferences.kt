@@ -24,13 +24,6 @@ object UserPreferences {
         get() = prefs(this).getInt(KEY_AVATAR, R.drawable.avatar_male_1)
         set(v) = prefs(this).edit { putInt(KEY_AVATAR, v) }
 
-    var Context.battleDifficulty: Difficulty
-        get() {
-            val str = prefs(this).getString(KEY_BATTLE_DIFFICULTY, Difficulty.MEDIUM.name)
-            return Difficulty.valueOf(str ?: Difficulty.MEDIUM.name)
-        }
-        set(v) = prefs(this).edit { putString(KEY_BATTLE_DIFFICULTY, v.name) }
-
     var Context.isMusicEnabled: Boolean
         get() = prefs(this).getBoolean(KEY_MUSIC_ENABLED, false)
         set(value) = prefs(this).edit { putBoolean(KEY_MUSIC_ENABLED, value) }

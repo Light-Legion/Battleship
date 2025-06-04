@@ -12,7 +12,6 @@ import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.data.model.ShipPlacement
 import com.example.battleship_game.databinding.ActivitySavePlacementBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
-import com.example.battleship_game.presentation.placement.save.SavePlacementViewModel
 
 /**
  * Экран «Сохранить расстановку».
@@ -27,7 +26,7 @@ class SavePlacementActivity : BaseActivity() {
     }
 
     private lateinit var binding: ActivitySavePlacementBinding
-    private val vm: SavePlacementViewModel by viewModels()
+    private val viewModel: SavePlacementViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,13 +40,17 @@ class SavePlacementActivity : BaseActivity() {
         setupUI()
 
         onBackPressedDispatcher.addCallback(this) {
+            setResult(RESULT_CANCELED)
             finish()
         }
     }
 
     private fun setupUI() {
         binding.apply {
-            btnBack.setOnClickListener { finish() }
+            btnBack.setOnClickListener {
+                setResult(RESULT_CANCELED)
+                finish()
+            }
 
             // Обработчик кнопки «Готово» на клавиатуре:
             etName.setOnEditorActionListener { _, actionId, _ ->
@@ -87,7 +90,9 @@ class SavePlacementActivity : BaseActivity() {
                     .orEmpty()
 
                 // сохраняем и закрываем
-                vm.save(name, ships)
+                viewModel.save(name, ships)
+
+                setResult(RESULT_OK)
                 finish()
             }
         }

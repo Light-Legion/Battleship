@@ -1,7 +1,6 @@
 package com.example.battleship_game.data.model
 
 import android.os.Parcelable
-import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 /**

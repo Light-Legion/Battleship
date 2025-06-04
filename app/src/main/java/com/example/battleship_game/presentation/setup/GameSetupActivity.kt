@@ -6,7 +6,6 @@ import android.widget.ArrayAdapter
 import androidx.activity.addCallback
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
-import com.example.battleship_game.common.UserPreferences.battleDifficulty
 import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.databinding.ActivityGameSetupBinding
 import com.example.battleship_game.presentation.placement.load.LoadSavedPlacementActivity
@@ -27,8 +26,9 @@ class GameSetupActivity : BaseActivity() {
 
     private lateinit var binding: ActivityGameSetupBinding
 
-    private lateinit var difficulties: Array<String>
-    private lateinit var placements:   Array<String>
+    companion object {
+        const val EXTRA_DIFFICULTY = "EXTRA_DIFFICULTY"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,18 +50,19 @@ class GameSetupActivity : BaseActivity() {
 
     /** Инициализируем оба выпадающих списка и задаём им дефолтные значения. */
     private fun setupDropdowns() {
-        difficulties = resources.getStringArray(R.array.difficulty_options)
-        placements   = resources.getStringArray(R.array.placement_options)
 
-        // 1) Сложность
-        ArrayAdapter(this, R.layout.list_item_dropdown, difficulties).also { adapter ->
+        // 1) Сложность (через enum)
+        val difficultyDisplayNames = Difficulty.getDisplayNames(this)
+        ArrayAdapter(this, R.layout.list_item_dropdown, difficultyDisplayNames).also { adapter ->
             binding.actvDifficulty.setAdapter(adapter)
-            binding.actvDifficulty.setText(difficulties[1], false)  // по умолчанию "Средний"
+            binding.actvDifficulty.setText(difficultyDisplayNames[1], false) // По умолчанию: Средний
         }
-        // 2) Способ расстановки
-        ArrayAdapter(this, R.layout.list_item_dropdown, placements).also { adapter ->
+
+        // 2) Способ расстановки (PlacementType уже реализован)
+        val placementDisplayNames = PlacementType.getDisplayNames(this)
+        ArrayAdapter(this, R.layout.list_item_dropdown, placementDisplayNames).also { adapter ->
             binding.actvPlacement.setAdapter(adapter)
-            binding.actvPlacement.setText(placements[0], false)    // по умолчанию "Ручной"
+            binding.actvPlacement.setText(placementDisplayNames[0], false) // По умолчанию: Ручной
         }
     }
 
@@ -75,25 +76,30 @@ class GameSetupActivity : BaseActivity() {
             btnNext.setOnClickListener {
                 // 1) Читаем user choice
                 val chosenDifficulty = binding.actvDifficulty.text.toString()
-                val chosenPlacement  = binding.actvPlacement.text.toString()
+                val chosenPlacement = binding.actvPlacement.text.toString()
 
                 // 2) Сохраняем только сложность
-                battleDifficulty = Difficulty.fromString(this@GameSetupActivity, chosenDifficulty)
+                val battleDifficulty = Difficulty.fromDisplayName(this@GameSetupActivity, chosenDifficulty)
 
                 // 3) По индексу способа выбираем Activity
-                val index = placements.indexOf(chosenPlacement)
+                val placementType = PlacementType.fromDisplayName(this@GameSetupActivity, chosenPlacement)
 
-                when (index) {
-                    0 -> {
-                        startActivity(Intent(this@GameSetupActivity, ManualPlacementActivity::class.java))
-                    }
-                    1 -> {
-                        startActivity(Intent(this@GameSetupActivity, AutoPlacementActivity::class.java))
-                    }
-                    2 -> {
-                        startActivity(Intent(this@GameSetupActivity, LoadSavedPlacementActivity::class.java))
-                    }
-                    else -> Snackbar.make(main, R.string.hint_select_setup, Snackbar.LENGTH_SHORT).show()
+                val activityClass = when (placementType) {
+                    PlacementType.MANUAL     -> ManualPlacementActivity::class.java
+                    PlacementType.AUTO       -> AutoPlacementActivity::class.java
+                    PlacementType.LOAD_SAVED -> LoadSavedPlacementActivity::class.java
+                    else -> null
+                }
+
+                if (activityClass != null) {
+                    startActivity(Intent(this@GameSetupActivity, activityClass).apply {
+                        putExtra(
+                            EXTRA_DIFFICULTY,
+                            battleDifficulty
+                        )
+                    })
+                } else {
+                    Snackbar.make(main, R.string.hint_select_setup, Snackbar.LENGTH_SHORT).show()
                 }
             }
         }

@@ -23,5 +23,5 @@ interface GamePlacementDao {
 
     /** Одна расстановка по ID */
     @Query("SELECT * FROM game_placement WHERE placement_id = :id LIMIT 1")
-    suspend fun getById(id: Long): GamePlacement?
+    fun getByIdFlow(id: Long): Flow<GamePlacement?>
 }

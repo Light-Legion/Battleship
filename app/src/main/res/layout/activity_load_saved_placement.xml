@@ -6,7 +6,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/bg_screen_gradient">
 
     <!-- Назад -->
     <ImageButton
@@ -58,14 +59,14 @@
         android:layout_marginStart="120dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="120dp"
-        android:layout_marginBottom="24dp"
-        android:tooltipText="@string/txt_load_saved_setup"
-        android:scrollbars="vertical"
+        android:layout_marginBottom="16dp"
+        android:fadeScrollbars="false"
+        android:scrollbarSize="6dp"
         android:scrollbarStyle="outsideInset"
         android:scrollbarThumbVertical="@drawable/scrollbar_thumb"
         android:scrollbarTrackVertical="@drawable/scrollbar_track"
-        android:scrollbarSize="6dp"
-        android:fadeScrollbars="false"
+        android:scrollbars="vertical"
+        android:tooltipText="@string/txt_load_saved_setup"
         app:layout_constraintBottom_toTopOf="@id/btnLoad"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

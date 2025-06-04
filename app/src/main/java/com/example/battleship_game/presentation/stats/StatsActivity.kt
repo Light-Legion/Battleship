@@ -56,15 +56,13 @@ class StatsActivity : BaseActivity() {
      * чтобы сборка происходила только когда Activity в STARTED.
      */
     private fun observeStats() {
-        val adapter = (binding.rvStats.adapter as GameHistoryAdapter)
+        val adapter = binding.rvStats.adapter as GameHistoryAdapter
 
         lifecycleScope.launch {
-            // Повторяем сбор, когда статус ≥ STARTED
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vm.stats
-                    .collectLatest { list ->
-                        adapter.submitList(list)
-                    }
+                vm.stats.collectLatest { list ->
+                    adapter.submitList(list)
+                }
             }
         }
     }

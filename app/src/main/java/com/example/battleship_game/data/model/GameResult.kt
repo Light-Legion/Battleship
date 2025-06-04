@@ -2,35 +2,28 @@ package com.example.battleship_game.data.model
 
 import android.content.Context
 import com.example.battleship_game.R
-import com.example.battleship_game.data.model.Difficulty.EASY
-import com.example.battleship_game.data.model.Difficulty.HARD
-import com.example.battleship_game.data.model.Difficulty.MEDIUM
 
 /**
  * Результат игры: ПОБЕДА или ПОРАЖЕНИЕ.
  */
-enum class GameResult {
-    WIN, LOSS;
+enum class GameResult(val displayNameRes: Int) {
+    WIN(R.string.result_win),
+    LOSS(R.string.result_loss);
 
-    /** Отображаемое русское название */
-    fun toDisplayString(): String =
-        when(this) {
-            WIN  -> "Победа"
-            LOSS -> "Поражение"
-        }
+    /** Возвращает локализованную строку по ресурсу */
+    fun toDisplayString(context: Context): String {
+        return context.getString(displayNameRes)
+    }
 
     companion object {
-        /**
-         * Конвертирует строку (например, "Легкий", "Средний", "Сложный")
-         * в соответствующий enum-элемент [Difficulty].
-         * Если ни один из вариантов не подходит, возвращает MEDIUM по умолчанию.
-         */
-        fun fromString(context: Context, str: String): GameResult {
-            return when (str) {
-                context.getString(R.string.result_win) -> WIN
-                context.getString(R.string.result_loss) -> LOSS
-                else -> LOSS
-            }
+        /** Возвращает enum по локализованной строке */
+        fun fromDisplayName(context: Context, str: String): GameResult {
+            return entries.firstOrNull { context.getString(it.displayNameRes) == str } ?: LOSS
+        }
+
+        /** Возвращает список всех локализованных названий */
+        fun getDisplayNames(context: Context): List<String> {
+            return entries.map { context.getString(it.displayNameRes) }
         }
     }
 }

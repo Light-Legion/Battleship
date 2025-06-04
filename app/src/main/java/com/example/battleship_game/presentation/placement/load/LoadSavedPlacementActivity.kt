@@ -8,9 +8,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
+import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.databinding.ActivityLoadSavedPlacementBinding
-import com.example.battleship_game.presentation.placement.load.LoadSavedPlacementViewModel
-import com.example.battleship_game.presentation.placement.load.SavedPlacementAdapter
+import com.example.battleship_game.presentation.placement.auto.AutoPlacementActivity
 import com.example.battleship_game.presentation.placement.manual.ManualPlacementActivity
 import com.google.android.material.snackbar.Snackbar
 
@@ -21,8 +21,12 @@ import com.google.android.material.snackbar.Snackbar
 class LoadSavedPlacementActivity : BaseActivity() {
 
     private lateinit var binding: ActivityLoadSavedPlacementBinding
-    private val vm: LoadSavedPlacementViewModel by viewModels()
+    private val viewModel: LoadSavedPlacementViewModel by viewModels()
     private var selectedId: Long? = null
+
+    companion object {
+        const val EXTRA_DIFFICULTY = "EXTRA_DIFFICULTY"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +37,19 @@ class LoadSavedPlacementActivity : BaseActivity() {
         applyEdgeInsets(binding.main)
         enterImmersiveMode()
 
+        parseIntentExtras()
         setupUI()
 
         // Перехват системной кнопки «Назад»
         onBackPressedDispatcher.addCallback(this) {
             finish()
         }
+    }
+
+    private fun parseIntentExtras() {
+        // Получаем сложность из настроек и сохраняем в viewModel
+        viewModel.difficulty = intent
+            .getSerializableExtra(EXTRA_DIFFICULTY) as? Difficulty ?: Difficulty.MEDIUM
     }
 
     /**
@@ -64,7 +75,7 @@ class LoadSavedPlacementActivity : BaseActivity() {
 
             // 2) Сбор списка из ViewModel
             lifecycleScope.launchWhenStarted {
-                vm.placements.collect { list ->
+                viewModel.placements.collect { list ->
                     adapter.submitList(list)
                 }
             }
@@ -74,13 +85,15 @@ class LoadSavedPlacementActivity : BaseActivity() {
                 selectedId?.let { id ->
                     // Передаём ID в ManualPlacementActivity
                     startActivity(
-                    Intent(this@LoadSavedPlacementActivity, ManualPlacementActivity::class.java)
-                        .putExtra("FIELD_ID", id)
-                    )
+                        Intent(this@LoadSavedPlacementActivity, ManualPlacementActivity::class.java).apply {
+                            putExtra(ManualPlacementActivity.EXTRA_FIELD_ID, id)
+                            putExtra(EXTRA_DIFFICULTY, viewModel.difficulty)
+                        })
                 } ?: run {
                     // Если ничего не выбрано — предупредим пользователя
                     Snackbar.make(main, R.string.hint_select_setup, Snackbar.LENGTH_SHORT).show()
                 }
+
             }
         }
     }

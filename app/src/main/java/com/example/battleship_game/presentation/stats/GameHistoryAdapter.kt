@@ -1,11 +1,18 @@
 package com.example.battleship_game.presentation.stats
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.battleship_game.R
 import com.example.battleship_game.data.entity.GameHistory
+import com.example.battleship_game.data.model.Difficulty
+import com.example.battleship_game.data.model.GameResult
 import com.example.battleship_game.databinding.ItemGameHistoryBinding
+import com.google.android.material.color.MaterialColors
 
 /**
  * Адаптер для RecyclerView статистики.
@@ -18,10 +25,27 @@ class GameHistoryAdapter(
         : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: GameHistory) {
             binding.apply {
+                val context = root.context
                 tvName.text = item.name
-                tvResult.text = item.result.toDisplayString()
-                tvLevel.text = item.level.toDisplayString()
+                tvResult.text = context.getString(item.result.displayNameRes)
+                tvLevel.text = context.getString(item.level.displayNameRes)
                 tvDate.text = item.date
+
+                // Устанавливаем золотой фон для побед на экспертном уровне
+                if (item.level == Difficulty.EXPERT && item.result == GameResult.WIN) {
+                    cardGameHistory.apply {
+                        setCardBackgroundColor(ContextCompat.getColor(context, R.color.gold))
+                    }
+                } else {
+                    // Возвращаем стандартные значения
+                    cardGameHistory.apply {
+                        setCardBackgroundColor(MaterialColors.getColor(
+                            context,
+                            com.google.android.material.R.attr.colorSurface,
+                            Color.TRANSPARENT
+                        ))
+                    }
+                }
             }
         }
     }

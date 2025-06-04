@@ -23,7 +23,7 @@
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
         <activity
-            android:name=".presentation.game.ResultActivity"
+            android:name=".presentation.result.ResultActivity"
             android:exported="false"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.Battleshipgame" />
@@ -38,7 +38,7 @@
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.Battleshipgame" />
         <activity
-            android:name=".presentation.game.LoadingActivity"
+            android:name=".presentation.loading.LoadingActivity"
             android:exported="false"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.Battleshipgame" />
