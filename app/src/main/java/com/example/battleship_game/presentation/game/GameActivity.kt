@@ -318,6 +318,11 @@ class GameActivity : BaseActivity() {
                 ResultActivity.EXTRA_PLAYER_RESULT,
                 result
             )
+            putExtra(
+                ResultActivity.EXTRA_DIFFICULTY,
+                viewModel.difficulty
+            )
+
         }
         startActivity(intent)
         finish()
