@@ -175,6 +175,9 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         // Считаем индекс следующего трека (если на последнем — возвращаемся к 0)
         currentTrackIndex = (currentTrackIndex + 1) % playlist.size
 
+        // Сохраняем этот индекс в UserPreferences
+        lastTrackIndex = currentTrackIndex
+
         // Инициализируем плеер заново для следующего трека
         initializeMediaPlayer()
 
