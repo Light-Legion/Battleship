@@ -10,7 +10,6 @@ import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.databinding.ActivityLoadSavedPlacementBinding
-import com.example.battleship_game.presentation.placement.auto.AutoPlacementActivity
 import com.example.battleship_game.presentation.placement.manual.ManualPlacementActivity
 import com.google.android.material.snackbar.Snackbar
 
