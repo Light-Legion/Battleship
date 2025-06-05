@@ -1,6 +1,5 @@
 package com.example.battleship_game.common
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -10,8 +9,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.battleship_game.common.UserPreferences.isMusicEnabled
-import com.example.battleship_game.services.MusicService
 
 abstract class BaseActivity : ComponentActivity()  {
 

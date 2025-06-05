@@ -11,12 +11,11 @@ import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.graphics.scale
 import com.example.battleship_game.R
 import com.example.battleship_game.data.model.ShipPlacement
-import kotlin.collections.forEach
-import kotlin.math.min
-import androidx.core.graphics.scale
 import com.example.battleship_game.strategies.shooting.CellState
+import kotlin.math.min
 
 /**
  * BattleFieldView — кастомный View для отображения 10×10 поля «Морской бой».

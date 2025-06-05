@@ -24,7 +24,6 @@ import com.example.battleship_game.data.model.ShipPlacementUi
 import com.example.battleship_game.databinding.ActivityManualPlacementBinding
 import com.example.battleship_game.dialog.CustomAlertDialog
 import com.example.battleship_game.presentation.loading.LoadingActivity
-import com.example.battleship_game.presentation.placement.auto.AutoPlacementActivity
 import com.example.battleship_game.presentation.placement.save.SavePlacementActivity
 import com.example.battleship_game.ui.ManualPlacementFieldView
 import com.example.battleship_game.ui.ShipDragShadowBuilder

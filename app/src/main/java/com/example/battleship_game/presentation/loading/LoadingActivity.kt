@@ -92,7 +92,7 @@ class LoadingActivity : BaseActivity() {
     private fun startComputerShipGeneration() {
         lifecycleScope.launch(Dispatchers.IO) {
             parseIntentExtras()
-            viewModel.computerShips = viewModel.generateComputerShips(viewModel.difficulty)
+            viewModel.computerShips = viewModel.generateComputerShips(Difficulty.HARD)
             generationComplete = true
 
             // Если анимация уже завершена, сразу переходим
