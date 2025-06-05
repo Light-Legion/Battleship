@@ -49,22 +49,18 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
     /**
      * Плейлист: список raw-ресурсов для фоновых треков.
-     * Положите в res/raw файлы background_music_1.mp3, background_music_2.mp3, background_music_3.mp3.
      */
     @RawRes
     private val playlist = listOf(
-        /*R.raw.background_music_1,
-        R.raw.background_music_2,
-        R.raw.background_music_3,*/
-        R.raw.background_music_welost,
-        R.raw.background_music_forgottenbattlefied_dividedswords,
         R.raw.background_music_falling_leaves_autumns_brush,
+        R.raw.background_music_welost,
+        R.raw.background_music_worldmap_takingdownthepaintress,
+        R.raw.background_music_forgottenbattlefied_dividedswords,
         R.raw.background_music_flyingwaters_rainfromtheground,
         R.raw.background_music_springmeadows_battlingbreeze,
         R.raw.background_music_springmeadows_beneaththebluetree,
         R.raw.background_music_springmeadows_getupforlumiere,
         R.raw.background_music_stonewavecliffs_wardingblades,
-        R.raw.background_music_worldmap_takingdownthepaintress,
         R.raw.background_music_worldmap_untilyouregone
     )
 
