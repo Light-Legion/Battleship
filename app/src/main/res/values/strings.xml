@@ -23,6 +23,7 @@
     <string name="music">Музыка</string>
     <string name="initial_countdown_value">3</string>
     <string name="give_up">С\nД\nА\nТ\nЬ\nС\nЯ</string>
+    <string name="template_ships">Шаблоны кораблей</string>
 
 
 
@@ -91,6 +92,8 @@
     <string name="hint_changed_avatar">Аватар изменен</string>
     <string name="hint_error_placement">Не удалось сгенерировать расстановку</string>
     <string name="hint_save_placement">Расстановка сохранена</string>
+    <string name="hint_clear_already">Игровое поле уже очищено!</string>
+    <string name="hint_battle_invalid">Сначала расставьте все корабли!</string>
 
     <!-- Названия для уведомлений -->
     <string name="notification_channel_name">Music Service</string>
@@ -135,5 +138,7 @@
     <string name="error_refresh_title">Ошибка обновления!</string>
     <string name="error_refresh_message">Чтобы обновить расстановку, необходимо выбрать стратегию!</string>
     <string name="error_save_title">Ошибка сохранения!</string>
-    <string name="error_save_message">Чтобы сохранить расстановку, необходимо расставить все корабли!</string>
+    <string name="error_save_auto_placement_message">Чтобы сохранить расстановку, необходимо расставить корабли!</string>
+    <string name="error_save_manual_placement_message">Чтобы сохранить расстановку,
+        необходимо расставить корректно все корабли!</string>
 </resources>

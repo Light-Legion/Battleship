@@ -21,6 +21,8 @@
     <color name="red">#DC2828</color>
     <color name="gray_lite">#C0C0C0</color>
     <color name="game_field">#96F0F0FF</color>
+    <color name="invalidate_ship">#E53935</color>
+    <color name="pointer_cell">#43A047</color>
     <color name="gold">#D9FAEDB2</color>
 
     <!-- Цвета для индикации хода -->
