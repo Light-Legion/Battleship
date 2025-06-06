@@ -36,15 +36,6 @@ class GameHistoryAdapter(
                     cardGameHistory.apply {
                         setCardBackgroundColor(ContextCompat.getColor(context, R.color.gold))
                     }
-                } else {
-                    // Возвращаем стандартные значения
-                    cardGameHistory.apply {
-                        setCardBackgroundColor(MaterialColors.getColor(
-                            context,
-                            com.google.android.material.R.attr.colorSurface,
-                            Color.TRANSPARENT
-                        ))
-                    }
                 }
             }
         }

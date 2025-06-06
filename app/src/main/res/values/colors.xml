@@ -23,7 +23,7 @@
     <color name="game_field">#96F0F0FF</color>
     <color name="invalidate_ship">#E53935</color>
     <color name="pointer_cell">#43A047</color>
-    <color name="gold">#D9FAEDB2</color>
+    <color name="gold">#FCD975</color>
 
     <!-- Цвета для индикации хода -->
     <color name="player_turn_background">#E8F5E9</color> <!-- Светло-зеленый -->

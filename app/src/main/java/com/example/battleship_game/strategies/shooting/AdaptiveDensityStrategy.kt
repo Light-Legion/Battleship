@@ -49,7 +49,7 @@ class AdaptiveDensityStrategy : BaseShootingStrategy() {
         private const val EDGE_BONUS_THRESHOLD = 6
 
         /** Порог подряд промахов, при котором получаем координату реальной палубы. */
-        private const val MISS_BONUS_THRESHOLD = 12
+        private const val MISS_BONUS_THRESHOLD = 10
     }
 
     /** Виртуальное поле (SIZE×SIZE) для учёта MISS/HIT/SUNK/EMPTY. */
