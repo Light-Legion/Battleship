@@ -94,13 +94,14 @@ class EditNameActivity : BaseActivity() {
                 visibility = View.VISIBLE
             }
             showExitConfirmDialog()
-        } else {
-            // сохраняем и закрываем
-            nickname = name
-
-            setResult(RESULT_OK)
-            finish()
+            return
         }
+
+        // сохраняем и закрываем
+        nickname = name
+
+        setResult(RESULT_OK)
+        finish()
     }
 
     private fun showExitConfirmDialog() {

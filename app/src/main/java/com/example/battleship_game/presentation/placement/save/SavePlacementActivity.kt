@@ -2,6 +2,7 @@ package com.example.battleship_game.presentation.placement.save
 
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
@@ -75,25 +76,7 @@ class SavePlacementActivity : BaseActivity() {
             }
 
             btnSave.setOnClickListener {
-                val raw = etName.text.toString()
-                // trim + нормализовать пробелы
-                val name = raw.trim().replace(Regex("\\s+"), " ")
-                // разрешаем буквы, цифры, пробел, длина ≤20
-                val valid = Regex("^[\\p{L}\\d ]{1,20}$").matches(name)
-                if (!valid) {
-                    showExitConfirmDialog()
-                    return@setOnClickListener
-                }
-                // достаём список ShipPlacement из Intent
-                val ships = intent
-                    .getParcelableArrayListExtra<ShipPlacement>(EXTRA_SHIPS)
-                    .orEmpty()
-
-                // сохраняем и закрываем
-                viewModel.save(name, ships)
-
-                setResult(RESULT_OK)
-                finish()
+                validateName()
             }
         }
     }
@@ -105,6 +88,32 @@ class SavePlacementActivity : BaseActivity() {
             this, InputMethodManager::class.java
         )
         imm?.hideSoftInputFromWindow(binding.etName.windowToken, 0)
+    }
+
+    private fun validateName() {
+        val raw = binding.etName.text.toString()
+        // trim + нормализовать пробелы
+        val name = raw.trim().replace(Regex("\\s+"), " ")
+        // разрешаем буквы, цифры, пробел, длина ≤20
+        val valid = Regex("^[\\p{L}\\d ]{1,20}$").matches(name)
+        if (!valid) {
+            binding.tvError.apply {
+                text = getString(R.string.hint_error_placement)
+                visibility = View.VISIBLE
+            }
+            showExitConfirmDialog()
+            return
+        }
+        // достаём список ShipPlacement из Intent
+        val ships = intent
+            .getParcelableArrayListExtra<ShipPlacement>(EXTRA_SHIPS)
+            .orEmpty()
+
+        // сохраняем и закрываем
+        viewModel.save(name, ships)
+
+        setResult(RESULT_OK)
+        finish()
     }
 
     private fun showExitConfirmDialog() {
