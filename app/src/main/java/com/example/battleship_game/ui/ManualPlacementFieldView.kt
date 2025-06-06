@@ -13,6 +13,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.DragEvent
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -69,6 +70,7 @@ class ManualPlacementFieldView @JvmOverloads constructor(
 
     // ======== Константы для размеров поля ========
     companion object {
+        private const val TAG = "MPFieldView"
         private const val GRID_SIZE = 10               // 10×10 клеток
         private const val INVALID_SCALE = 0.9f         // Масштабирование для некорректного размещения
         private const val INVALID_ALPHA = 150          // Прозрачность для подсветки некорректных (0–255)
@@ -172,6 +174,7 @@ class ManualPlacementFieldView @JvmOverloads constructor(
             // При двойном тапе: нужно понять, попал ли пользователь в какой-нибудь корабль.
             val tappedShip = findShipAt(e.x, e.y)
             tappedShip?.let { ship ->
+                Log.d(TAG, "DoubleTap по кораблю id=${ship}")
                 // Передаём событие в Activity/ViewModel
                 doubleTapListener?.onShipDoubleTapped(ship)
             }
@@ -193,6 +196,9 @@ class ManualPlacementFieldView @JvmOverloads constructor(
 
     /** Флаг: drag уже был запущен (чтобы не стартовать его несколько раз) */
     private var dragStarted = false
+
+    // Чтобы не вызывать onShipPickedFromField дважды
+    private var alreadyPickedShipId: Int? = null
 
     init {
         // Заранее загружаем битмапы кораблей (гориз./верт.) в кэш
@@ -220,11 +226,19 @@ class ManualPlacementFieldView @JvmOverloads constructor(
         setOnDragListener { _, event ->
             when (event.action) {
                 DragEvent.ACTION_DRAG_STARTED -> {
+                    val ship = event.localState as? ShipPlacementUi
+
+                    Log.d(TAG, "ACTION_DRAG_STARTED, localState=${event.localState}")
                     // При старте drag-operaton проверяем, что у нас в ClipDescription есть нужный MIME-тип
-                    return@setOnDragListener (event.localState is ShipPlacementUi)
+                    if (ship != null && alreadyPickedShipId != ship.shipId) {
+                        alreadyPickedShipId = ship.shipId
+                        onShipPickedFromField?.invoke(ship)
+                    }
+                    return@setOnDragListener (ship != null)
                 }
 
                 DragEvent.ACTION_DRAG_ENTERED -> {
+                    Log.d(TAG, "ACTION_DRAG_ENTERED")
                     // Можно подсветить поле, например, изменение цвета фона (по желанию)
                     invalidate()
                     return@setOnDragListener true
@@ -232,35 +246,21 @@ class ManualPlacementFieldView @JvmOverloads constructor(
 
                 DragEvent.ACTION_DRAG_LOCATION -> {
                     // Вычисляем «adjusted» координаты для верхнего левого угла тени:
-                    val adjX = event.x - shadowOffsetX
-                    val adjY = event.y - shadowOffsetY
-                    val col = ((adjX - offsetX) / cellSize).toInt()
-                    val row = ((adjY - offsetY) / cellSize).toInt()
-                    val newHover = if (row in 0 until GRID_SIZE && col in 0 until GRID_SIZE) {
-                        row to col
-                    } else null
-                    if (newHover != hoverCell) {
-                        hoverCell = newHover
-                        invalidate()
-                    }
+                    handleHover(event)
                     return@setOnDragListener true
                 }
 
                 DragEvent.ACTION_DRAG_EXITED -> {
+                    Log.d(TAG, "ACTION_DRAG_EXITED")
                     // курсор вышел за границы поля
-                    if (hoverCell != null) {
-                        hoverCell = null
-                        invalidate()
-                    }
+                    resetHover()
                     return@setOnDragListener true
                 }
 
                 DragEvent.ACTION_DROP -> {
                     // Сбросим hover
-                    if (hoverCell != null) {
-                        hoverCell = null
-                        invalidate()
-                    }
+                    Log.d(TAG, "ACTION_DROP, localState=${event.localState}, event.x=${event.x}, event.y=${event.y}")
+                    resetHover()
                     // Получим ship из localState
                     val ship = event.localState as? ShipPlacementUi
                     if (ship != null) {
@@ -272,9 +272,11 @@ class ManualPlacementFieldView @JvmOverloads constructor(
                         val row = ((adjY - offsetY) / cellSize).toInt()
 
                         if (row in 0 until GRID_SIZE && col in 0 until GRID_SIZE) {
-                            post { dropListener?.onShipDropped(ship, row, col) }
+                            Log.d(TAG, "→ onShipDropped(shipId=${ship.shipId}, row=$row, col=$col)")
+                            dropListener?.onShipDropped(ship, row, col)
                         } else {
-                            post { dropListener?.onShipDroppedOutside(ship) }
+                            Log.d(TAG, "→ onShipDroppedOutside(shipId=${ship.shipId}) (за пределами)")
+                            dropListener?.onShipDroppedOutside(ship)
                         }
                     }
                     return@setOnDragListener true
@@ -283,17 +285,38 @@ class ManualPlacementFieldView @JvmOverloads constructor(
                 DragEvent.ACTION_DRAG_ENDED -> {
                     // Если drop не завершён (event.result==false), то вызываем onShipDroppedOutside
                     val ship = event.localState as? ShipPlacementUi
+                    Log.d(TAG, "ACTION_DRAG_ENDED, result=${event.result}, wasDropped=${event.result}, ship=$ship")
                     if (ship != null && !event.result) {
-                        post { dropListener?.onShipDroppedOutside(ship) }
+                        Log.d(TAG, "→ onShipDroppedOutside(shipId=${ship.shipId}) (не было ACTION_DROP)")
+                        dropListener?.onShipDroppedOutside(ship)
                     }
-                    if (hoverCell != null) {
-                        hoverCell = null
-                        invalidate()
-                    }
+                    resetHover()
+                    alreadyPickedShipId = null
                     return@setOnDragListener true
                 }
                 else -> return@setOnDragListener false
             }
+        }
+    }
+
+    private fun handleHover(event : DragEvent) {
+        val adjX = event.x - shadowOffsetX
+        val adjY = event.y - shadowOffsetY
+        val col = ((adjX - offsetX) / cellSize).toInt()
+        val row = ((adjY - offsetY) / cellSize).toInt()
+        val newHover = if (row in 0 until GRID_SIZE && col in 0 until GRID_SIZE) {
+            row to col
+        } else null
+        if (newHover != hoverCell) {
+            hoverCell = newHover
+            invalidate()
+        }
+    }
+
+    private fun resetHover() {
+        if (hoverCell != null) {
+            hoverCell = null
+            invalidate()
         }
     }
 
@@ -377,6 +400,7 @@ class ManualPlacementFieldView @JvmOverloads constructor(
                     downX = event.x
                     downY = event.y
                     dragStarted = false
+                    Log.d(TAG, "ACTION_DOWN по кораблю id=${ship.shipId} at x=${event.x}, y=${event.y}")
                     // Возвращаем true, чтобы начать получать ACTION_MOVE
                     return true
                 }
@@ -388,8 +412,7 @@ class ManualPlacementFieldView @JvmOverloads constructor(
                     val dx = abs(event.x - downX)
                     val dy = abs(event.y - downY)
                     if (dx > touchSlop || dy > touchSlop) {
-                        // Мы точно начинаем drag
-                        onShipPickedFromField?.invoke(ship)
+                        Log.d(TAG, "ACTION_MOVE: начинаем drag для shipId=${ship.shipId}")
 
                         // Берём bitmap и размер корабля из кэша
                         val key = "${ship.length}_${if (ship.isVertical) "v" else "h"}"
@@ -408,7 +431,8 @@ class ManualPlacementFieldView @JvmOverloads constructor(
                         setDragShadowOffset(touchX.toFloat(), touchY.toFloat())
 
                         val dummyClip = ClipData.newPlainText("", "")
-                        startDragAndDrop(dummyClip, shadow, ship, 0)
+                        val flags = DRAG_FLAG_GLOBAL or DRAG_FLAG_OPAQUE
+                        startDragAndDrop(dummyClip, shadow, ship, flags)
                         dragStarted = true
                         return true
                     }
@@ -416,7 +440,7 @@ class ManualPlacementFieldView @JvmOverloads constructor(
             }
 
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                // 6) Если палец отпал до того, как мы реально начали drag → значит это был просто тап / double‐tap.
+                Log.d(TAG, "ACTION_UP/CANCEL, selectedShip=${selectedShip}")
                 selectedShip = null
                 dragStarted = false
             }
