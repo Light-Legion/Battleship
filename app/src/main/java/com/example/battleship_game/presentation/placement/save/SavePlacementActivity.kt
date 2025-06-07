@@ -98,7 +98,7 @@ class SavePlacementActivity : BaseActivity() {
         val valid = Regex("^[\\p{L}\\d ]{1,20}$").matches(name)
         if (!valid) {
             binding.tvError.apply {
-                text = getString(R.string.hint_error_placement)
+                text = getString(R.string.hint_placement_name)
                 visibility = View.VISIBLE
             }
             showExitConfirmDialog()
