@@ -8,8 +8,10 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.DRAG_FLAG_OPAQUE
 import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.activity.addCallback
@@ -223,7 +225,7 @@ class ManualPlacementActivity : BaseActivity() {
                             dragData,
                             shadow,
                             template,  // localState = ShipPlacementUi
-                            0
+                            DRAG_FLAG_OPAQUE
                         )
                         view.visibility = View.INVISIBLE
                         return@setOnTouchListener true
@@ -264,18 +266,16 @@ class ManualPlacementActivity : BaseActivity() {
                         // Ничего дополнительно делать не нужно: FieldView перерисует красным/уменьшенным
                     }
                     2 -> {
-                        val id = ship.shipId
-                        val oldPos = oldPositionMap[id]
-                        if (oldPos != null) {
+                        if (ship.fromTemplate) {
+                            viewModel.returnShipToStation(ship)
+                        } else {
+                            val (oldRow, oldCol) = oldPositionMap[ship.shipId]
+                                ?: Pair(ship.startRow, ship.startCol)
                             viewModel.returnShipToField(
                                 ship,
-                                oldRow = oldPos.first,
-                                oldCol = oldPos.second
+                                oldRow = oldRow,
+                                oldCol = oldCol
                             )
-                        } else {
-                            // если вдруг нет старой позиции, считаем, что это «возврат на станцию»
-                            viewModel.returnShipToStation(ship)
-                            stationMap[ship.shipId]?.visibility = View.VISIBLE
                         }
                     }
                 }
@@ -284,7 +284,6 @@ class ManualPlacementActivity : BaseActivity() {
             override fun onShipDroppedOutside(ship: ShipPlacementUi) {
                 // Если дропнули за пределы поля → сразу возвращаем на станцию
                 viewModel.returnShipToStation(ship)
-                stationMap[ship.shipId]?.visibility = View.VISIBLE
             }
         })
 
@@ -309,8 +308,32 @@ class ManualPlacementActivity : BaseActivity() {
 
         // 3) PickFromField (ACTION_MOVE) → удалить с поля, но **не** возвращать в templates
         binding.bfv.onShipPickedFromField = { ship ->
-            oldPositionMap[ship.shipId] = Pair(ship.startRow, ship.startCol)
+            oldPositionMap[ship.shipId] = ship.startRow to ship.startCol
             viewModel.pickShipFromField(ship)
+        }
+
+        // Навешиваем слушатель на main, чтобы убрать возврат тени на игровое поле
+        binding.main.setOnDragListener { _, event ->
+            when (event.action) {
+                DragEvent.ACTION_DROP -> {
+                    val ship = event.localState as? ShipPlacementUi
+                    if (ship != null) {
+                        // Сброс за пределами поля — возвращаем на станцию
+                        viewModel.returnShipToStation(ship)
+                        return@setOnDragListener true // Считаем сброс успешным
+                    }
+                    return@setOnDragListener false
+                }
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    // Обрабатываем завершение драга
+                    val ship = event.localState as? ShipPlacementUi
+                    if (ship != null && !event.result) {
+                        viewModel.returnShipToStation(ship)
+                    }
+                    return@setOnDragListener true
+                }
+                else -> return@setOnDragListener true
+            }
         }
     }
 

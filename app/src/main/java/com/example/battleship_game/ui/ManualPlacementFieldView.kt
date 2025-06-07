@@ -286,10 +286,6 @@ class ManualPlacementFieldView @JvmOverloads constructor(
                     // Если drop не завершён (event.result==false), то вызываем onShipDroppedOutside
                     val ship = event.localState as? ShipPlacementUi
                     Log.d(TAG, "ACTION_DRAG_ENDED, result=${event.result}, wasDropped=${event.result}, ship=$ship")
-                    if (ship != null && !event.result) {
-                        Log.d(TAG, "→ onShipDroppedOutside(shipId=${ship.shipId}) (не было ACTION_DROP)")
-                        dropListener?.onShipDroppedOutside(ship)
-                    }
                     resetHover()
                     alreadyPickedShipId = null
                     return@setOnDragListener true
@@ -431,8 +427,7 @@ class ManualPlacementFieldView @JvmOverloads constructor(
                         setDragShadowOffset(touchX.toFloat(), touchY.toFloat())
 
                         val dummyClip = ClipData.newPlainText("", "")
-                        val flags = DRAG_FLAG_GLOBAL or DRAG_FLAG_OPAQUE
-                        startDragAndDrop(dummyClip, shadow, ship, flags)
+                        startDragAndDrop(dummyClip, shadow, ship, DRAG_FLAG_OPAQUE)
                         dragStarted = true
                         return true
                     }
