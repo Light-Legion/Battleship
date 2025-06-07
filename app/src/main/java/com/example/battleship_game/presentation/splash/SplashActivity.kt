@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.animation.LinearInterpolator
+import androidx.activity.addCallback
 import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -32,6 +33,10 @@ class SplashActivity : BaseActivity() {
         }
 
         simulateLoading()
+
+        onBackPressedDispatcher.addCallback(this) {
+            finish()
+        }
     }
 
     private fun simulateLoading() {
