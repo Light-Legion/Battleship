@@ -46,10 +46,10 @@ class AdaptiveDensityStrategy : BaseShootingStrategy() {
 
     companion object {
         /** Порог промахов, при котором начинаем «усилять» края. */
-        private const val EDGE_BONUS_THRESHOLD = 6
+        private const val EDGE_BONUS_THRESHOLD = 5
 
         /** Порог подряд промахов, при котором получаем координату реальной палубы. */
-        private const val MISS_BONUS_THRESHOLD = 10
+        private const val MISS_BONUS_THRESHOLD = 8
     }
 
     /** Виртуальное поле (SIZE×SIZE) для учёта MISS/HIT/SUNK/EMPTY. */

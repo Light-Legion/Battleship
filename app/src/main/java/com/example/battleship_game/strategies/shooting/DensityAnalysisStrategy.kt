@@ -46,7 +46,7 @@ class DensityAnalysisStrategy : BaseShootingStrategy() {
 
     companion object {
         /** Порог промахов, при котором начинаем «усилять» края. */
-        private const val EDGE_BONUS_THRESHOLD = 10
+        private const val EDGE_BONUS_THRESHOLD = 8
     }
 
     /** Виртуальное поле (SIZE×SIZE) для учёта MISS/HIT/SUNK/EMPTY. */
