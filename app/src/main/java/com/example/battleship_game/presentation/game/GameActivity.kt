@@ -21,6 +21,8 @@ import com.example.battleship_game.audio.SoundEffectsManager
 import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.common.UserPreferences.avatarRes
 import com.example.battleship_game.common.UserPreferences.nickname
+import com.example.battleship_game.common.UserPreferences.pendingGameDifficulty
+import com.example.battleship_game.common.UserPreferences.pendingGameStartTime
 import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.data.model.GameResult
 import com.example.battleship_game.data.model.ShipPlacement
@@ -61,6 +63,9 @@ class GameActivity : BaseActivity() {
         parseIntentExtras()
         initBattle()
         setupUI()
+
+        pendingGameStartTime = System.currentTimeMillis()
+        pendingGameDifficulty = viewModel.difficulty.name
     }
 
     override fun onDestroy() {

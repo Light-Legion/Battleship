@@ -11,6 +11,8 @@ object UserPreferences {
     private const val KEY_AVATAR = "key_avatar"
     private const val KEY_MUSIC_ENABLED = "key_music_enabled"
     private const val KEY_LAST_TRACK_INDEX = "key_last_track_index"
+    private const val KEY_PENDING_GAME_START_TIME = "key_pending_game_start_time"
+    private const val KEY_PENDING_GAME_DIFFICULTY = "key_pending_game_difficulty"
 
     private fun prefs(ctx: Context) =
         ctx.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -30,5 +32,26 @@ object UserPreferences {
     var Context.lastTrackIndex: Int
         get() = prefs(this).getInt(KEY_LAST_TRACK_INDEX, 0)
         set(idx) = prefs(this).edit { putInt(KEY_LAST_TRACK_INDEX, idx) }
+
+    var Context.pendingGameStartTime: Long
+        get() = prefs(this).getLong(KEY_PENDING_GAME_START_TIME, 0L)
+        set(value) = prefs(this).edit { putLong(KEY_PENDING_GAME_START_TIME, value) }
+
+    var Context.pendingGameDifficulty: String?
+        get() = prefs(this).getString(KEY_PENDING_GAME_DIFFICULTY, null)
+        set(value) {
+            if (value != null) {
+                prefs(this).edit { putString(KEY_PENDING_GAME_DIFFICULTY, value) }
+            } else {
+                prefs(this).edit { remove(KEY_PENDING_GAME_DIFFICULTY) }
+            }
+        }
+
+    fun Context.clearPendingGameFlag() {
+        prefs(this).edit {
+            remove(KEY_PENDING_GAME_START_TIME)
+            remove(KEY_PENDING_GAME_DIFFICULTY)
+        }
+    }
 
 }

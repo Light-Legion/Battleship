@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.battleship_game.R
 import com.example.battleship_game.common.BaseActivity
+import com.example.battleship_game.common.UserPreferences.clearPendingGameFlag
 import com.example.battleship_game.common.UserPreferences.nickname
 import com.example.battleship_game.data.model.Difficulty
 import com.example.battleship_game.data.model.GameResult
@@ -91,6 +92,7 @@ class ResultActivity : BaseActivity() {
     private fun saveGameRecord() {
         val name = nickname
         viewModel.saveGameHistory(name, viewModel.result, viewModel.level)
+        clearPendingGameFlag()
     }
 
     /**
