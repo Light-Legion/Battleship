@@ -52,7 +52,8 @@
             android:textSize="16sp"
             android:gravity="center"
             android:textAlignment="center"
-            android:padding="8dp"/>
+            android:padding="8dp"
+            android:lineSpacingExtra="8dp" />
     </ScrollView>
 
     <TextView
