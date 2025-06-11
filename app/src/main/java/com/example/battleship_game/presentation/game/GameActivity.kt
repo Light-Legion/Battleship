@@ -17,6 +17,7 @@ import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.battleship_game.R
+import com.example.battleship_game.audio.SoundEffectsManager
 import com.example.battleship_game.common.BaseActivity
 import com.example.battleship_game.common.UserPreferences.avatarRes
 import com.example.battleship_game.common.UserPreferences.nickname
@@ -35,6 +36,9 @@ class GameActivity : BaseActivity() {
     private lateinit var binding: ActivityGameBinding
     private val viewModel: GameActivityViewModel by viewModels()
 
+    // Менеджер звуковых эффектов
+    private lateinit var soundEffectsManager: SoundEffectsManager
+
     companion object {
         const val EXTRA_PLAYER_SHIPS = "EXTRA_PLAYER_SHIPS"
         const val EXTRA_COMPUTER_SHIPS = "EXTRA_COMPUTER_SHIPS"
@@ -47,6 +51,9 @@ class GameActivity : BaseActivity() {
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Инициализируем менеджер звуковых эффектов
+        soundEffectsManager = SoundEffectsManager(applicationContext)
+
         // edge-to-edge + immersive
         applyEdgeInsets(binding.main)
         enterImmersiveMode()
@@ -54,6 +61,12 @@ class GameActivity : BaseActivity() {
         parseIntentExtras()
         initBattle()
         setupUI()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Освобождаем ресурсы SoundPool
+        soundEffectsManager.release()
     }
 
     /**
@@ -142,8 +155,14 @@ class GameActivity : BaseActivity() {
 
             // 2.2) Если этим ходом корабль потоплен:
             if (result.sunk && result.sunkShip != null) {
+                // Последняя палуба → затопление: звук затопления
+                soundEffectsManager.playSunkSound()
+
                 binding.bfvComputer.markSunkShip(result.sunkShip, result.bufferCells)
                 updateRemainingCounters(result.sunkShip.length)
+            } else {
+                // Просто попадание в палубу (не полное затопление)
+                soundEffectsManager.playHitSound()
             }
 
             // 2.3) Проверяем: не закончилась ли битва?
@@ -156,8 +175,10 @@ class GameActivity : BaseActivity() {
             return
         }
 
-        // Промах
+        // Промах → рисуем штриховку и звук промаха
         binding.bfvComputer.markMiss(row, col)
+        soundEffectsManager.playMissSound()
+
         viewModel.isPlayerTurn = false
         switchToComputerTurn(startedFromMiss = false)
     }
@@ -181,7 +202,13 @@ class GameActivity : BaseActivity() {
 
                 // 2) Если затопил корабль:
                 if (result.sunk && result.sunkShip != null) {
+                    // Затопление корабля игрока
+                    soundEffectsManager.playSunkSound()
+
                     binding.bfvPlayer.markSunkShip(result.sunkShip, result.bufferCells)
+                } else {
+                    // Просто попадание
+                    soundEffectsManager.playHitSound()
                 }
 
                 // 3) Если сейчас бой закончен — сразу уходим
@@ -194,8 +221,10 @@ class GameActivity : BaseActivity() {
                 // 4) Компьютер попал, значит он стреляет ещё раз:
                 switchToComputerTurn(startedFromMiss = true)
             } else {
-                // 5) Компьютер промахнулся:
+                // 5) Компьютер промахнулся: → рисуем штриховку и звук промаха
                 binding.bfvPlayer.markMiss(result.row, result.col)
+                soundEffectsManager.playMissSound()
+
                 switchToPlayerTurn()
             }
         }

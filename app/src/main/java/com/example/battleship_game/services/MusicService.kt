@@ -40,6 +40,12 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         /** Действие: полностью остановить воспроизведение и сервис */
         const val ACTION_STOP = "com.example.battleship_game.services.action.STOP"
 
+        /** Действие: приглушение громкости музыки */
+        const val ACTION_DUCK = "com.example.battleship_game.services.action.DUCK"
+
+        /** Действие: восстановление громкости музыки */
+        const val ACTION_UNDUCK = "com.example.battleship_game.services.action.UNDUCK"
+
         /** Идентификатор канала уведомлений для foreground-сервиса */
         const val NOTIFICATION_CHANNEL_ID = "music_service_channel"
 
@@ -79,6 +85,10 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
     /** Флаг, указывающий, переведён ли сервис в foreground-режим */
     private var isForegroundService: Boolean = false
 
+    // Громкость: исходная и приглушённая
+    private var originalVolume: Float = 0.5f
+    private val duckVolume: Float = 0.2f
+
     //----------------------------------------------------------------------------------------------
     // 1. Жизненный цикл: onCreate, onStartCommand, onDestroy
     //----------------------------------------------------------------------------------------------
@@ -94,6 +104,8 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
         currentTrackIndex = lastTrackIndex
 
+        isPaused = false
+
         // Инициализируем MediaPlayer для первого трека (но ещё не запускаем)
         initializeMediaPlayer()
     }
@@ -107,6 +119,8 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             ACTION_PLAY  -> play()
             ACTION_PAUSE -> pause()
             ACTION_STOP  -> stopServiceAndRelease()
+            ACTION_DUCK -> duckVolumeTemporarily()
+            ACTION_UNDUCK -> restoreVolume()
         }
         return START_STICKY
     }
@@ -149,7 +163,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
             mediaPlayer = newPlayer.apply {
                 isLooping = false
-                setVolume(0.5f, 0.5f)
+                setVolume(originalVolume, originalVolume)
                 setOnCompletionListener { nextTrack() }
             }
         } catch (_: Exception) {
@@ -221,6 +235,10 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             AudioManager.AUDIOFOCUS_GAIN -> {
                 // Вернули аудиофокус — если ранее не был на паузе, возобновляем
                 if (!isPaused) play()
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
+                // При возможности duck — приглушаем музыку, но не останавливаем
+                mediaPlayer?.setVolume(duckVolume, duckVolume)
             }
         }
     }
@@ -306,6 +324,20 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         stopForegroundService()
 
         stopSelf()
+    }
+
+    /**
+     * При действии ACTION_DUCK: снижаем громкость воспроизведения музыки.
+     */
+    private fun duckVolumeTemporarily() {
+        mediaPlayer?.setVolume(duckVolume, duckVolume)
+    }
+
+    /**
+     * При действии ACTION_UNDUCK: восстанавливаем исходную громкость.
+     */
+    private fun restoreVolume() {
+        mediaPlayer?.setVolume(originalVolume, originalVolume)
     }
 
     //----------------------------------------------------------------------------------------------
