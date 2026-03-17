@@ -31,4 +31,6 @@
 
     <color name="computer_turn_background">#FFEBEE</color> <!-- Светло-красный -->
     <color name="computer_turn_text">#B71C1C</color> <!-- Темно-красный -->
+
+    <color name="ic_launcher_background">#0D1014</color>
 </resources>
